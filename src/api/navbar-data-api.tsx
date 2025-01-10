@@ -9,12 +9,14 @@ export default function NavbarDataApi(): NavbarLinkModel[] {
       title: "首页",
       url: "/admin",
       icon: <Home className="h-5 w-5" />,
+      type: "link",
     },
     {
       id: "1",
       title: "文章管理",
-      url: "/admin",
+      url: "/pages",
       icon: <Home className="h-5 w-5" />,
+      type: "link",
     },
     {
       id: "2",
@@ -26,25 +28,30 @@ export default function NavbarDataApi(): NavbarLinkModel[] {
           id: "2-1",
           title: "Profile",
           url: "/settings/profile",
+          type: "link",
         },
         {
           id: "2-2",
           title: "Account",
           url: "/settings/account",
+          type: "link",
         },
       ],
+      type: "group",
     },
     {
       id: "3",
       title: "用户管理",
       url: "/video",
       icon: <MonitorPlay className="h-5 w-5" />,
+      type: "link",
     },
     {
       id: "4",
       title: "权限管理",
       url: "/chat",
       icon: <Users className="h-5 w-5" />,
+      type: "link",
     },
   ];
 }
