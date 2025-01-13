@@ -51,6 +51,7 @@ function SidebarGroup(
   expandedItems: Set<string>,
   onToggle: (id: string | null) => void
 ) {
+  debugger
   const isExpanded = expandedItems.has(id);
   return (
     <div key={id}>
@@ -77,7 +78,7 @@ function SidebarGroup(
           </span>
         </div>
       </div>
-      <div className={cn("grid gap-2 ml-10", { hidden: isExpanded })}>
+      <div className={cn("grid gap-2 ml-10", { hidden: !isExpanded })}>
         {subItems.map(({ id, title, url }: NavbarLinkModel) => {
           return SidebarItem(id, isActive, url, null, title);
         })}
