@@ -16,7 +16,27 @@ export default function NavbarDataApi(): NavbarLinkModel[] {
       title: "文章管理",
       url: "/pages",
       icon: <Home className="h-5 w-5" />,
-      type: "link",
+      type: "group",
+      subItems: [
+        {
+          id: "1-1",
+          title: "所有文章",
+          url: "/admin/posts",
+          type: "link",
+        },
+        {
+          id: "1-2",
+          title: "分类目录",
+          url: "/pages/types",
+          type: "link",
+        },
+        {
+          id: "1-3",
+          title: "标签管理",
+          url: "/pages/lables",
+          type: "link",
+        },
+      ],
     },
     {
       id: "2",

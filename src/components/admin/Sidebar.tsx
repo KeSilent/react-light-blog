@@ -51,7 +51,6 @@ function SidebarGroup(
   expandedItems: Set<string>,
   onToggle: (id: string | null) => void
 ) {
-  debugger
   const isExpanded = expandedItems.has(id);
   return (
     <div key={id}>
