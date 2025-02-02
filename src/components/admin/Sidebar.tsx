@@ -15,28 +15,29 @@ function SidebarItem(
   title: string
 ) {
   return (
-    <div
-      key={id}
-      className={cn(
-        "flex hover:text-primary hover:rounded-xl hover:bg-hover-background",
-        { "text-primary": isActive }
-      )}
-    >
+    <div key={id}>
       <div
-        className={cn("my-2 pl-2 border-l-4 border-primary", {
-          "border-background": !isActive,
-        })}
-      ></div>
-      <Link
-        key={id}
-        href={url}
         className={cn(
-          "flex items-center gap-3 rounded-lg px-3 py-2 transition-all cursor-pointer"
+          "flex hover:text-primary hover:rounded-xl hover:bg-hover-background",
+          { "text-primary": isActive }
         )}
       >
-        {icon}
-        {title}
-      </Link>
+        <div
+          className={cn("my-2 pl-2 border-l-4 border-primary", {
+            "border-background": !isActive,
+          })}
+        ></div>
+        <Link
+          key={id}
+          href={url}
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2 transition-all cursor-pointer"
+          )}
+        >
+          {icon}
+          {title}
+        </Link>
+      </div>
     </div>
   );
 }
@@ -61,20 +62,19 @@ function SidebarGroup(
         )}
       >
         <div
-          className={cn("my-2 border-l-4 border-primary", {
+          className={cn("my-2 border-primary", {
             "border-background": !isActive,
           })}
         ></div>
         <div
-          className="flex items-center gap-3 rounded-lg px-3 py-2 transition-all cursor-pointer"
+          className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 transition-all cursor-pointer"
           onClick={() => onToggle(isExpanded ? null : id)}
         >
           {icon}
           {title}
-          <span className="ml-auto">
-            {/* 添加展开/折叠图标 */}
-            {isExpanded ? "▲" : "▼"}
-          </span>
+          <div className="ml-auto">
+            {isExpanded ? "▼" : "▲"}
+          </div>
         </div>
       </div>
       <div className={cn("grid gap-2 ml-10", { hidden: !isExpanded })}>
