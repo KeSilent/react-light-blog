@@ -45,7 +45,7 @@ function SidebarItem(
 //每个菜单组
 function SidebarGroup(
   id: string,
-  isActive: boolean,
+  pathname: string,
   icon: ReactNode,
   title: string,
   subItems: NavbarLinkModel[],
@@ -57,14 +57,11 @@ function SidebarGroup(
     <div key={id}>
       <div
         className={cn(
-          "flex gap-3 hover:text-primary hover:rounded-xl hover:bg-hover-background",
-          { "text-primary": isActive }
+          "flex gap-3 hover:text-primary hover:rounded-xl hover:bg-hover-background"
         )}
       >
         <div
-          className={cn("my-2 border-primary", {
-            "border-background": !isActive,
-          })}
+          className={cn("my-2 border-primary")}
         ></div>
         <div
           className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 transition-all cursor-pointer"
@@ -79,6 +76,7 @@ function SidebarGroup(
       </div>
       <div className={cn("grid gap-2 ml-10", { hidden: !isExpanded })}>
         {subItems.map(({ id, title, url }: NavbarLinkModel) => {
+          const isActive = url === pathname || false;
           return SidebarItem(id, isActive, url, null, title);
         })}
       </div>
@@ -99,20 +97,28 @@ function SidebarItems({
   const resultItems: JSX.Element[] = [];
 
   items.map(({ id, title, url, icon, type, subItems }: NavbarLinkModel) => {
-    const isActive = pathname === url;
+
+
     if (type === "group") {
+      const isGroupActive = subItems?.some((item) => item.url === pathname) || false;
+      let expandedItems = new Set(expandedItemId ? [expandedItemId] : []);
+      if (isGroupActive && expandedItemId == null) {
+        expandedItems = new Set(isGroupActive ? [id] : []);
+      }
       resultItems.push(
         SidebarGroup(
           id,
-          isActive,
+          pathname,
           icon,
           title,
           subItems || [],
-          new Set(expandedItemId ? [expandedItemId] : []), // 过滤掉 null
+          expandedItems,
           onToggle
         )
       );
     } else if (type === "link") {
+      const isActive = pathname === url;
+
       resultItems.push(SidebarItem(id, isActive, url, icon, title));
     }
   });
