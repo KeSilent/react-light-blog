@@ -31,16 +31,19 @@ const CheckboxTree: React.FC<CheckboxTreeProps> = ({ treeData }) => {
 
   const renderTreeNodes = (nodes: TreeNode[]) => {
     return nodes.map((node) => (
-      <div key={node.id} style={{ marginLeft: 20 }}>
-        <label>
+      <div key={node.id} className="ml-3">
+        <label className="flex items-center space-x-2">
           <input
             type="checkbox"
             checked={!!checkedState[node.id]}
             onChange={(e) => handleCheckboxChange(node, e.target.checked)}
+            className="form-checkbox h-4 w-4 text-blue-600"
           />
-          {node.label}
+          <span className="text-gray-700">{node.label}</span>
         </label>
-        {node.children && <div>{renderTreeNodes(node.children)}</div>}
+        {node.children && (
+          <div className="ml-3 mt-2">{renderTreeNodes(node.children)}</div>
+        )}
       </div>
     ));
   };

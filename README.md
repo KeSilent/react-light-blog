@@ -40,6 +40,11 @@ bun dev
 **技术栈**：
 
 - **前端**：Next.js（React框架）
+  - [echarts](https://echarts.apache.org/zh/index.html)
+  - [Markdown编辑器](https://github.com/uiwjs/react-md-editor)
+  - [HTML防止XSS攻击](https://github.com/rehypejs/rehype-sanitize)
+  - [Markdown处理官方文档](https://nextjs.org/docs/pages/building-your-application/configuring/mdx#install-dependencies)
+  - [ejs模板引擎](https://ejs.bootcss.com/)
 
 - **后端**：Next.js API路由 + Node.js
 
