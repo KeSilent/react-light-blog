@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 export interface TreeNode {
   id: string;
@@ -8,25 +8,26 @@ export interface TreeNode {
 
 type CheckboxTreeProps = {
   treeData: TreeNode[];
+  checkedState: { [key: string]: boolean };
+  onCheckedChange: (checkedState: { [key: string]: boolean }) => void;
 };
 
-const CheckboxTree: React.FC<CheckboxTreeProps> = ({ treeData }) => {
-  const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>(
-    {}
-  );
-
+export default function CheckboxTree({ treeData, checkedState, onCheckedChange }: CheckboxTreeProps) {
   const handleCheckboxChange = (node: TreeNode, checked: boolean) => {
-    setCheckedState((prevState) => ({
-      ...prevState,
+    const newState = {
+      ...checkedState,
       [node.id]: checked,
-    }));
+    };
 
     // 如果节点有子节点，递归更新子节点的状态
     if (node.children) {
       node.children.forEach((child) => {
-        handleCheckboxChange(child, checked);
+        newState[child.id] = checked;
       });
     }
+
+    // 调用回调函数
+    onCheckedChange(newState);
   };
 
   const renderTreeNodes = (nodes: TreeNode[]) => {
@@ -49,6 +50,4 @@ const CheckboxTree: React.FC<CheckboxTreeProps> = ({ treeData }) => {
   };
 
   return <div>{renderTreeNodes(treeData)}</div>;
-};
-
-export default CheckboxTree;
+}

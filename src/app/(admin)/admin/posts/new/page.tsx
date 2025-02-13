@@ -1,51 +1,40 @@
 "use client";
 
-import MDEditor from "@uiw/react-md-editor";
-import { SetStateAction, useState } from "react";
-import rehypeSanitize from "rehype-sanitize";
-import {
-  getCommands,
-  getExtraCommands,
-} from "@uiw/react-md-editor/commands-cn";
-
-import "./mdEditorCss.css";
+import { useEffect, useState } from "react";
 import Button from "@/components/UI/button";
 import UploadButton from "@/components/UI/upload-button";
 import CheckboxTree, { TreeNode } from "@/components/UI/checkbox-tree";
-import fm from "front-matter";
 import SelectMenu from "@/components/UI/select-menus";
+import CategoryDataApi from "@/api/category-data.api";
+import { PostModel } from "@/model/post-model";
+import TagInput from "@/components/UI/tag-input";
+import { MdEditor } from 'md-editor-rt';
+import 'md-editor-rt/lib/style.css';
+import '../new/mdEditorCss.css'
 
 export default function PostNew() {
-  const [value, setValue] = useState("");
-  const nodes: TreeNode[] = [
-    {
-      id: "1",
-      label: "Node 1",
-      children: [
-        {
-          id: "1-1",
-          label: "Node 1-1",
-        },
-        {
-          id: "1-2",
-          label: "Node 1-2",
-          children: [
-            {
-              id: "1-2-1",
-              label: "Node 1-2-1",
-            },
-          ],
-        },
-      ],
+  const [codeTheme] = useState('atom');
+  const [categoryData, setCategoryData] = useState<TreeNode[]>([]);
+  const [postModel, setPostModel] = useState<PostModel>({
+    id: "", // 初始化必填字段
+    title: "",
+    slug: "",
+    content: "",
+    state: "2",
+    cover: "",
+    description: "",
+    author: {
+      id: "",
+      name: "",
+      email: "",
+      avatar: ""
     },
-    {
-      id: "2",
-      label: "Node 2",
+    category: {
+      id: "",
+      name: "",
     },
-  ];
-
-  //选中的状态
-  const [checkedState, setCheckedState] = useState<string>("1");
+    keys: []
+  });
 
   const stateList = [
     {
@@ -61,15 +50,19 @@ export default function PostNew() {
       name: "已删除",
     },
   ];
-  // 定义一个新的 onChange 回调函数
-  const handleEditorChange = (value?: string) => {
-    if (value !== undefined) {
-      setValue(value);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setCategoryData(await CategoryDataApi());
     }
-  };
+    fetchData();
+  }, [])
+
 
   const handlePublish = () => {
     // 发布文章的逻辑
+    console.log("发布文章", postModel);
+
   };
 
   const handleUploadStart = () => {
@@ -103,34 +96,78 @@ export default function PostNew() {
     }
   };
 
-  // 上传 Markdown 文件
-  const handleUploadMDFile = async (file: File) => {
-    try {
-      // 使用 FileReader 读取文件内容
-      const reader = new FileReader();
-      reader.readAsText(file);
-      reader.onload = (event) => {
-        if (event.target && event.target.result) {
-          let fileContent: string;
-          if (typeof event.target.result === "string") {
-            fileContent = event.target.result;
-          } else {
-            // 如果是 ArrayBuffer，可以尝试将其转换为字符串
-            const uint8Array = new Uint8Array(
-              event.target.result as ArrayBuffer
-            );
-            fileContent = new TextDecoder().decode(uint8Array);
-          }
-          // 使用 front-matter 解析文件内容
-          const content = fm(fileContent);
-          console.log("front matter:", content.attributes);
+  const onUploadImg = async (files: File[], callback: (arg0: any[]) => void) => {
+    console.log("onUploadImg");
+
+    // const res = await Promise.all(
+    //   files.map((file) => {
+    //     return new Promise((rev, rej) => {
+    //       const form = new FormData();
+    //       form.append('file', file);
+    //     });
+    //   })
+    // );
+
+    // callback(res.map((item) => item.data.url));
+  };
+
+  const findNodeById = (treeData: TreeNode[], id: string): TreeNode | undefined => {
+
+    for (const node of treeData) {
+      if (node.id === id) {
+        return node;
+      }
+      if (node.children) {
+        const foundNode = findNodeById(node.children, id);
+        if (foundNode) {
+          return foundNode;
         }
-      };
-      console.log("文件上传成功");
-    } catch (error) {
-      console.error("上传失败:", error);
+      }
+    }
+    return undefined;
+  };
+
+
+  // 编辑器回调函数
+  const handleEditorChange = (value?: string) => {
+    if (value !== undefined) {
+      setPostModel(prev => ({
+        ...prev,
+        content: value,
+      }));
     }
   };
+
+  //设置状态回调函数
+  const handleSelectedHandleChange = (value: { id: string; name: string }) => {
+    setPostModel(prev => ({
+      ...prev,
+      state: value.id,
+    }));
+  };
+  const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
+  useEffect(() => {
+    const lastCheckedId = Object.keys(checkedState).reverse().find(id => checkedState[id]);
+    if (lastCheckedId) {
+      const selectCategory = findNodeById(categoryData, lastCheckedId);
+      if (selectCategory) {
+        setPostModel(prev => ({
+          ...prev,
+          category: {
+            id: selectCategory.id,
+            name: selectCategory.label,
+          },
+        }));
+      }
+    }
+  }, [checkedState]);
+
+  const handleCheckedChange = (newCheckedState: { [key: string]: boolean }) => {
+    setCheckedState(newCheckedState);
+  };
+
+
+
 
   return (
     <>
@@ -150,19 +187,16 @@ export default function PostNew() {
               id="posttitle"
               className=" w-full p-2 my-4 border border-gray-300 rounded-md text-lg"
               placeholder="添加标题"
+              value={postModel?.title}
+              onChange={(e) => setPostModel(prev => ({ ...prev, title: e.target.value }))}
             />
           </div>
-          <MDEditor
-            height={800}
-            value={value}
-            visibleDragbar={false}
-            preview="edit"
+          <MdEditor value={postModel?.content}
             onChange={handleEditorChange}
-            commands={[...getCommands()]}
-            extraCommands={[...getExtraCommands()]}
-            previewOptions={{
-              rehypePlugins: [[rehypeSanitize]],
-            }}
+            onUploadImg={onUploadImg}
+            preview={false}
+            toolbarsExclude={["github"]}
+            codeTheme={codeTheme}
           />
         </div>
         <div className="flex-none pl-4">
@@ -179,9 +213,9 @@ export default function PostNew() {
                 <div className="flex-1 pt-1">状态：</div>
                 <div className="flex-1">
                   <SelectMenu
-                    selected={checkedState}
+                    selected={postModel?.state || ""}
                     menuList={stateList}
-                    setSelected={setCheckedState}
+                    handleChange={handleSelectedHandleChange}
                   />
                 </div>
               </div>
@@ -190,7 +224,14 @@ export default function PostNew() {
             <div className="w-full">
               <label>分类目录</label>
               <div className="border border-gray-300 rounded-md mt-4 p-2 overflow-y-auto max-h-64">
-                <CheckboxTree treeData={nodes} />
+                <CheckboxTree treeData={categoryData} checkedState={checkedState} onCheckedChange={handleCheckedChange} />
+              </div>
+            </div>
+            <div className="w-full h-px bg-gray-300 my-6"></div>
+            <div className="w-full">
+              <label>添加标签</label>
+              <div className="mt-4 p-2 overflow-y-auto max-h-64">
+                <TagInput initialTags={postModel?.keys} />
               </div>
             </div>
             <div className="w-full h-px bg-gray-300 my-6"></div>
