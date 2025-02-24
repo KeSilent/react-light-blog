@@ -5,6 +5,7 @@ import (
 
 	"github.com/kesilent/react-light-blog/core/initialize/server"
 	"github.com/kesilent/react-light-blog/global"
+	"github.com/kesilent/react-light-blog/models/system"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -27,8 +28,11 @@ func RegisterTables() {
 	db := global.RLB_DB
 	err := db.AutoMigrate(
 
-	//TODO 初始化表
-
+		//TODO 初始化表
+		system.SysUser{},
+		system.SysBaseMenu{},
+		system.JwtBlacklist{},
+		system.SysAuthority{},
 	)
 	if err != nil {
 		global.RLB_LOG.Error("register table failed", zap.Error(err))

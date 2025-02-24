@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kesilent/react-light-blog/config"
 	"github.com/kesilent/react-light-blog/utils/timer"
+	"github.com/redis/go-redis/v9"
 	"github.com/songzhibin97/gkit/cache/local_cache"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -24,4 +25,7 @@ var (
 	RLB_Timer               timer.Timer = timer.NewTimerTask()
 	RLB_Concurrency_Control             = &singleflight.Group{}
 	RLB_ROUTERS             gin.RoutesInfo
+
+	RLB_REDISList map[string]redis.UniversalClient
+	RLB_REDIS     redis.UniversalClient
 )

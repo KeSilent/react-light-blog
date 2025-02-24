@@ -14,6 +14,12 @@ type server interface {
 
 func RunWindowsServer() {
 
+	if global.RLB_CONFIG.System.UseMultipoint || global.RLB_CONFIG.System.UseRedis {
+		// 初始化redis服务
+		initialize.Redis()
+		initialize.RedisList()
+	}
+
 	Router := initialize.Routers()
 
 	address := fmt.Sprintf(":%d", global.RLB_CONFIG.System.Addr)
