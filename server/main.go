@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/kesilent/react-light-blog/core"
 	"github.com/kesilent/react-light-blog/core/initialize"
+	"github.com/kesilent/react-light-blog/dal/query"
 	"github.com/kesilent/react-light-blog/global"
 	"go.uber.org/zap"
 )
@@ -18,11 +19,14 @@ func main() {
 	initialize.Timer() //定时任务
 
 	if global.RLB_DB != nil {
-		initialize.RegisterTables() // 初始化表
-		// 程序结束前关闭数据库链接
-		db, _ := global.RLB_DB.DB()
-		defer db.Close()
-	}
+		query.SetDefault(global.RLB_DB)
+		// initialize.RegisterTables() // 初始化表
 
+		// 程序结束前关闭数据库链接
+		// db, _ := global.RLB_DB.DB()
+		// defer db.Close()
+	}
+	//TODO 生成代码，发布时候注释掉
+	core.GenStructs()
 	core.RunWindowsServer()
 }

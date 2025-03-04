@@ -7,8 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/kesilent/react-light-blog/dal/common/response"
 	"github.com/kesilent/react-light-blog/global"
-	"github.com/kesilent/react-light-blog/models/common/response"
 	"github.com/kesilent/react-light-blog/utils"
 )
 

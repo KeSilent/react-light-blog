@@ -5,8 +5,8 @@ import (
 	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
+	request "github.com/kesilent/react-light-blog/dal/request"
 	"github.com/kesilent/react-light-blog/global"
-	request "github.com/kesilent/react-light-blog/models/system/request"
 )
 
 type JWT struct {

@@ -2,13 +2,16 @@ package utils
 
 import (
 	"net"
+	"strconv"
 	"time"
+
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/kesilent/react-light-blog/dal/model"
+	systemReq "github.com/kesilent/react-light-blog/dal/request"
 	"github.com/kesilent/react-light-blog/global"
-	"github.com/kesilent/react-light-blog/models/system"
-	systemReq "github.com/kesilent/react-light-blog/models/system/request"
 )
 
 func ClearToken(c *gin.Context) {
@@ -70,11 +73,13 @@ func GetUserID(c *gin.Context) uint {
 		if cl, err := GetClaims(c); err != nil {
 			return 0
 		} else {
-			return cl.BaseClaims.ID
+			id, _ := strconv.ParseUint(cl.BaseClaims.ID, 10, 32)
+			return uint(id)
 		}
 	} else {
 		waitUse := claims.(*systemReq.CustomClaims)
-		return waitUse.BaseClaims.ID
+		id, _ := strconv.ParseUint(waitUse.BaseClaims.ID, 10, 32)
+		return uint(id)
 	}
 }
 
@@ -98,11 +103,13 @@ func GetUserAuthorityId(c *gin.Context) uint {
 		if cl, err := GetClaims(c); err != nil {
 			return 0
 		} else {
-			return cl.AuthorityId
+			authorityId, _ := strconv.ParseUint(cl.AuthorityId, 10, 32)
+			return uint(authorityId)
 		}
 	} else {
 		waitUse := claims.(*systemReq.CustomClaims)
-		return waitUse.AuthorityId
+		authorityId, _ := strconv.ParseUint(waitUse.AuthorityId, 10, 32)
+		return uint(authorityId)
 	}
 }
 
@@ -134,14 +141,15 @@ func GetUserName(c *gin.Context) string {
 	}
 }
 
-func LoginToken(user system.Login) (token string, claims systemReq.CustomClaims, err error) {
+func LoginToken(user model.SysUser) (token string, claims systemReq.CustomClaims, err error) {
 	j := NewJWT()
+	parsedUUID, _ := uuid.Parse(fmt.Sprint(user.ID))
 	claims = j.CreateClaims(systemReq.BaseClaims{
-		UUID:        user.GetUUID(),
-		ID:          user.GetUserId(),
-		NickName:    user.GetNickname(),
-		Username:    user.GetUsername(),
-		AuthorityId: user.GetAuthorityId(),
+		UUID:        parsedUUID,
+		ID:          fmt.Sprint(user.ID),
+		NickName:    user.NickName,
+		Username:    user.Username,
+		AuthorityId: fmt.Sprint(user.AuthorityID),
 	})
 	token, err = j.CreateToken(claims)
 	return

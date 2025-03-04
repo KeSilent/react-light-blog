@@ -1,15 +1,14 @@
 package system
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kesilent/react-light-blog/dal/common/response"
+	"github.com/kesilent/react-light-blog/dal/model"
+	systemReq "github.com/kesilent/react-light-blog/dal/request"
+	systemRes "github.com/kesilent/react-light-blog/dal/response"
 	"github.com/kesilent/react-light-blog/global"
-	"github.com/kesilent/react-light-blog/models/common/response"
-	"github.com/kesilent/react-light-blog/models/system"
-	systemReq "github.com/kesilent/react-light-blog/models/system/request"
-	systemRes "github.com/kesilent/react-light-blog/models/system/response"
 	"github.com/kesilent/react-light-blog/utils"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
@@ -40,20 +39,13 @@ func (b *BaseApi) Login(c *gin.Context) {
 
 	var oc bool = openCaptcha == 0 || openCaptcha < interfaceToInt(v)
 	if !oc || (l.CaptchaId != "" && l.Captcha != "" && store.Verify(l.CaptchaId, l.Captcha, true)) {
-		u := &system.SysUser{Username: l.Username, Password: l.Password}
+		u := &model.SysUser{Username: l.Username, Password: l.Password}
 		user, err := userService.Login(u)
 		if err != nil {
 			global.RLB_LOG.Error("登陆失败! 用户名不存在或者密码错误!", zap.Error(err))
 			// 验证码次数+1
 			global.BlackCache.Increment(key, 1)
 			response.FailWithMessage("用户名不存在或者密码错误", c)
-			return
-		}
-		if user.Enable != 1 {
-			global.RLB_LOG.Error("登陆失败! 用户被禁止登录!")
-			// 验证码次数+1
-			global.BlackCache.Increment(key, 1)
-			response.FailWithMessage("用户被禁止登录", c)
 			return
 		}
 		b.TokenNext(c, *user)
@@ -63,8 +55,8 @@ func (b *BaseApi) Login(c *gin.Context) {
 	global.BlackCache.Increment(key, 1)
 	response.FailWithMessage("验证码错误", c)
 }
-func (b *BaseApi) TokenNext(c *gin.Context, user system.SysUser) {
-	token, claims, err := utils.LoginToken(&user)
+func (b *BaseApi) TokenNext(c *gin.Context, user model.SysUser) {
+	token, claims, err := utils.LoginToken(user)
 	if err != nil {
 		global.RLB_LOG.Error("获取token失败!", zap.Error(err))
 		response.FailWithMessage("获取token失败", c)
@@ -96,13 +88,13 @@ func (b *BaseApi) TokenNext(c *gin.Context, user system.SysUser) {
 		global.RLB_LOG.Error("设置登录状态失败!", zap.Error(err))
 		response.FailWithMessage("设置登录状态失败", c)
 	} else {
-		var blackJWT system.JwtBlacklist
+		var blackJWT model.JwtBlacklist
 		blackJWT.Jwt = jwtStr
 		if err := jwtService.JsonInBlacklist(blackJWT); err != nil {
 			response.FailWithMessage("jwt作废失败", c)
 			return
 		}
-		if err := jwtService.SetRedisJWT(token, user.GetUsername()); err != nil {
+		if err := jwtService.SetRedisJWT(token, user.Username); err != nil {
 			response.FailWithMessage("设置登录状态失败", c)
 			return
 		}
@@ -134,13 +126,8 @@ func (b *BaseApi) Register(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	var authorities []system.SysAuthority
-	for _, v := range r.AuthorityIds {
-		authorities = append(authorities, system.SysAuthority{
-			AuthorityId: v,
-		})
-	}
-	user := &system.SysUser{Username: r.Username, NickName: r.NickName, Password: r.Password, HeaderImg: r.HeaderImg, AuthorityId: r.AuthorityId, Authorities: authorities, Enable: r.Enable, Phone: r.Phone, Email: r.Email}
+	var authorities []model.SysAuthority
+	user := &model.SysUser{Username: r.Username, NickName: r.NickName, Password: r.Password, HeaderImg: r.HeaderImg, AuthorityID: int64(r.AuthorityId), Authorities: authorities, Phone: r.Phone, Email: r.Email}
 	userReturn, err := userService.Register(*user)
 	if err != nil {
 		global.RLB_LOG.Error("注册失败!", zap.Error(err))
@@ -171,7 +158,7 @@ func (b *BaseApi) ChangePassword(c *gin.Context) {
 		return
 	}
 	uid := utils.GetUserID(c)
-	u := &system.SysUser{RLB_MODEL: global.RLB_MODEL{ID: uid}, Password: req.Password}
+	u := &model.SysUser{ID: int64(uid), Password: req.Password}
 	_, err = userService.ChangePassword(u, req.NewPassword)
 	if err != nil {
 		global.RLB_LOG.Error("修改失败!", zap.Error(err))
@@ -214,45 +201,4 @@ func (b *BaseApi) GetUserList(c *gin.Context) {
 		Page:     pageInfo.Page,
 		PageSize: pageInfo.PageSize,
 	}, "获取成功", c)
-}
-
-// SetUserAuthority
-// @Tags      SysUser
-// @Summary   更改用户权限
-// @Security  ApiKeyAuth
-// @accept    application/json
-// @Produce   application/json
-// @Param     data  body      systemReq.SetUserAuth          true  "用户UUID, 角色ID"
-// @Success   200   {object}  response.Response{msg=string}  "设置用户权限"
-// @Router    /user/setUserAuthority [post]
-func (b *BaseApi) SetUserAuthority(c *gin.Context) {
-	var sua systemReq.SetUserAuth
-	err := c.ShouldBindJSON(&sua)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	if UserVerifyErr := utils.Verify(sua, utils.SetUserAuthorityVerify); UserVerifyErr != nil {
-		response.FailWithMessage(UserVerifyErr.Error(), c)
-		return
-	}
-	userID := utils.GetUserID(c)
-	err = userService.SetUserAuthority(userID, sua.AuthorityId)
-	if err != nil {
-		global.RLB_LOG.Error("修改失败!", zap.Error(err))
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	claims := utils.GetUserInfo(c)
-	claims.AuthorityId = sua.AuthorityId
-	token, err := utils.NewJWT().CreateToken(*claims)
-	if err != nil {
-		global.RLB_LOG.Error("修改失败!", zap.Error(err))
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	c.Header("new-token", token)
-	c.Header("new-expires-at", strconv.FormatInt(claims.ExpiresAt.Unix(), 10))
-	utils.SetToken(c, token, int((claims.ExpiresAt.Unix()-time.Now().Unix())/60))
-	response.OkWithMessage("修改成功", c)
 }

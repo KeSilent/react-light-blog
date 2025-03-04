@@ -30,3 +30,5 @@ vendor/
 # IDE和编辑器配置文件
 .vscode/
 .idea/
+web/.husky/commit-msg
+web/.husky/pre-commit

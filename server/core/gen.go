@@ -1,38 +1,25 @@
 package core
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/kesilent/react-light-blog/global"
 	"github.com/kesilent/react-light-blog/utils"
 	"gorm.io/gen"
+	"gorm.io/gen/field"
 	"gorm.io/gorm"
 )
 
-func getGenerator(packageName string) *gen.Generator {
-	if packageName == "" {
-		return nil
-	}
-
+// GenStructs 生成dal/query及model目录下的结构体
+func GenStructs() error {
 	dir, _ := os.Getwd()
-	outPath := dir + "/dal/query"
-	if _, err := os.Stat(outPath); os.IsNotExist(err) {
-		err := os.MkdirAll(dir, os.ModePerm)
-		if err != nil {
-			fmt.Println("创建目录失败：", err)
-		} else {
-			fmt.Println("目录创建成功")
-		}
-	}
-
 	// 指定生成代码的具体相对目录(相对当前文件)，默认为：./query
 	// 默认生成需要使用WithContext之后才可以查询的代码，但可以通过设置gen.WithoutContext禁用该模式
 	generator := gen.NewGenerator(gen.Config{
 		// 默认会在 OutPath 目录生成CRUD代码，并且同目录下生成 model 包
 		// 所以OutPath最终package不能设置为model，在有数据库表同步的情况下会产生冲突
 		// 若一定要使用可以通过ModelPkgPath单独指定model package的名称
-		OutPath: outPath,
+		OutPath: dir + "/dal/query",
 		/* ModelPkgPath: "dal/model"*/
 
 		// gen.WithoutContext：禁用WithContext模式
@@ -66,15 +53,107 @@ func getGenerator(packageName string) *gen.Generator {
 	// 自定义字段的数据类型
 	// 统一数字类型为int64,兼容protobuf和thrift
 	dataMap := map[string]func(detailType gorm.ColumnType) (dataType string){
-		"tinyint": func(detailType gorm.ColumnType) (dataType string) { return "*bool" },
-		// "smallint":  func(detailType gorm.ColumnType) (dataType string) { return "int64" },
-		// "mediumint": func(detailType gorm.ColumnType) (dataType string) { return "int64" },
-		// "bigint":    func(detailType gorm.ColumnType) (dataType string) { return "int64" },
-		// "int":       func(detailType gorm.ColumnType) (dataType string) { return "int64" },
-		// "timestamp": func(detailType gorm.ColumnType) (dataType string) { return "LocalTime" }, // 自定义时间
-		// "decimal":   func(detailType gorm.ColumnType) (dataType string) { return "Decimal" },   // 金额类型全部转换为第三方库,github.com/shopspring/decimal
+		"varchar": func(detailType gorm.ColumnType) (dataType string) { return "string" },
+		"tinyint": func(detailType gorm.ColumnType) (dataType string) { return "bool" },
 	}
 	// 要先于`ApplyBasic`执行
 	generator.WithDataTypeMap(dataMap)
-	return generator
+
+	fieldOpts := []gen.ModelOpt{}
+	// 将非默认字段名的字段定义为自动时间戳和软删除字段;
+	// 自动时间戳默认字段名为:`updated_at`、`created_at, 表字段数据类型为: INT 或 DATETIME
+	// 软删除默认字段名为:`deleted_at`, 表字段数据类型为: DATETIME
+
+	allModel := generator.GenerateAllTable()
+	generator.ApplyBasic(allModel...)
+	// 1. 首先生成基础模型
+	SysAuthorityMenus := generator.GenerateModel("sys_authority_menus")
+	SysUserAuthority := generator.GenerateModel("sys_user_authority")
+
+	// 生成角色模型
+	authority := generator.GenerateModel("sys_authorities")
+
+	// 生成菜单模型
+	menu := generator.GenerateModel("sys_base_menus")
+
+	// 重新配置用户模型的关联关系
+	user := generator.GenerateModel("sys_users", append(fieldOpts,
+		gen.FieldRelate(field.Many2Many, "Authorities", authority, &field.RelateConfig{
+			GORMTag: field.GormTag{
+				"many2many":      []string{"sys_user_authority"},
+				"joinForeignKey": []string{"sys_user_id"},
+				"joinReferences": []string{"sys_authority_authority_id"},
+			},
+		}),
+		gen.FieldRelate(field.BelongsTo, "Authority", authority, &field.RelateConfig{
+			GORMTag: field.GormTag{"foreignKey": []string{"authority_id"}},
+		}),
+	)...)
+
+	// 重新配置角色模型的关联关系
+	authority = generator.GenerateModel("sys_authorities", append(fieldOpts,
+		gen.FieldRelate(field.Many2Many, "Menus", menu, &field.RelateConfig{
+			GORMTag: field.GormTag{
+				"many2many":      []string{"sys_authority_menus"},
+				"joinForeignKey": []string{"sys_authority_authority_id"},
+				"joinReferences": []string{"sys_base_menu_id"},
+			},
+		}),
+		gen.FieldRelate(field.Many2Many, "Users", user, &field.RelateConfig{
+			GORMTag: field.GormTag{
+				"many2many":      []string{"sys_user_authority"},
+				"joinForeignKey": []string{"sys_authority_authority_id"},
+				"joinReferences": []string{"sys_user_id"},
+			},
+		}),
+	)...)
+
+	// 重新配置菜单模型的关联关系
+	menu = generator.GenerateModel("sys_base_menus", append(fieldOpts,
+		gen.FieldRelate(field.Many2Many, "Authorities", authority, &field.RelateConfig{
+			GORMTag: field.GormTag{
+				"many2many":      []string{"sys_authority_menus"},
+				"joinForeignKey": []string{"sys_base_menu_id"},
+				"joinReferences": []string{"sys_authority_authority_id"},
+			},
+		}),
+		gen.FieldRelate(field.HasMany, "Children", menu, &field.RelateConfig{
+			GORMTag: field.GormTag{"foreignKey": []string{"parent_id"}},
+		}),
+	)...)
+
+	// 生成字典相关模型
+	dicDetails := generator.GenerateModel("sys_dictionary_details")
+
+	// 生成带有关联关系的字典模型
+	dic := generator.GenerateModel("sys_dictionaries", append(fieldOpts,
+		gen.FieldRelate(field.HasMany, "Details", dicDetails, &field.RelateConfig{
+			GORMTag: field.GormTag{"foreignKey": []string{"sys_dictionary_id"}},
+		}),
+	)...)
+
+	// 重新生成带有关联关系的字典详情模型
+	dicDetails = generator.GenerateModel("sys_dictionary_details", append(fieldOpts,
+		gen.FieldRelate(field.BelongsTo, "Dictionary", dic, &field.RelateConfig{
+			GORMTag: field.GormTag{
+				"foreignKey": []string{"sys_dictionary_id"},
+				"references": []string{"id"},
+			},
+		}),
+	)...)
+
+	// 应用所有模型
+	generator.ApplyBasic(
+		SysAuthorityMenus,
+		SysUserAuthority,
+		user,
+		authority,
+		menu,
+		dic,
+		dicDetails,
+	)
+
+	// 执行并生成代码
+	generator.Execute()
+	return nil
 }

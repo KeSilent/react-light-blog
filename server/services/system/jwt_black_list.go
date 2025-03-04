@@ -3,8 +3,8 @@ package system
 import (
 	"context"
 
+	"github.com/kesilent/react-light-blog/dal/model"
 	"github.com/kesilent/react-light-blog/global"
-	"github.com/kesilent/react-light-blog/models/system"
 	"github.com/kesilent/react-light-blog/utils"
 	"go.uber.org/zap"
 )
@@ -18,7 +18,7 @@ var JwtServiceApp = new(JwtService)
 //@param: jwtList model.JwtBlacklist
 //@return: err error
 
-func (jwtService *JwtService) JsonInBlacklist(jwtList system.JwtBlacklist) (err error) {
+func (jwtService *JwtService) JsonInBlacklist(jwtList model.JwtBlacklist) (err error) {
 	err = global.RLB_DB.Create(&jwtList).Error
 	if err != nil {
 		return
@@ -68,7 +68,7 @@ func (jwtService *JwtService) SetRedisJWT(jwt string, userName string) (err erro
 
 func LoadAll() {
 	var data []string
-	err := global.RLB_DB.Model(&system.JwtBlacklist{}).Select("jwt").Find(&data).Error
+	err := global.RLB_DB.Model(&model.JwtBlacklist{}).Select("jwt").Find(&data).Error
 	if err != nil {
 		global.RLB_LOG.Error("加载数据库jwt黑名单失败!", zap.Error(err))
 		return

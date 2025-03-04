@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kesilent/react-light-blog/dal/common/response"
+	systemRes "github.com/kesilent/react-light-blog/dal/response"
 	"github.com/kesilent/react-light-blog/global"
-	"github.com/kesilent/react-light-blog/models/common/response"
-	systemRes "github.com/kesilent/react-light-blog/models/system/response"
 	"github.com/mojocn/base64Captcha"
 	"go.uber.org/zap"
 )
