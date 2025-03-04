@@ -32,3 +32,5 @@ vendor/
 .idea/
 web/.husky/commit-msg
 web/.husky/pre-commit
+server/config.yaml
+server/__debug_bin*

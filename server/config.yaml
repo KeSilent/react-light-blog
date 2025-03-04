@@ -68,3 +68,10 @@ zap:
   stacktrace-key: stacktrace
   log-in-console: true
   retention-day: -1
+
+captcha:
+  key-long: 4
+  img-width: 120
+  img-height: 40
+  open-captcha: 1
+  open-captcha-timeout: 3600

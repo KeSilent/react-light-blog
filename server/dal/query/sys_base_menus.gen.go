@@ -39,6 +39,7 @@ func newSysBaseMenu(db *gorm.DB, opts ...gen.DOOption) sysBaseMenu {
 	_sysBaseMenu.Icon = field.NewString(tableName, "icon")
 	_sysBaseMenu.CreateTime = field.NewTime(tableName, "create_time")
 	_sysBaseMenu.UpdateTime = field.NewTime(tableName, "update_time")
+	_sysBaseMenu.DeletedAt = field.NewTime(tableName, "deleted_at")
 
 	_sysBaseMenu.fillFieldMap()
 
@@ -62,6 +63,7 @@ type sysBaseMenu struct {
 	Icon       field.String // 图标
 	CreateTime field.Time
 	UpdateTime field.Time
+	DeletedAt  field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -90,6 +92,7 @@ func (s *sysBaseMenu) updateTableName(table string) *sysBaseMenu {
 	s.Icon = field.NewString(table, "icon")
 	s.CreateTime = field.NewTime(table, "create_time")
 	s.UpdateTime = field.NewTime(table, "update_time")
+	s.DeletedAt = field.NewTime(table, "deleted_at")
 
 	s.fillFieldMap()
 
@@ -116,7 +119,7 @@ func (s *sysBaseMenu) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysBaseMenu) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 12)
+	s.fieldMap = make(map[string]field.Expr, 13)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["menu_level"] = s.MenuLevel
 	s.fieldMap["parent_id"] = s.ParentID
@@ -129,6 +132,7 @@ func (s *sysBaseMenu) fillFieldMap() {
 	s.fieldMap["icon"] = s.Icon
 	s.fieldMap["create_time"] = s.CreateTime
 	s.fieldMap["update_time"] = s.UpdateTime
+	s.fieldMap["deleted_at"] = s.DeletedAt
 }
 
 func (s sysBaseMenu) clone(db *gorm.DB) sysBaseMenu {

@@ -30,7 +30,7 @@ func newJwtBlacklist(db *gorm.DB, opts ...gen.DOOption) jwtBlacklist {
 	_jwtBlacklist.ID = field.NewInt64(tableName, "id")
 	_jwtBlacklist.CreatedAt = field.NewTime(tableName, "created_at")
 	_jwtBlacklist.UpdatedAt = field.NewTime(tableName, "updated_at")
-	_jwtBlacklist.DeletedAt = field.NewField(tableName, "deleted_at")
+	_jwtBlacklist.DeletedAt = field.NewTime(tableName, "deleted_at")
 	_jwtBlacklist.Jwt = field.NewString(tableName, "jwt")
 
 	_jwtBlacklist.fillFieldMap()
@@ -45,7 +45,7 @@ type jwtBlacklist struct {
 	ID        field.Int64
 	CreatedAt field.Time
 	UpdatedAt field.Time
-	DeletedAt field.Field
+	DeletedAt field.Time
 	Jwt       field.String // jwt
 
 	fieldMap map[string]field.Expr
@@ -66,7 +66,7 @@ func (j *jwtBlacklist) updateTableName(table string) *jwtBlacklist {
 	j.ID = field.NewInt64(table, "id")
 	j.CreatedAt = field.NewTime(table, "created_at")
 	j.UpdatedAt = field.NewTime(table, "updated_at")
-	j.DeletedAt = field.NewField(table, "deleted_at")
+	j.DeletedAt = field.NewTime(table, "deleted_at")
 	j.Jwt = field.NewString(table, "jwt")
 
 	j.fillFieldMap()

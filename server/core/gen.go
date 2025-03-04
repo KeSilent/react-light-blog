@@ -55,6 +55,22 @@ func GenStructs() error {
 	dataMap := map[string]func(detailType gorm.ColumnType) (dataType string){
 		"varchar": func(detailType gorm.ColumnType) (dataType string) { return "string" },
 		"tinyint": func(detailType gorm.ColumnType) (dataType string) { return "bool" },
+		"timestamp": func(detailType gorm.ColumnType) (dataType string) {
+			// 只将 update_time 和 deleted_at 设置为指针类型
+			columnName := detailType.Name()
+			if columnName == "update_time" || columnName == "deleted_at" {
+				return "*time.Time"
+			}
+			return "time.Time"
+		},
+		"datetime": func(detailType gorm.ColumnType) (dataType string) {
+			// 只将 update_time 和 deleted_at 设置为指针类型
+			columnName := detailType.Name()
+			if columnName == "update_time" || columnName == "deleted_at" {
+				return "*time.Time"
+			}
+			return "time.Time"
+		},
 	}
 	// 要先于`ApplyBasic`执行
 	generator.WithDataTypeMap(dataMap)

@@ -33,6 +33,7 @@ func newSysAuthority(db *gorm.DB, opts ...gen.DOOption) sysAuthority {
 	_sysAuthority.DefaultRouter = field.NewString(tableName, "default_router")
 	_sysAuthority.CreateTime = field.NewTime(tableName, "create_time")
 	_sysAuthority.UpdateTime = field.NewTime(tableName, "update_time")
+	_sysAuthority.DeletedAt = field.NewTime(tableName, "deleted_at")
 
 	_sysAuthority.fillFieldMap()
 
@@ -50,6 +51,7 @@ type sysAuthority struct {
 	DefaultRouter field.String // 默认路由
 	CreateTime    field.Time
 	UpdateTime    field.Time
+	DeletedAt     field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -72,6 +74,7 @@ func (s *sysAuthority) updateTableName(table string) *sysAuthority {
 	s.DefaultRouter = field.NewString(table, "default_router")
 	s.CreateTime = field.NewTime(table, "create_time")
 	s.UpdateTime = field.NewTime(table, "update_time")
+	s.DeletedAt = field.NewTime(table, "deleted_at")
 
 	s.fillFieldMap()
 
@@ -100,13 +103,14 @@ func (s *sysAuthority) GetFieldByName(fieldName string) (field.OrderExpr, bool) 
 }
 
 func (s *sysAuthority) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 6)
+	s.fieldMap = make(map[string]field.Expr, 7)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["authority_name"] = s.AuthorityName
 	s.fieldMap["parent_id"] = s.ParentID
 	s.fieldMap["default_router"] = s.DefaultRouter
 	s.fieldMap["create_time"] = s.CreateTime
 	s.fieldMap["update_time"] = s.UpdateTime
+	s.fieldMap["deleted_at"] = s.DeletedAt
 }
 
 func (s sysAuthority) clone(db *gorm.DB) sysAuthority {

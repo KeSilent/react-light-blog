@@ -6,19 +6,17 @@ package model
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 const TableNameJwtBlacklist = "jwt_blacklists"
 
 // JwtBlacklist mapped from table <jwt_blacklists>
 type JwtBlacklist struct {
-	ID        int64          `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
-	CreatedAt time.Time     `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
-	UpdatedAt time.Time     `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`
-	Jwt       string        `gorm:"column:jwt;type:text;comment:jwt" json:"jwt"` // jwt
+	ID        int64      `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
+	CreatedAt time.Time  `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
+	UpdatedAt time.Time  `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
+	DeletedAt *time.Time `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`
+	Jwt       string     `gorm:"column:jwt;type:text;comment:jwt" json:"jwt"` // jwt
 }
 
 // TableName JwtBlacklist's table name

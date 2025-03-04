@@ -30,7 +30,7 @@ func newSysDictionary(db *gorm.DB, opts ...gen.DOOption) sysDictionary {
 	_sysDictionary.ID = field.NewInt64(tableName, "id")
 	_sysDictionary.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysDictionary.UpdatedAt = field.NewTime(tableName, "updated_at")
-	_sysDictionary.DeletedAt = field.NewField(tableName, "deleted_at")
+	_sysDictionary.DeletedAt = field.NewTime(tableName, "deleted_at")
 	_sysDictionary.Name = field.NewString(tableName, "name")
 	_sysDictionary.Type = field.NewString(tableName, "type")
 	_sysDictionary.Status = field.NewInt64(tableName, "status")
@@ -49,7 +49,7 @@ type sysDictionary struct {
 	ID        field.Int64
 	CreatedAt field.Time
 	UpdatedAt field.Time
-	DeletedAt field.Field
+	DeletedAt field.Time
 	Name      field.String // 字典名（中）
 	Type      field.String // 字典名（英）
 	Status    field.Int64  // 状态
@@ -73,7 +73,7 @@ func (s *sysDictionary) updateTableName(table string) *sysDictionary {
 	s.ID = field.NewInt64(table, "id")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
-	s.DeletedAt = field.NewField(table, "deleted_at")
+	s.DeletedAt = field.NewTime(table, "deleted_at")
 	s.Name = field.NewString(table, "name")
 	s.Type = field.NewString(table, "type")
 	s.Status = field.NewInt64(table, "status")

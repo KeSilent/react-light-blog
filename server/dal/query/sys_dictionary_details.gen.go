@@ -30,7 +30,7 @@ func newSysDictionaryDetail(db *gorm.DB, opts ...gen.DOOption) sysDictionaryDeta
 	_sysDictionaryDetail.ID = field.NewInt64(tableName, "id")
 	_sysDictionaryDetail.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysDictionaryDetail.UpdatedAt = field.NewTime(tableName, "updated_at")
-	_sysDictionaryDetail.DeletedAt = field.NewField(tableName, "deleted_at")
+	_sysDictionaryDetail.DeletedAt = field.NewTime(tableName, "deleted_at")
 	_sysDictionaryDetail.Label = field.NewString(tableName, "label")
 	_sysDictionaryDetail.Value = field.NewInt64(tableName, "value")
 	_sysDictionaryDetail.Status = field.NewInt64(tableName, "status")
@@ -50,7 +50,7 @@ type sysDictionaryDetail struct {
 	ID              field.Int64
 	CreatedAt       field.Time
 	UpdatedAt       field.Time
-	DeletedAt       field.Field
+	DeletedAt       field.Time
 	Label           field.String // 展示值
 	Value           field.Int64  // 字典值
 	Status          field.Int64  // 启用状态
@@ -75,7 +75,7 @@ func (s *sysDictionaryDetail) updateTableName(table string) *sysDictionaryDetail
 	s.ID = field.NewInt64(table, "id")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
-	s.DeletedAt = field.NewField(table, "deleted_at")
+	s.DeletedAt = field.NewTime(table, "deleted_at")
 	s.Label = field.NewString(table, "label")
 	s.Value = field.NewInt64(table, "value")
 	s.Status = field.NewInt64(table, "status")

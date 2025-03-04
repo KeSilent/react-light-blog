@@ -18,6 +18,9 @@ func main() {
 
 	initialize.Timer() //定时任务
 
+	//TODO 生成代码，发布时候注释掉
+	// core.GenStructs()
+
 	if global.RLB_DB != nil {
 		query.SetDefault(global.RLB_DB)
 		// initialize.RegisterTables() // 初始化表
@@ -26,7 +29,5 @@ func main() {
 		// db, _ := global.RLB_DB.DB()
 		// defer db.Close()
 	}
-	//TODO 生成代码，发布时候注释掉
-	core.GenStructs()
 	core.RunWindowsServer()
 }

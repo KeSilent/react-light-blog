@@ -39,6 +39,7 @@ func newSysUser(db *gorm.DB, opts ...gen.DOOption) sysUser {
 	_sysUser.CreateTime = field.NewTime(tableName, "create_time")
 	_sysUser.UpdateTime = field.NewTime(tableName, "update_time")
 	_sysUser.HeaderImg = field.NewString(tableName, "header_img")
+	_sysUser.DeletedAt = field.NewTime(tableName, "deleted_at")
 
 	_sysUser.fillFieldMap()
 
@@ -62,6 +63,7 @@ type sysUser struct {
 	CreateTime  field.Time
 	UpdateTime  field.Time
 	HeaderImg   field.String
+	DeletedAt   field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -90,6 +92,7 @@ func (s *sysUser) updateTableName(table string) *sysUser {
 	s.CreateTime = field.NewTime(table, "create_time")
 	s.UpdateTime = field.NewTime(table, "update_time")
 	s.HeaderImg = field.NewString(table, "header_img")
+	s.DeletedAt = field.NewTime(table, "deleted_at")
 
 	s.fillFieldMap()
 
@@ -114,7 +117,7 @@ func (s *sysUser) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysUser) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 12)
+	s.fieldMap = make(map[string]field.Expr, 13)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["username"] = s.Username
 	s.fieldMap["password"] = s.Password
@@ -127,6 +130,7 @@ func (s *sysUser) fillFieldMap() {
 	s.fieldMap["create_time"] = s.CreateTime
 	s.fieldMap["update_time"] = s.UpdateTime
 	s.fieldMap["header_img"] = s.HeaderImg
+	s.fieldMap["deleted_at"] = s.DeletedAt
 }
 
 func (s sysUser) clone(db *gorm.DB) sysUser {
