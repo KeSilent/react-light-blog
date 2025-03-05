@@ -6,10 +6,10 @@ package model
 
 const TableNameSysAuthorityMenu = "sys_authority_menus"
 
-// SysAuthorityMenu 角色菜单关联表
+// SysAuthorityMenu mapped from table <sys_authority_menus>
 type SysAuthorityMenu struct {
-	SysAuthorityID int64 `gorm:"column:sys_authority_id;type:bigint;primaryKey;comment:角色ID" json:"sysAuthorityId"` // 角色ID
-	SysBaseMenuID  int64 `gorm:"column:sys_base_menu_id;type:bigint;primaryKey;comment:菜单ID" json:"sysBaseMenuId"`  // 菜单ID
+	SysAuthorityAuthorityID int64 `gorm:"column:sys_authority_authority_id;type:bigint;primaryKey" json:"sysAuthorityAuthorityId"`
+	SysBaseMenuID           int64 `gorm:"column:sys_base_menu_id;type:bigint;primaryKey" json:"sysBaseMenuId"`
 }
 
 // TableName SysAuthorityMenu's table name

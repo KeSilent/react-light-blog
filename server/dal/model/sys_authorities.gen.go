@@ -20,7 +20,7 @@ type SysAuthority struct {
 	UpdateTime    *time.Time    `gorm:"column:update_time;type:datetime" json:"updateTime"`
 	DeletedAt     *time.Time    `gorm:"column:deleted_at;type:datetime" json:"deletedAt"`
 	Menus         []SysBaseMenu `gorm:"joinForeignKey:sys_authority_authority_id;joinReferences:sys_base_menu_id;many2many:sys_authority_menus" json:"menus"`
-	Users         []SysUser     `gorm:"joinForeignKey:sys_authority_authority_id;joinReferences:sys_user_id;many2many:sys_user_authority" json:"users"`
+	Users         []SysUser     `gorm:"foreignKey:id;joinForeignKey:sys_authority_id;joinReferences:sys_user_id;many2many:sys_user_authority;references:id" json:"users"`
 }
 
 // TableName SysAuthority's table name

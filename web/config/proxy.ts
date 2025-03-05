@@ -22,16 +22,14 @@ export default {
   //   },
   // },
 
-  /**
-   * @name 详细的代理配置
-   * @doc https://github.com/chimurai/http-proxy-middleware
-   */
-  test: {
-    // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
+  dev: {
     '/api/': {
-      target: 'https://proapi.azurewebsites.net',
+      // 设置你的后端服务地址
+      target: 'http://localhost:8888',  // 去掉末尾的 /
       changeOrigin: true,
-      pathRewrite: { '^': '' },
+      pathRewrite: {
+        '^/api': '' // 修改重写规则，将 /api 前缀删除
+      },
     },
   },
   pre: {

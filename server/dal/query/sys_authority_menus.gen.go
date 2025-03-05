@@ -27,7 +27,7 @@ func newSysAuthorityMenu(db *gorm.DB, opts ...gen.DOOption) sysAuthorityMenu {
 
 	tableName := _sysAuthorityMenu.sysAuthorityMenuDo.TableName()
 	_sysAuthorityMenu.ALL = field.NewAsterisk(tableName)
-	_sysAuthorityMenu.SysAuthorityID = field.NewInt64(tableName, "sys_authority_id")
+	_sysAuthorityMenu.SysAuthorityAuthorityID = field.NewInt64(tableName, "sys_authority_authority_id")
 	_sysAuthorityMenu.SysBaseMenuID = field.NewInt64(tableName, "sys_base_menu_id")
 
 	_sysAuthorityMenu.fillFieldMap()
@@ -35,13 +35,12 @@ func newSysAuthorityMenu(db *gorm.DB, opts ...gen.DOOption) sysAuthorityMenu {
 	return _sysAuthorityMenu
 }
 
-// sysAuthorityMenu 角色菜单关联表
 type sysAuthorityMenu struct {
 	sysAuthorityMenuDo sysAuthorityMenuDo
 
-	ALL            field.Asterisk
-	SysAuthorityID field.Int64 // 角色ID
-	SysBaseMenuID  field.Int64 // 菜单ID
+	ALL                     field.Asterisk
+	SysAuthorityAuthorityID field.Int64
+	SysBaseMenuID           field.Int64
 
 	fieldMap map[string]field.Expr
 }
@@ -58,7 +57,7 @@ func (s sysAuthorityMenu) As(alias string) *sysAuthorityMenu {
 
 func (s *sysAuthorityMenu) updateTableName(table string) *sysAuthorityMenu {
 	s.ALL = field.NewAsterisk(table)
-	s.SysAuthorityID = field.NewInt64(table, "sys_authority_id")
+	s.SysAuthorityAuthorityID = field.NewInt64(table, "sys_authority_authority_id")
 	s.SysBaseMenuID = field.NewInt64(table, "sys_base_menu_id")
 
 	s.fillFieldMap()
@@ -89,7 +88,7 @@ func (s *sysAuthorityMenu) GetFieldByName(fieldName string) (field.OrderExpr, bo
 
 func (s *sysAuthorityMenu) fillFieldMap() {
 	s.fieldMap = make(map[string]field.Expr, 2)
-	s.fieldMap["sys_authority_id"] = s.SysAuthorityID
+	s.fieldMap["sys_authority_authority_id"] = s.SysAuthorityAuthorityID
 	s.fieldMap["sys_base_menu_id"] = s.SysBaseMenuID
 }
 

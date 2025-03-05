@@ -68,18 +68,16 @@ func GetClaims(c *gin.Context) (*systemReq.CustomClaims, error) {
 }
 
 // GetUserID 从Gin的Context中获取从jwt解析出来的用户ID
-func GetUserID(c *gin.Context) uint {
+func GetUserID(c *gin.Context) int64 {
 	if claims, exists := c.Get("claims"); !exists {
 		if cl, err := GetClaims(c); err != nil {
 			return 0
 		} else {
-			id, _ := strconv.ParseUint(cl.BaseClaims.ID, 10, 32)
-			return uint(id)
+			return int64(cl.BaseClaims.ID)
 		}
 	} else {
 		waitUse := claims.(*systemReq.CustomClaims)
-		id, _ := strconv.ParseUint(waitUse.BaseClaims.ID, 10, 32)
-		return uint(id)
+		return int64(waitUse.BaseClaims.ID)
 	}
 }
 
@@ -146,10 +144,10 @@ func LoginToken(user model.SysUser) (token string, claims systemReq.CustomClaims
 	parsedUUID, _ := uuid.Parse(fmt.Sprint(user.ID))
 	claims = j.CreateClaims(systemReq.BaseClaims{
 		UUID:        parsedUUID,
-		ID:          fmt.Sprint(user.ID),
+		ID:          user.ID,
 		NickName:    user.NickName,
 		Username:    user.Username,
-		AuthorityId: fmt.Sprint(user.AuthorityID),
+		AuthorityId: fmt.Sprint(user.Authorities[0].ID),
 	})
 	token, err = j.CreateToken(claims)
 	return

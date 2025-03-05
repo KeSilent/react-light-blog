@@ -1,4 +1,4 @@
-﻿import type { RequestOptions } from '@@/plugin-request/request';
+﻿import type { RequestInterceptor, RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
 
@@ -107,3 +107,17 @@ export const errorConfig: RequestConfig = {
     },
   ],
 };
+
+
+/**
+ * 请求增加token
+ */
+export const tokenInit:RequestInterceptor = (url: string, options: RequestOptions) => {
+  const accessToken = localStorage.getItem("accessToken") || ''
+  const o = options
+  o.headers = {
+    ...options.headers,
+    accessToken,
+  }
+  return {url, options: o}
+  }

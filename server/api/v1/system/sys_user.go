@@ -127,7 +127,7 @@ func (b *BaseApi) Register(c *gin.Context) {
 		return
 	}
 	var authorities []model.SysAuthority
-	user := &model.SysUser{Username: r.Username, NickName: r.NickName, Password: r.Password, HeaderImg: r.HeaderImg, AuthorityID: int64(r.AuthorityId), Authorities: authorities, Phone: r.Phone, Email: r.Email}
+	user := &model.SysUser{Username: r.Username, NickName: r.NickName, Password: r.Password, Avatar: r.HeaderImg, Authorities: authorities, Phone: r.Phone, Email: r.Email}
 	userReturn, err := userService.Register(*user)
 	if err != nil {
 		global.RLB_LOG.Error("注册失败!", zap.Error(err))

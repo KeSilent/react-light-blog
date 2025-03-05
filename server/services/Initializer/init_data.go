@@ -27,26 +27,24 @@ func (i *InitData) Initialize() error {
 func (i *InitData) initUsers() error {
 	entities := []model.SysUser{
 		{
-			ID:          1,
-			Username:    "admin",
-			Password:    "123123",
-			NickName:    "超级管理员",
-			AuthorityID: 888,
-			Phone:       "18888888888",
-			Email:       "admin@example.com",
-			HeaderImg:   "https://os.alipayobjects.com/rmsportal/UXamdIxYSkXfoVo.jpg",
-			Status:      true,
+			ID:       1,
+			Username: "admin",
+			Password: "123123",
+			NickName: "超级管理员",
+			Phone:    "18888888888",
+			Email:    "admin@example.com",
+			Avatar:   "https://os.alipayobjects.com/rmsportal/UXamdIxYSkXfoVo.jpg",
+			Status:   true,
 		},
 		{
-			ID:          2,
-			Username:    "test",
-			Password:    "123123",
-			NickName:    "测试用户",
-			AuthorityID: 999,
-			Phone:       "13999999999",
-			HeaderImg:   "https://os.alipayobjects.com/rmsportal/UXamdIxYSkXfoVo.jpg",
-			Email:       "test@example.com",
-			Status:      true,
+			ID:       2,
+			Username: "test",
+			Password: "123123",
+			NickName: "测试用户",
+			Phone:    "13999999999",
+			Avatar:   "https://os.alipayobjects.com/rmsportal/UXamdIxYSkXfoVo.jpg",
+			Email:    "test@example.com",
+			Status:   true,
 		},
 	}
 
@@ -80,15 +78,15 @@ func (i *InitData) initAuthorities() error {
 func (i *InitData) initAuthorityMenus() error {
 	// 超级管理员拥有所有菜单权限
 	adminMenus := []*model.SysAuthorityMenu{
-		{SysAuthorityID: 888, SysBaseMenuID: 1},
-		{SysAuthorityID: 888, SysBaseMenuID: 2},
-		{SysAuthorityID: 888, SysBaseMenuID: 3},
-		{SysAuthorityID: 888, SysBaseMenuID: 4},
-		{SysAuthorityID: 888, SysBaseMenuID: 5},
+		{SysAuthorityAuthorityID: 888, SysBaseMenuID: 1},
+		{SysAuthorityAuthorityID: 888, SysBaseMenuID: 2},
+		{SysAuthorityAuthorityID: 888, SysBaseMenuID: 3},
+		{SysAuthorityAuthorityID: 888, SysBaseMenuID: 4},
+		{SysAuthorityAuthorityID: 888, SysBaseMenuID: 5},
 	}
 	// 普通用户只有仪表盘权限
 	userMenus := []*model.SysAuthorityMenu{
-		{SysAuthorityID: 999, SysBaseMenuID: 1},
+		{SysAuthorityAuthorityID: 999, SysBaseMenuID: 1},
 	}
 
 	entities := append(adminMenus, userMenus...)

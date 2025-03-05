@@ -47,12 +47,12 @@ func (userService *UserService) Register(u model.SysUser) (userInter model.SysUs
 func (userService *UserService) Login(u *model.SysUser) (userInter *model.SysUser, err error) {
 	var user *model.SysUser
 	q := query.Q.SysUser
-	user, err = q.WithContext(context.Background()).Where(q.Username.Eq(u.Username)).Preload(field.NewRelation("Authorities", "")).Preload(field.NewRelation("Authority", "")).First()
+	user, err = q.WithContext(context.Background()).Where(q.Username.Eq(u.Username)).Preload(field.NewRelation("Authorities", "")).First()
 	if err == nil {
 		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
 			return nil, errors.New("密码错误")
 		}
-		MenuServiceApp.UserAuthorityDefaultRouter(user)
+		MenuServiceApp.UserAuthorityDefaultRouter(&user.Authorities[0])
 	}
 	return user, err
 }
@@ -110,6 +110,16 @@ func (userService *UserService) GetUserInfoList(info systemReq.GetUserList) (lis
 	userList, err := db.Preload(field.NewRelation("Authorities", "")).Preload(field.NewRelation("Authority", "")).Limit(limit).Offset(offset).Find()
 
 	return userList, total, err
+}
+
+// @author: JackYang
+// @function: SysUser
+// @description: 通过ID获取用户信息
+// @param: id int64
+// @return: *model.SysUser, error
+func (userService *UserService) GetUserInfo(id int64) (*model.SysUser, error) {
+	q := query.Q.SysUser
+	return q.WithContext(context.Background()).Preload(field.NewRelation("Authorities", "")).Where(query.SysUser.ID.Eq(id)).First()
 }
 
 func (userService *UserService) AddUserAuthorities(userAuthorities []*model.SysUserAuthority) error {

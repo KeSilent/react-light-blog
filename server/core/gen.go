@@ -97,12 +97,11 @@ func GenStructs() error {
 		gen.FieldRelate(field.Many2Many, "Authorities", authority, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_user_authority"},
+				"foreignKey":     []string{"id"},
+				"references":     []string{"id"},
 				"joinForeignKey": []string{"sys_user_id"},
-				"joinReferences": []string{"sys_authority_authority_id"},
+				"joinReferences": []string{"sys_authority_id"},
 			},
-		}),
-		gen.FieldRelate(field.BelongsTo, "Authority", authority, &field.RelateConfig{
-			GORMTag: field.GormTag{"foreignKey": []string{"authority_id"}},
 		}),
 	)...)
 
@@ -118,7 +117,9 @@ func GenStructs() error {
 		gen.FieldRelate(field.Many2Many, "Users", user, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_user_authority"},
-				"joinForeignKey": []string{"sys_authority_authority_id"},
+				"foreignKey":     []string{"id"},
+				"references":     []string{"id"},
+				"joinForeignKey": []string{"sys_authority_id"},
 				"joinReferences": []string{"sys_user_id"},
 			},
 		}),

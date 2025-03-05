@@ -9,4 +9,5 @@ type RouterGroup struct {
 
 var (
 	baseApi = api.ApiGroupApp.SystemApiGroup.BaseApi
+	menuApi = api.ApiGroupApp.SystemApiGroup.MenuApi
 )

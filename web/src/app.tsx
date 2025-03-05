@@ -1,14 +1,14 @@
-import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
-import { LinkOutlined } from '@ant-design/icons';
+import { Footer, AvatarDropdown, AvatarName } from '@/components';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link } from '@umijs/max';
+import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
-import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
+import { errorConfig, tokenInit } from './requestErrorConfig';
 import React from 'react';
-import { getDynamicRoutes } from './api/routes-aip';
+import { RouteItem } from './models/RouteItem';
+import { createIcon } from './utils/MenuItemRender';
+import { getDynamicMenus } from './services/base/api';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -24,10 +24,7 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser({
-        skipErrorHandler: true,
-      });
-      return msg.data;
+      return JSON.parse(localStorage.getItem("userInfo") || '{}');
     } catch (error) {
       history.push(loginPath);
     }
@@ -37,7 +34,7 @@ export async function getInitialState(): Promise<{
   // 获取动态路由
   const fetchDynamicRoutes = async () => {
     try {
-      const { data } = await getDynamicRoutes();
+      const { data } = await getDynamicMenus();
       return data;
     } catch (error) {
       return [];
@@ -65,7 +62,6 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
-    actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
@@ -73,6 +69,28 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
+    menu: {
+      locale: false,
+      request: async () => {
+        const menuData = initialState?.dynamicRoutes || [];
+        // 处理菜单数据，适配 ProLayout 需要的格式
+        const formatMenuData = (menus: RouteItem[]): any[] => {
+          return menus.map(menu => ({
+            path: menu.path,
+            name: menu.title, // 使用 title 作为显示名称
+            icon: createIcon(menu.icon),
+            component: menu.component,
+            hideInMenu: menu.hidden,
+            children: menu.children ? formatMenuData(menu.children) : undefined,
+            // 如果需要排序
+            sort: menu.sort,
+          }));
+        };
+
+        return formatMenuData(menuData).sort((a, b) => a.sort - b.sort);
+      },
+    },
+
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
@@ -101,14 +119,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         width: '331px',
       },
     ],
-    links: isDev
-      ? [
-        <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-          <LinkOutlined />
-          <span>OpenAPI 文档</span>
-        </Link>,
-      ]
-      : [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
@@ -145,4 +155,5 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  */
 export const request = {
   ...errorConfig,
+  requestInterceptors: [tokenInit],
 };

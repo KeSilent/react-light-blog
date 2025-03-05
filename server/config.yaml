@@ -69,9 +69,10 @@ zap:
   log-in-console: true
   retention-day: -1
 
+# captcha configuration
 captcha:
-  key-long: 4
-  img-width: 120
-  img-height: 40
-  open-captcha: 1
-  open-captcha-timeout: 3600
+  key-long: 6
+  img-width: 240
+  img-height: 80
+  open-captcha: 1000 # 0代表一直开启，大于0代表限制次数
+  open-captcha-timeout: 3600 # open-captcha大于0时才生效

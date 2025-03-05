@@ -32,13 +32,11 @@ func newSysUser(db *gorm.DB, opts ...gen.DOOption) sysUser {
 	_sysUser.Password = field.NewString(tableName, "password")
 	_sysUser.NickName = field.NewString(tableName, "nick_name")
 	_sysUser.Avatar = field.NewString(tableName, "avatar")
-	_sysUser.AuthorityID = field.NewInt64(tableName, "authority_id")
 	_sysUser.Phone = field.NewString(tableName, "phone")
 	_sysUser.Email = field.NewString(tableName, "email")
 	_sysUser.Status = field.NewBool(tableName, "status")
 	_sysUser.CreateTime = field.NewTime(tableName, "create_time")
 	_sysUser.UpdateTime = field.NewTime(tableName, "update_time")
-	_sysUser.HeaderImg = field.NewString(tableName, "header_img")
 	_sysUser.DeletedAt = field.NewTime(tableName, "deleted_at")
 
 	_sysUser.fillFieldMap()
@@ -50,20 +48,18 @@ func newSysUser(db *gorm.DB, opts ...gen.DOOption) sysUser {
 type sysUser struct {
 	sysUserDo sysUserDo
 
-	ALL         field.Asterisk
-	ID          field.Int64  // 用户ID
-	Username    field.String // 用户名
-	Password    field.String // 密码
-	NickName    field.String // 昵称
-	Avatar      field.String // 头像
-	AuthorityID field.Int64  // 角色ID
-	Phone       field.String // 手机号
-	Email       field.String // 邮箱
-	Status      field.Bool   // 状态(0:禁用,1:启用)
-	CreateTime  field.Time
-	UpdateTime  field.Time
-	HeaderImg   field.String
-	DeletedAt   field.Time
+	ALL        field.Asterisk
+	ID         field.Int64  // 用户ID
+	Username   field.String // 用户名
+	Password   field.String // 密码
+	NickName   field.String // 昵称
+	Avatar     field.String // 头像
+	Phone      field.String // 手机号
+	Email      field.String // 邮箱
+	Status     field.Bool   // 状态(0:禁用,1:启用)
+	CreateTime field.Time
+	UpdateTime field.Time
+	DeletedAt  field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -85,13 +81,11 @@ func (s *sysUser) updateTableName(table string) *sysUser {
 	s.Password = field.NewString(table, "password")
 	s.NickName = field.NewString(table, "nick_name")
 	s.Avatar = field.NewString(table, "avatar")
-	s.AuthorityID = field.NewInt64(table, "authority_id")
 	s.Phone = field.NewString(table, "phone")
 	s.Email = field.NewString(table, "email")
 	s.Status = field.NewBool(table, "status")
 	s.CreateTime = field.NewTime(table, "create_time")
 	s.UpdateTime = field.NewTime(table, "update_time")
-	s.HeaderImg = field.NewString(table, "header_img")
 	s.DeletedAt = field.NewTime(table, "deleted_at")
 
 	s.fillFieldMap()
@@ -117,19 +111,17 @@ func (s *sysUser) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysUser) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 13)
+	s.fieldMap = make(map[string]field.Expr, 11)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["username"] = s.Username
 	s.fieldMap["password"] = s.Password
 	s.fieldMap["nick_name"] = s.NickName
 	s.fieldMap["avatar"] = s.Avatar
-	s.fieldMap["authority_id"] = s.AuthorityID
 	s.fieldMap["phone"] = s.Phone
 	s.fieldMap["email"] = s.Email
 	s.fieldMap["status"] = s.Status
 	s.fieldMap["create_time"] = s.CreateTime
 	s.fieldMap["update_time"] = s.UpdateTime
-	s.fieldMap["header_img"] = s.HeaderImg
 	s.fieldMap["deleted_at"] = s.DeletedAt
 }
 

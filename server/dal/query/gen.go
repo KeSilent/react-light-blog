@@ -23,6 +23,7 @@ var (
 	SysBaseMenu         *sysBaseMenu
 	SysDictionary       *sysDictionary
 	SysDictionaryDetail *sysDictionaryDetail
+	SysOperationRecord  *sysOperationRecord
 	SysUser             *sysUser
 	SysUserAuthority    *sysUserAuthority
 )
@@ -35,6 +36,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	SysBaseMenu = &Q.SysBaseMenu
 	SysDictionary = &Q.SysDictionary
 	SysDictionaryDetail = &Q.SysDictionaryDetail
+	SysOperationRecord = &Q.SysOperationRecord
 	SysUser = &Q.SysUser
 	SysUserAuthority = &Q.SysUserAuthority
 }
@@ -48,6 +50,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		SysBaseMenu:         newSysBaseMenu(db, opts...),
 		SysDictionary:       newSysDictionary(db, opts...),
 		SysDictionaryDetail: newSysDictionaryDetail(db, opts...),
+		SysOperationRecord:  newSysOperationRecord(db, opts...),
 		SysUser:             newSysUser(db, opts...),
 		SysUserAuthority:    newSysUserAuthority(db, opts...),
 	}
@@ -62,6 +65,7 @@ type Query struct {
 	SysBaseMenu         sysBaseMenu
 	SysDictionary       sysDictionary
 	SysDictionaryDetail sysDictionaryDetail
+	SysOperationRecord  sysOperationRecord
 	SysUser             sysUser
 	SysUserAuthority    sysUserAuthority
 }
@@ -77,6 +81,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		SysBaseMenu:         q.SysBaseMenu.clone(db),
 		SysDictionary:       q.SysDictionary.clone(db),
 		SysDictionaryDetail: q.SysDictionaryDetail.clone(db),
+		SysOperationRecord:  q.SysOperationRecord.clone(db),
 		SysUser:             q.SysUser.clone(db),
 		SysUserAuthority:    q.SysUserAuthority.clone(db),
 	}
@@ -99,6 +104,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		SysBaseMenu:         q.SysBaseMenu.replaceDB(db),
 		SysDictionary:       q.SysDictionary.replaceDB(db),
 		SysDictionaryDetail: q.SysDictionaryDetail.replaceDB(db),
+		SysOperationRecord:  q.SysOperationRecord.replaceDB(db),
 		SysUser:             q.SysUser.replaceDB(db),
 		SysUserAuthority:    q.SysUserAuthority.replaceDB(db),
 	}
@@ -111,6 +117,7 @@ type queryCtx struct {
 	SysBaseMenu         *sysBaseMenuDo
 	SysDictionary       *sysDictionaryDo
 	SysDictionaryDetail *sysDictionaryDetailDo
+	SysOperationRecord  *sysOperationRecordDo
 	SysUser             *sysUserDo
 	SysUserAuthority    *sysUserAuthorityDo
 }
@@ -123,6 +130,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		SysBaseMenu:         q.SysBaseMenu.WithContext(ctx),
 		SysDictionary:       q.SysDictionary.WithContext(ctx),
 		SysDictionaryDetail: q.SysDictionaryDetail.WithContext(ctx),
+		SysOperationRecord:  q.SysOperationRecord.WithContext(ctx),
 		SysUser:             q.SysUser.WithContext(ctx),
 		SysUserAuthority:    q.SysUserAuthority.WithContext(ctx),
 	}
