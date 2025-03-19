@@ -1,11 +1,8 @@
 import { PageParams } from "@/models/common-model";
 import { UserModel } from "@/models/user-model";
 import { getUserList } from "@/services/user/api";
-import { PlusOutlined } from "@ant-design/icons";
 import { ActionType, PageContainer, ProTable } from "@ant-design/pro-components";
-import { FormattedMessage } from "@umijs/max";
-import { Button } from "antd";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { columns } from "./data";
 import CreationUser from "./components/CreationUser";
 
@@ -14,11 +11,14 @@ const UserList: React.FC = () => {
 
   const actionRef = useRef<ActionType>();
 
-  const handleModalOpen = (flag: boolean) => {
-    console.log(flag);
-  }
-
-  const [selectedRowsState, setSelectedRows] = useState<UserModel[]>([]);
+  const handleGetUserList = async (params: PageParams & { pageSize?: number; current?: number; keyword?: string }) => {
+    const result = await getUserList(params);
+    return {
+      data: result?.data,
+      success: true,
+      total: result?.total,
+    };
+  };
 
   return (
     <PageContainer>
@@ -31,19 +31,12 @@ const UserList: React.FC = () => {
         }}
         toolBarRender={() => [
           <CreationUser
-          key="updateUser"
-          reload={actionRef.current?.reload}
-        />,
+            key="updateUser"
+            reload={actionRef.current?.reload}
+          />,
         ]}
-        request={getUserList}
+        request={handleGetUserList}
         columns={columns(actionRef)}
-        rowSelection={{
-          onChange: (_, selectedRows) => {
-            console.log(selectedRows);
-
-            setSelectedRows(selectedRows);
-          },
-        }}
       />
     </PageContainer>
   )

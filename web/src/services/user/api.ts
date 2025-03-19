@@ -15,8 +15,6 @@ export async function getUserList(
   },
   options?: { [keyword: string]: any },
 ) {
-
-
   const result = await request<ResponseResult<PageList<UserModel[]>>>('/api/user/getUserList', {
     method: 'GET',
     params: {
