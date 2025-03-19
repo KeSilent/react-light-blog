@@ -10,12 +10,12 @@ type MenuApi struct{}
 
 func (m *MenuApi) Menus(c *gin.Context) {
 	user, _ := userService.GetUserInfo(utils.GetUserID(c))
-	if len(user.Authorities) == 0 {
+	if len(user.Role) == 0 {
 		response.FailWithMessage("未设置任何角色", c)
 	}
 
 	//获取第一个角色
-	menus, err := menuService.GetAuthorMenuList(user.Authorities[0].ID)
+	menus, err := menuService.GetAuthorMenuList(user.Role[0].ID)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return

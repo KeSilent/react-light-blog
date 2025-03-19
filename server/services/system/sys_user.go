@@ -52,7 +52,7 @@ func (userService *UserService) Login(u *model.SysUser) (userInter *model.SysUse
 		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
 			return nil, errors.New("密码错误")
 		}
-		MenuServiceApp.UserAuthorityDefaultRouter(&user.Authorities[0])
+		MenuServiceApp.UserAuthorityDefaultRouter(&user.Role[0])
 	}
 	return user, err
 }
@@ -119,8 +119,8 @@ func (userService *UserService) GetUserInfo(id int64) (*model.SysUser, error) {
 	return q.WithContext(context.Background()).Preload(field.NewRelation("Authorities", "")).Where(query.SysUser.ID.Eq(id)).First()
 }
 
-func (userService *UserService) AddUserAuthorities(userAuthorities []*model.SysUserAuthority) error {
-	q := query.Q.SysUserAuthority
+func (userService *UserService) AddUserAuthorities(userAuthorities []*model.SysUserRole) error {
+	q := query.Q.SysUserRole
 	return q.WithContext(context.Background()).Create(userAuthorities...)
 }
 

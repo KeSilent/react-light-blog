@@ -20,11 +20,11 @@ var MenuServiceApp = new(MenuService)
 // @description: 用户角色默认路由检查
 // @param: 参数类型
 // @return: 返回类型
-func (menuService *MenuService) UserAuthorityDefaultRouter(authority *model.SysAuthority) {
+func (menuService *MenuService) UserAuthorityDefaultRouter(authority *model.SysRole) {
 	var menuIds []int64
 
-	db := query.Q.SysAuthorityMenu.WithContext(context.Background())
-	err := db.Where(query.SysAuthorityMenu.SysAuthorityAuthorityID.Eq(authority.ID)).Pluck(query.SysAuthorityMenu.SysBaseMenuID, &menuIds)
+	db := query.Q.SysRoleMenu.WithContext(context.Background())
+	err := db.Where(query.SysRoleMenu.SysRoleRoleID.Eq(authority.ID)).Pluck(query.SysRoleMenu.SysBaseMenuID, &menuIds)
 
 	if err != nil {
 		return
@@ -61,8 +61,8 @@ func (menuService *MenuService) AddBaseMenuList(menus []*model.SysBaseMenu) erro
 // @return: 返回类型
 func (menuService *MenuService) GetAuthorMenuList(authorId int64) ([]model.SysBaseMenu, error) {
 	// 获取权限信息，并预加载菜单
-	authority, err := query.Q.SysAuthority.WithContext(context.Background()).
-		Where(query.SysAuthority.ID.Eq(authorId)).
+	authority, err := query.Q.SysRole.WithContext(context.Background()).
+		Where(query.SysRole.ID.Eq(authorId)).
 		Preload(field.NewRelation("Menus", "")).
 		Preload(field.NewRelation("Menus.Children", "")).
 		First()

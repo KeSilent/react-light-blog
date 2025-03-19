@@ -86,43 +86,43 @@ func GenStructs() error {
 	allModel := generator.GenerateAllTable()
 	generator.ApplyBasic(allModel...)
 	// 1. 首先生成基础模型
-	SysAuthorityMenus := generator.GenerateModel("sys_authority_menus")
-	SysUserAuthority := generator.GenerateModel("sys_user_authority")
+	SysRoleMenus := generator.GenerateModel("sys_role_menus")
+	SysUserRole := generator.GenerateModel("sys_user_role")
 
 	// 生成角色模型
-	authority := generator.GenerateModel("sys_authorities")
+	role := generator.GenerateModel("sys_role")
 
 	// 生成菜单模型
 	menu := generator.GenerateModel("sys_base_menus")
 
 	// 重新配置用户模型的关联关系
 	user := generator.GenerateModel("sys_users", append(fieldOpts,
-		gen.FieldRelate(field.Many2Many, "Authorities", authority, &field.RelateConfig{
+		gen.FieldRelate(field.Many2Many, "Role", role, &field.RelateConfig{
 			GORMTag: field.GormTag{
-				"many2many":      []string{"sys_user_authority"},
+				"many2many":      []string{"sys_user_role"},
 				"foreignKey":     []string{"id"},
 				"references":     []string{"id"},
 				"joinForeignKey": []string{"sys_user_id"},
-				"joinReferences": []string{"sys_authority_id"},
+				"joinReferences": []string{"sys_role_id"},
 			},
 		}),
 	)...)
 
 	// 重新配置角色模型的关联关系
-	authority = generator.GenerateModel("sys_authorities", append(fieldOpts,
+	role = generator.GenerateModel("sys_role", append(fieldOpts,
 		gen.FieldRelate(field.Many2Many, "Menus", menu, &field.RelateConfig{
 			GORMTag: field.GormTag{
-				"many2many":      []string{"sys_authority_menus"},
-				"joinForeignKey": []string{"sys_authority_authority_id"},
+				"many2many":      []string{"sys_role_menus"},
+				"joinForeignKey": []string{"sys_role_role_id"},
 				"joinReferences": []string{"sys_base_menu_id"},
 			},
 		}),
 		gen.FieldRelate(field.Many2Many, "Users", user, &field.RelateConfig{
 			GORMTag: field.GormTag{
-				"many2many":      []string{"sys_user_authority"},
+				"many2many":      []string{"sys_user_role"},
 				"foreignKey":     []string{"id"},
 				"references":     []string{"id"},
-				"joinForeignKey": []string{"sys_authority_id"},
+				"joinForeignKey": []string{"sys_role_id"},
 				"joinReferences": []string{"sys_user_id"},
 			},
 		}),
@@ -130,11 +130,11 @@ func GenStructs() error {
 
 	// 重新配置菜单模型的关联关系
 	menu = generator.GenerateModel("sys_base_menus", append(fieldOpts,
-		gen.FieldRelate(field.Many2Many, "Authorities", authority, &field.RelateConfig{
+		gen.FieldRelate(field.Many2Many, "Role", role, &field.RelateConfig{
 			GORMTag: field.GormTag{
-				"many2many":      []string{"sys_authority_menus"},
+				"many2many":      []string{"sys_role_menus"},
 				"joinForeignKey": []string{"sys_base_menu_id"},
-				"joinReferences": []string{"sys_authority_authority_id"},
+				"joinReferences": []string{"sys_role_role_id"},
 			},
 		}),
 		gen.FieldRelate(field.HasMany, "Children", menu, &field.RelateConfig{
@@ -164,10 +164,10 @@ func GenStructs() error {
 
 	// 应用所有模型
 	generator.ApplyBasic(
-		SysAuthorityMenus,
-		SysUserAuthority,
+		SysRoleMenus,
+		SysUserRole,
 		user,
-		authority,
+		role,
 		menu,
 		dic,
 		dicDetails,

@@ -23,11 +23,6 @@ export default [
     ],
   },
   {
-    name: 'userList',
-    path: '/user/list',
-    component: './user/manage'
-  },
-  {
     path: '/welcome',
     name: 'welcome',
     icon: 'smile',
@@ -58,5 +53,15 @@ export default [
     path: '*',
     layout: false,
     component: './404',
+  },
+  {
+    name: '用户列表',
+    path: '/user/list',
+    component: './user/manage'
+  },
+  {
+    name: '角色列表',
+    path: '/role',
+    component: './role'
   },
 ];

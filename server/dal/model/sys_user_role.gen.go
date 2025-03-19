@@ -4,15 +4,15 @@
 
 package model
 
-const TableNameSysUserAuthority = "sys_user_authority"
+const TableNameSysUserRole = "sys_user_role"
 
-// SysUserAuthority 用户角色关联表
-type SysUserAuthority struct {
+// SysUserRole 用户角色关联表
+type SysUserRole struct {
 	SysUserID      int64 `gorm:"column:sys_user_id;type:bigint;primaryKey;comment:用户ID" json:"sysUserId"`           // 用户ID
 	SysAuthorityID int64 `gorm:"column:sys_authority_id;type:bigint;primaryKey;comment:角色ID" json:"sysAuthorityId"` // 角色ID
 }
 
-// TableName SysUserAuthority's table name
-func (*SysUserAuthority) TableName() string {
-	return TableNameSysUserAuthority
+// TableName SysUserRole's table name
+func (*SysUserRole) TableName() string {
+	return TableNameSysUserRole
 }

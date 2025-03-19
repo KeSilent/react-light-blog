@@ -147,7 +147,7 @@ func LoginToken(user model.SysUser) (token string, claims systemReq.CustomClaims
 		ID:          user.ID,
 		NickName:    user.NickName,
 		Username:    user.Username,
-		AuthorityId: fmt.Sprint(user.Authorities[0].ID),
+		AuthorityId: fmt.Sprint(user.Role[0].ID),
 	})
 	token, err = j.CreateToken(claims)
 	return

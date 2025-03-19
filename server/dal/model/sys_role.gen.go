@@ -8,22 +8,22 @@ import (
 	"time"
 )
 
-const TableNameSysAuthority = "sys_authorities"
+const TableNameSysRole = "sys_role"
 
-// SysAuthority 角色表
-type SysAuthority struct {
+// SysRole 角色表
+type SysRole struct {
 	ID            int64         `gorm:"column:id;type:bigint;primaryKey;comment:角色ID" json:"id,string"`                              // 角色ID
-	AuthorityName string        `gorm:"column:authority_name;type:varchar(64);not null;comment:角色名称" json:"authorityName"`           // 角色名称
+	RoleName      string        `gorm:"column:role_name;type:varchar(64);not null;comment:角色名称" json:"roleName"`                     // 角色名称
 	ParentID      int64         `gorm:"column:parent_id;type:bigint;comment:父角色ID" json:"parentId"`                                  // 父角色ID
 	DefaultRouter string        `gorm:"column:default_router;type:varchar(128);default:dashboard;comment:默认路由" json:"defaultRouter"` // 默认路由
 	CreateTime    time.Time     `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"createTime"`
 	UpdateTime    *time.Time    `gorm:"column:update_time;type:datetime" json:"updateTime"`
 	DeletedAt     *time.Time    `gorm:"column:deleted_at;type:datetime" json:"deletedAt"`
-	Menus         []SysBaseMenu `gorm:"joinForeignKey:sys_authority_authority_id;joinReferences:sys_base_menu_id;many2many:sys_authority_menus" json:"menus"`
-	Users         []SysUser     `gorm:"foreignKey:id;joinForeignKey:sys_authority_id;joinReferences:sys_user_id;many2many:sys_user_authority;references:id" json:"users"`
+	Menus         []SysBaseMenu `gorm:"joinForeignKey:sys_role_role_id;joinReferences:sys_base_menu_id;many2many:sys_role_menus" json:"menus"`
+	Users         []SysUser     `gorm:"foreignKey:id;joinForeignKey:sys_role_id;joinReferences:sys_user_id;many2many:sys_user_role;references:id" json:"users"`
 }
 
-// TableName SysAuthority's table name
-func (*SysAuthority) TableName() string {
-	return TableNameSysAuthority
+// TableName SysRole's table name
+func (*SysRole) TableName() string {
+	return TableNameSysRole
 }

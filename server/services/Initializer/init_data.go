@@ -68,25 +68,25 @@ func (i *InitData) initMenus() error {
 }
 
 func (i *InitData) initAuthorities() error {
-	entities := []*model.SysAuthority{
-		{ID: 888, AuthorityName: "超级管理员", DefaultRouter: "dashboard"},
-		{ID: 999, AuthorityName: "普通用户", ParentID: 888, DefaultRouter: "dashboard"},
+	entities := []*model.SysRole{
+		{ID: 888, RoleName: "超级管理员", DefaultRouter: "dashboard"},
+		{ID: 999, RoleName: "普通用户", ParentID: 888, DefaultRouter: "dashboard"},
 	}
 	return system.AuthorityServiceApp.CreateAuthorityList(entities)
 }
 
 func (i *InitData) initAuthorityMenus() error {
 	// 超级管理员拥有所有菜单权限
-	adminMenus := []*model.SysAuthorityMenu{
-		{SysAuthorityAuthorityID: 888, SysBaseMenuID: 1},
-		{SysAuthorityAuthorityID: 888, SysBaseMenuID: 2},
-		{SysAuthorityAuthorityID: 888, SysBaseMenuID: 3},
-		{SysAuthorityAuthorityID: 888, SysBaseMenuID: 4},
-		{SysAuthorityAuthorityID: 888, SysBaseMenuID: 5},
+	adminMenus := []*model.SysRoleMenu{
+		{SysRoleRoleID: 888, SysBaseMenuID: 1},
+		{SysRoleRoleID: 888, SysBaseMenuID: 2},
+		{SysRoleRoleID: 888, SysBaseMenuID: 3},
+		{SysRoleRoleID: 888, SysBaseMenuID: 4},
+		{SysRoleRoleID: 888, SysBaseMenuID: 5},
 	}
 	// 普通用户只有仪表盘权限
-	userMenus := []*model.SysAuthorityMenu{
-		{SysAuthorityAuthorityID: 999, SysBaseMenuID: 1},
+	userMenus := []*model.SysRoleMenu{
+		{SysRoleRoleID: 999, SysBaseMenuID: 1},
 	}
 
 	entities := append(adminMenus, userMenus...)
@@ -94,7 +94,7 @@ func (i *InitData) initAuthorityMenus() error {
 }
 
 func (i *InitData) initUserAuthorities() error {
-	entities := []*model.SysUserAuthority{
+	entities := []*model.SysUserRole{
 		{SysUserID: 1, SysAuthorityID: 888},
 		{SysUserID: 2, SysAuthorityID: 999},
 	}
