@@ -1,6 +1,7 @@
 ﻿import type { RequestInterceptor, RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
+import { ResponseResult } from './models/common-model';
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {
@@ -9,14 +10,6 @@ enum ErrorShowType {
   ERROR_MESSAGE = 2,
   NOTIFICATION = 3,
   REDIRECT = 9,
-}
-// 与后端约定的响应数据格式
-interface ResponseStructure {
-  success: boolean;
-  data: any;
-  errorCode?: number;
-  errorMessage?: string;
-  showType?: ErrorShowType;
 }
 
 /**
@@ -29,12 +22,12 @@ export const errorConfig: RequestConfig = {
   errorConfig: {
     // 错误抛出
     errorThrower: (res) => {
-      const { success, data, errorCode, errorMessage, showType } =
-        res as unknown as ResponseStructure;
+      const { code: success, data, msg } =
+        res as unknown as ResponseResult;
       if (!success) {
-        const error: any = new Error(errorMessage);
+        const error: any = new Error(msg);
         error.name = 'BizError';
-        error.info = { errorCode, errorMessage, showType, data };
+        error.info = { success, msg, data };
         throw error; // 抛出自制的错误
       }
     },
@@ -43,30 +36,30 @@ export const errorConfig: RequestConfig = {
       if (opts?.skipErrorHandler) throw error;
       // 我们的 errorThrower 抛出的错误。
       if (error.name === 'BizError') {
-        const errorInfo: ResponseStructure | undefined = error.info;
+        const errorInfo: ResponseResult | undefined = error.info;
         if (errorInfo) {
-          const { errorMessage, errorCode } = errorInfo;
-          switch (errorInfo.showType) {
+          const { msg, code } = errorInfo;
+          switch (errorInfo.code) {
             case ErrorShowType.SILENT:
               // do nothing
               break;
             case ErrorShowType.WARN_MESSAGE:
-              message.warning(errorMessage);
+              message.warning(msg);
               break;
             case ErrorShowType.ERROR_MESSAGE:
-              message.error(errorMessage);
+              message.error(msg);
               break;
             case ErrorShowType.NOTIFICATION:
               notification.open({
-                description: errorMessage,
-                message: errorCode,
+                description: msg,
+                message: code,
               });
               break;
             case ErrorShowType.REDIRECT:
               // TODO: redirect
               break;
             default:
-              message.error(errorMessage);
+              message.error(code);
           }
         }
       } else if (error.response) {
@@ -98,10 +91,17 @@ export const errorConfig: RequestConfig = {
   responseInterceptors: [
     (response) => {
       // 拦截响应数据，进行个性化处理
-      const { data } = response as unknown as ResponseStructure;
+      const { data } = response as unknown as ResponseResult;
 
-      if (data?.success === false) {
-        message.error('请求失败！');
+      if (data?.code !== 0) {
+        message.error(data?.msg);
+        return {
+          ...response,
+          data: {
+            ...data,
+            success: data.code === 0,
+          },
+        };
       }
       return response;
     },
@@ -112,12 +112,12 @@ export const errorConfig: RequestConfig = {
 /**
  * 请求增加token
  */
-export const tokenInit:RequestInterceptor = (url: string, options: RequestOptions) => {
+export const tokenInit: RequestInterceptor = (url: string, options: RequestOptions) => {
   const accessToken = localStorage.getItem("accessToken") || ''
   const o = options
   o.headers = {
     ...options.headers,
     accessToken,
   }
-  return {url, options: o}
-  }
+  return { url, options: o }
+}

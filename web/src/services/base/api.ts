@@ -1,5 +1,5 @@
 
-import { RouteItem } from '@/models/RouteItem';
+import { RouteItem } from '@/models/route-item';
 import { request } from '@umijs/max';
 
 

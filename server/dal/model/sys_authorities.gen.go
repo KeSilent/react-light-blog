@@ -12,7 +12,7 @@ const TableNameSysAuthority = "sys_authorities"
 
 // SysAuthority 角色表
 type SysAuthority struct {
-	ID            int64         `gorm:"column:id;type:bigint;primaryKey;comment:角色ID" json:"id"`                                     // 角色ID
+	ID            int64         `gorm:"column:id;type:bigint;primaryKey;comment:角色ID" json:"id,string"`                              // 角色ID
 	AuthorityName string        `gorm:"column:authority_name;type:varchar(64);not null;comment:角色名称" json:"authorityName"`           // 角色名称
 	ParentID      int64         `gorm:"column:parent_id;type:bigint;comment:父角色ID" json:"parentId"`                                  // 父角色ID
 	DefaultRouter string        `gorm:"column:default_router;type:varchar(128);default:dashboard;comment:默认路由" json:"defaultRouter"` // 默认路由

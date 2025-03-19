@@ -6,4 +6,5 @@ var RouterGroupApp = new(RouterGroup)
 
 type RouterGroup struct {
 	System system.RouterGroup
+	User   system.UserRouter
 }

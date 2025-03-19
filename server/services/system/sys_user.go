@@ -83,9 +83,9 @@ func (userService *UserService) ChangePassword(u *model.SysUser, newPassword str
 // @description: 分页获取数据
 // @param: info request.PageInfo
 // @return: err error, list interface{}, total int64
-func (userService *UserService) GetUserInfoList(info systemReq.GetUserList) (list interface{}, total int64, err error) {
+func (userService *UserService) GetUserInfoList(info systemReq.GetUserList) (list []*model.SysUser, total int64, err error) {
 	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
+	offset := info.PageSize * (info.Current - 1)
 
 	db := query.Q.SysUser.WithContext(context.Background())
 
@@ -98,22 +98,19 @@ func (userService *UserService) GetUserInfoList(info systemReq.GetUserList) (lis
 	if info.Username != "" {
 		db = db.Where(query.SysUser.Username.Like("%" + info.Username + "%"))
 	}
-	if info.Email != "" {
-		db = db.Where(query.SysUser.Email.Like("%" + info.Email + "%"))
-	}
 
 	total, err = db.Count()
 	if err != nil {
 		return
 	}
 
-	userList, err := db.Preload(field.NewRelation("Authorities", "")).Preload(field.NewRelation("Authority", "")).Limit(limit).Offset(offset).Find()
+	userList, err := db.Preload(field.NewRelation("Authorities", "")).Limit(limit).Offset(offset).Find()
 
 	return userList, total, err
 }
 
 // @author: JackYang
-// @function: SysUser
+// @function: GetUserInfo
 // @description: 通过ID获取用户信息
 // @param: id int64
 // @return: *model.SysUser, error
@@ -125,4 +122,18 @@ func (userService *UserService) GetUserInfo(id int64) (*model.SysUser, error) {
 func (userService *UserService) AddUserAuthorities(userAuthorities []*model.SysUserAuthority) error {
 	q := query.Q.SysUserAuthority
 	return q.WithContext(context.Background()).Create(userAuthorities...)
+}
+
+// @author: JackYang
+// @function: UpdateUser
+// @description: 更新用户信息
+// @param:   u *model.SysUser
+// @return:  err error
+func (UserService *UserService) UpdateUser(u *model.SysUser) error {
+	q := query.Q.SysUser
+	result, err := q.WithContext(context.Background()).Where(q.ID.Eq(u.ID)).Updates(u)
+	if err != nil {
+		return result.Error
+	}
+	return nil
 }

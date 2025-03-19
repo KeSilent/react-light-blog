@@ -1,4 +1,4 @@
-import { Footer, AvatarDropdown, AvatarName } from '@/components';
+import { Footer,AvatarDropdown, AvatarName } from '@/components';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
@@ -6,9 +6,9 @@ import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig, tokenInit } from './requestErrorConfig';
 import React from 'react';
-import { RouteItem } from './models/RouteItem';
-import { createIcon } from './utils/MenuItemRender';
 import { getDynamicMenus } from './services/base/api';
+import { RouteItem } from './models/route-item';
+import { createIcon } from './utils/MenuItemRender';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -20,8 +20,8 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
-  dynamicRoutes?: any[];
 }> {
+
   const fetchUserInfo = async () => {
     try {
       return JSON.parse(localStorage.getItem("userInfo") || '{}');
@@ -31,25 +31,13 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
 
-  // 获取动态路由
-  const fetchDynamicRoutes = async () => {
-    try {
-      const { data } = await getDynamicMenus();
-      return data;
-    } catch (error) {
-      return [];
-    }
-  };
-
   // 如果不是登录页面，执行
   const { location } = history;
   if (location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
-    const dynamicRoutes = await fetchDynamicRoutes();
     return {
       fetchUserInfo,
       currentUser,
-      dynamicRoutes,
       settings: defaultSettings as Partial<LayoutSettings>,
     };
   }
@@ -62,6 +50,32 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    menu: {
+      locale: false,
+      params: initialState,
+      request: async () => {
+        const menuData = await getDynamicMenus();
+        if (!menuData.data) return [];
+        const formatMenuData = (menus: RouteItem[]): any[] => {
+          return menus.map(menu => {
+            return {
+              key: menu.id,
+              path: menu.path,
+              name: menu.title,
+              icon: createIcon(menu.icon),
+              component: menu.component,
+              hideInMenu: menu.hidden,
+              children: menu.children?.length
+                ? formatMenuData(menu.children)
+                : undefined,
+              sort: menu.sort,
+            };
+          });
+        };
+
+        return formatMenuData(menuData.data).sort((a, b) => a.sort - b.sort);
+      },
+    },
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
@@ -69,28 +83,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
-    menu: {
-      locale: false,
-      request: async () => {
-        const menuData = initialState?.dynamicRoutes || [];
-        // 处理菜单数据，适配 ProLayout 需要的格式
-        const formatMenuData = (menus: RouteItem[]): any[] => {
-          return menus.map(menu => ({
-            path: menu.path,
-            name: menu.title, // 使用 title 作为显示名称
-            icon: createIcon(menu.icon),
-            component: menu.component,
-            hideInMenu: menu.hidden,
-            children: menu.children ? formatMenuData(menu.children) : undefined,
-            // 如果需要排序
-            sort: menu.sort,
-          }));
-        };
-
-        return formatMenuData(menuData).sort((a, b) => a.sort - b.sort);
-      },
-    },
-
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;

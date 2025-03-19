@@ -12,7 +12,7 @@ const TableNameSysUser = "sys_users"
 
 // SysUser 用户表
 type SysUser struct {
-	ID          int64          `gorm:"column:id;type:bigint;primaryKey;comment:用户ID" json:"id"`                     // 用户ID
+	ID          int64          `gorm:"column:id;type:bigint;primaryKey;comment:用户ID" json:"id,string"`              // 用户ID
 	Username    string         `gorm:"column:username;type:varchar(64);not null;comment:用户名" json:"username"`       // 用户名
 	Password    string         `gorm:"column:password;type:varchar(255);not null;comment:密码" json:"password"`       // 密码
 	NickName    string         `gorm:"column:nick_name;type:varchar(64);comment:昵称" json:"nickName"`                // 昵称

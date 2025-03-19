@@ -14,13 +14,13 @@ import {
   ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
-import { FormattedMessage, history, SelectLang, useIntl, useModel, Helmet } from '@umijs/max';
+import { FormattedMessage, SelectLang, useIntl, useModel, Helmet } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
 import Settings from '../../../../config/defaultSettings';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { createStyles } from 'antd-style';
-import { getDynamicMenus, login } from '@/services/base/api';
+import { login } from '@/services/base/api';
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -98,26 +98,15 @@ const LoginMessage: React.FC<{
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const { setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const intl = useIntl();
 
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      flushSync(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-          dynamicRoutes: undefined,
-        }));
-      });
-    }
-  };
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      // 登录
+      const urlParams = new URL(window.location.href).searchParams;
+
       const msg = await login({ ...values, type, captcha: "1", captchaId: "1" });
       if (!msg.code) {
         const defaultLoginSuccessMessage = intl.formatMessage({
@@ -125,24 +114,21 @@ const Login: React.FC = () => {
           defaultMessage: '登录成功！',
         });
         message.success(defaultLoginSuccessMessage);
-        // 保存 token 到 localStorage
+
+        // 保存 token 和用户信息
         localStorage.setItem('token', msg.data?.token || '');
-        // 保存用户信息到 localStorage
         localStorage.setItem('userInfo', JSON.stringify(msg.data?.user));
 
-        await fetchUserInfo();
-
-        // 重新获取菜单数据
-        const { data } = await getDynamicMenus();
+        // 更新全局状态
         flushSync(() => {
           setInitialState((s) => ({
             ...s,
-            dynamicRoutes: data || [],
+            currentUser: msg.data?.user,
           }));
         });
 
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+        // 重新加载页面以应用新的路由配置
+        window.location.href = urlParams.get('redirect') || '/';
         return;
       }
       // 如果失败去设置用户错误信息

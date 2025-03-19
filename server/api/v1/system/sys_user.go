@@ -179,7 +179,7 @@ func (b *BaseApi) ChangePassword(c *gin.Context) {
 // @Router    /user/getUserList [post]
 func (b *BaseApi) GetUserList(c *gin.Context) {
 	var pageInfo systemReq.GetUserList
-	err := c.ShouldBindJSON(&pageInfo)
+	err := c.ShouldBindQuery(&pageInfo)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
@@ -196,9 +196,30 @@ func (b *BaseApi) GetUserList(c *gin.Context) {
 		return
 	}
 	response.OkWithDetailed(response.PageResult{
-		List:     list,
+		Data:     list,
 		Total:    total,
-		Page:     pageInfo.Page,
+		Page:     pageInfo.Current,
 		PageSize: pageInfo.PageSize,
+		Success:  true,
 	}, "获取成功", c)
+}
+
+// @author: JackYang
+// @function: sys_user
+// @description: 更新用户信息
+// @param: params
+// @return: returns
+func (b *BaseApi) UpdateUser(c *gin.Context) {
+	var user model.SysUser
+	err := c.ShouldBindJSON(&user)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	err = userService.UpdateUser(&user)
+	if err != nil {
+		response.FailWithMessage("更新失败", c)
+		return
+	}
+	response.OkWithMessage("更新成功", c)
 }

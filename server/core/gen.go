@@ -47,6 +47,9 @@ func GenStructs() error {
 	generator.UseDB(global.RLB_DB)
 
 	generator.WithJSONTagNameStrategy(func(columnName string) (tagContent string) {
+		if columnName == "id" {
+			return "id,string" // 将 ID 字段的 json 标签设置为 "id,string"
+		}
 		return utils.LowerCamelCase(columnName)
 	})
 

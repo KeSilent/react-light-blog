@@ -38,6 +38,7 @@ func Routers() *gin.Engine {
 	}
 
 	systemRouter := router.RouterGroupApp.System
+	userRouter := router.RouterGroupApp.User
 
 	PublicGroup := Router.Group(global.RLB_CONFIG.System.RouterPrefix)
 	PrivateGroup := Router.Group(global.RLB_CONFIG.System.RouterPrefix)
@@ -55,6 +56,7 @@ func Routers() *gin.Engine {
 
 	{
 		systemRouter.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
+		userRouter.InitUserRouter(PublicGroup)
 	}
 
 	global.RLB_ROUTERS = Router.Routes()
