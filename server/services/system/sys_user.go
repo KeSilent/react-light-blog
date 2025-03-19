@@ -47,12 +47,11 @@ func (userService *UserService) Register(u model.SysUser) (userInter model.SysUs
 func (userService *UserService) Login(u *model.SysUser) (userInter *model.SysUser, err error) {
 	var user *model.SysUser
 	q := query.Q.SysUser
-	user, err = q.WithContext(context.Background()).Where(q.Username.Eq(u.Username)).Preload(field.NewRelation("Authorities", "")).First()
+	user, err = q.WithContext(context.Background()).Where(q.Username.Eq(u.Username)).Preload(field.NewRelation("Role", "")).First()
 	if err == nil {
 		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
 			return nil, errors.New("密码错误")
 		}
-		MenuServiceApp.UserAuthorityDefaultRouter(&user.Role[0])
 	}
 	return user, err
 }
@@ -104,7 +103,7 @@ func (userService *UserService) GetUserInfoList(info systemReq.GetUserList) (lis
 		return
 	}
 
-	userList, err := db.Preload(field.NewRelation("Authorities", "")).Limit(limit).Offset(offset).Find()
+	userList, err := db.Preload(field.NewRelation("Role", "")).Limit(limit).Offset(offset).Find()
 
 	return userList, total, err
 }
@@ -116,12 +115,12 @@ func (userService *UserService) GetUserInfoList(info systemReq.GetUserList) (lis
 // @return: *model.SysUser, error
 func (userService *UserService) GetUserInfo(id int64) (*model.SysUser, error) {
 	q := query.Q.SysUser
-	return q.WithContext(context.Background()).Preload(field.NewRelation("Authorities", "")).Where(query.SysUser.ID.Eq(id)).First()
+	return q.WithContext(context.Background()).Preload(field.NewRelation("Role", "")).Where(query.SysUser.ID.Eq(id)).First()
 }
 
-func (userService *UserService) AddUserAuthorities(userAuthorities []*model.SysUserRole) error {
+func (userService *UserService) AddUserRole(userRole []*model.SysUserRole) error {
 	q := query.Q.SysUserRole
-	return q.WithContext(context.Background()).Create(userAuthorities...)
+	return q.WithContext(context.Background()).Create(userRole...)
 }
 
 // @author: JackYang

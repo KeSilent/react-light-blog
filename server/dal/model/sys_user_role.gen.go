@@ -8,8 +8,8 @@ const TableNameSysUserRole = "sys_user_role"
 
 // SysUserRole 用户角色关联表
 type SysUserRole struct {
-	SysUserID      int64 `gorm:"column:sys_user_id;type:bigint;primaryKey;comment:用户ID" json:"sysUserId"`           // 用户ID
-	SysAuthorityID int64 `gorm:"column:sys_authority_id;type:bigint;primaryKey;comment:角色ID" json:"sysAuthorityId"` // 角色ID
+	SysUserID int64 `gorm:"column:sys_user_id;type:bigint;primaryKey;comment:用户ID" json:"sysUserId"` // 用户ID
+	SysRoleID int64 `gorm:"column:sys_role_id;type:bigint;primaryKey;comment:角色ID" json:"sysRoleId"` // 角色ID
 }
 
 // TableName SysUserRole's table name

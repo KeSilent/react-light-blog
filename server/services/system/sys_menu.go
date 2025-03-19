@@ -15,25 +15,6 @@ type MenuService struct{}
 
 var MenuServiceApp = new(MenuService)
 
-// @author: JackYang
-// @function: SysBaseMenu
-// @description: 用户角色默认路由检查
-// @param: 参数类型
-// @return: 返回类型
-func (menuService *MenuService) UserAuthorityDefaultRouter(authority *model.SysRole) {
-	var menuIds []int64
-
-	db := query.Q.SysRoleMenu.WithContext(context.Background())
-	err := db.Where(query.SysRoleMenu.SysRoleRoleID.Eq(authority.ID)).Pluck(query.SysRoleMenu.SysBaseMenuID, &menuIds)
-
-	if err != nil {
-		return
-	}
-	menuDB := query.Q.SysBaseMenu.WithContext(context.Background())
-	_, err = menuDB.Where(query.SysBaseMenu.ID.In(menuIds...), query.SysBaseMenu.Name.Eq(authority.DefaultRouter)).First()
-
-}
-
 //@author: JackYang
 //@function: AddBaseMenu
 //@description: 增加菜单

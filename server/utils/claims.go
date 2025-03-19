@@ -101,12 +101,12 @@ func GetUserAuthorityId(c *gin.Context) uint {
 		if cl, err := GetClaims(c); err != nil {
 			return 0
 		} else {
-			authorityId, _ := strconv.ParseUint(cl.AuthorityId, 10, 32)
+			authorityId, _ := strconv.ParseUint(cl.RoleId, 10, 32)
 			return uint(authorityId)
 		}
 	} else {
 		waitUse := claims.(*systemReq.CustomClaims)
-		authorityId, _ := strconv.ParseUint(waitUse.AuthorityId, 10, 32)
+		authorityId, _ := strconv.ParseUint(waitUse.RoleId, 10, 32)
 		return uint(authorityId)
 	}
 }
@@ -143,11 +143,11 @@ func LoginToken(user model.SysUser) (token string, claims systemReq.CustomClaims
 	j := NewJWT()
 	parsedUUID, _ := uuid.Parse(fmt.Sprint(user.ID))
 	claims = j.CreateClaims(systemReq.BaseClaims{
-		UUID:        parsedUUID,
-		ID:          user.ID,
-		NickName:    user.NickName,
-		Username:    user.Username,
-		AuthorityId: fmt.Sprint(user.Role[0].ID),
+		UUID:     parsedUUID,
+		ID:       user.ID,
+		NickName: user.NickName,
+		Username: user.Username,
+		RoleId:   fmt.Sprint(user.Role[0].ID),
 	})
 	token, err = j.CreateToken(claims)
 	return

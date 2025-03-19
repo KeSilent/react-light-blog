@@ -95,8 +95,8 @@ func (i *InitData) initAuthorityMenus() error {
 
 func (i *InitData) initUserAuthorities() error {
 	entities := []*model.SysUserRole{
-		{SysUserID: 1, SysAuthorityID: 888},
-		{SysUserID: 2, SysAuthorityID: 999},
+		{SysUserID: 1, SysRoleID: 888},
+		{SysUserID: 2, SysRoleID: 999},
 	}
-	return system.UserServiceApp.AddUserAuthorities(entities)
+	return system.UserServiceApp.AddUserRole(entities)
 }
