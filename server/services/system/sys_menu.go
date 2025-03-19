@@ -36,11 +36,11 @@ func (menuService *MenuService) AddBaseMenuList(menus []*model.SysBaseMenu) erro
 }
 
 // @author: JackYang
-// @function: GetAuthorMenuList
+// @function: GetRoleMenuList
 // @description: 获取角色菜单
 // @param: authorId int64
 // @return: 返回类型
-func (menuService *MenuService) GetAuthorMenuList(authorId int64) ([]model.SysBaseMenu, error) {
+func (menuService *MenuService) GetRoleMenuList(authorId int64) ([]model.SysBaseMenu, error) {
 	// 获取权限信息，并预加载菜单
 	authority, err := query.Q.SysRole.WithContext(context.Background()).
 		Where(query.SysRole.ID.Eq(authorId)).

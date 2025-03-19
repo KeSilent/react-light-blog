@@ -15,7 +15,7 @@ func (m *MenuApi) Menus(c *gin.Context) {
 	}
 
 	//获取第一个角色
-	menus, err := menuService.GetAuthorMenuList(user.Role[0].ID)
+	menus, err := menuService.GetRoleMenuList(user.Role[0].ID)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
