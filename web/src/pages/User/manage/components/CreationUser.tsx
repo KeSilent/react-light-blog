@@ -1,5 +1,5 @@
 import { UserModel } from "@/models/user-model";
-import { saveUser } from "@/services/user/api";
+import { register } from "@/services/user/api";
 import { PlusOutlined } from "@ant-design/icons";
 import { ActionType, ModalForm, ProForm, ProFormText } from "@ant-design/pro-components";
 import { FormattedMessage, useRequest } from "@umijs/max";
@@ -18,7 +18,7 @@ const CreationUser: React.FC<CreationFormProps> = (props) => {
   const [form] = Form.useForm<UserModel>();
   const [open, setOpen] = useState(false);
 
-  const { run, loading } = useRequest<UserModel>(saveUser, {
+  const { run, loading } = useRequest<UserModel>(register, {
     manual: true,
     debounceInterval: 300,
     onSuccess: () => {

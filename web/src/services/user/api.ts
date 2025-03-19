@@ -28,11 +28,12 @@ export async function getUserList(
   return result.data
 }
 
-export async function saveUser(params: UserModel) {
-  return request<ResponseResult>('/api/user/saveUser', {
+export async function register(params: UserModel) {
+  const result = await request<ResponseResult>('/api/user/register', {
     method: 'POST',
     data: params
   })
+  return { data: result.code === 0 }
 }
 
 export async function changePassword(params: ChangePasswordReq) {
