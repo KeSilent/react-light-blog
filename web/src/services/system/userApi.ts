@@ -1,5 +1,5 @@
-import { PageList, ResponseResult } from "@/models/common-model";
-import { ChangePasswordReq, UserModel } from "@/models/user-model";
+import { PageList, ResponseResult } from "@/models/system/common-model";
+import { ChangePasswordReq, UserModel } from "@/models/system/user-model";
 import { request } from "@umijs/max";
 
 /**

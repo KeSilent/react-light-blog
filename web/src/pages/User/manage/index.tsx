@@ -1,6 +1,6 @@
-import { PageParams } from "@/models/common-model";
-import { UserModel } from "@/models/user-model";
-import { getUserList } from "@/services/user/api";
+import { PageParams } from "@/models/system/common-model";
+import { UserModel } from "@/models/system/user-model";
+import { getUserList } from "@/services/system/userApi";
 import { ActionType, PageContainer, ProTable } from "@ant-design/pro-components";
 import { useRef } from "react";
 import { columns } from "./data";

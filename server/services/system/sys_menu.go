@@ -42,8 +42,14 @@ func (menuService *MenuService) AddBaseMenuList(menus []*model.SysBaseMenu) erro
 // @return: 返回类型
 func (menuService *MenuService) GetRoleMenuList(authorId int64) ([]model.SysBaseMenu, error) {
 	// 获取权限信息，并预加载菜单
-	authority, err := query.Q.SysRole.WithContext(context.Background()).
-		Where(query.SysRole.ID.Eq(authorId)).
+
+	q := query.Q.SysRole.WithContext(context.Background())
+
+	if authorId != 0 {
+		q = q.Where(query.SysRole.ID.Eq(authorId))
+	}
+
+	authority, err := q.
 		Preload(field.NewRelation("Menus", "")).
 		Preload(field.NewRelation("Menus.Children", "")).
 		First()
@@ -94,4 +100,44 @@ func sortMenus(menus []model.SysBaseMenu) {
 			sortMenus(menus[i].Children)
 		}
 	}
+}
+
+func (menuService *MenuService) GetMenuList(menuName string) ([]model.SysBaseMenu, error) {
+	// 获取权限信息，并预加载菜单
+
+	q := query.Q.SysBaseMenu.WithContext(context.Background())
+
+	if menuName != "" {
+		q = q.Where(query.SysBaseMenu.Name.Eq(menuName))
+	}
+
+	menus, err := q.Find()
+
+	if err != nil {
+		return nil, err
+	}
+
+	treeMenus := buildTree(menus, 0)
+
+	// 对每个级别的菜单按 Sort 排序
+	sortMenus(treeMenus)
+
+	return treeMenus, nil
+}
+
+// 构建树形结构
+func buildTree(menus []*model.SysBaseMenu, parentID int64) []model.SysBaseMenu {
+	var tree []model.SysBaseMenu
+
+	for _, menu := range menus {
+		if menu.ParentID == parentID {
+			// 复制当前菜单节点
+			node := *menu
+			// 递归构建子菜单
+			node.Children = buildTree(menus, menu.ID)
+			tree = append(tree, node)
+		}
+	}
+
+	return tree
 }

@@ -7,7 +7,7 @@ import defaultSettings from '../config/defaultSettings';
 import { errorConfig, tokenInit } from './requestErrorConfig';
 import React from 'react';
 import { getDynamicMenus } from './services/base/api';
-import { RouteItem } from './models/route-item';
+import { MenuModel } from './models/system/menu-model';
 import { createIcon } from './utils/MenuItemRender';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -56,7 +56,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       request: async () => {
         const menuData = await getDynamicMenus();
         if (!menuData.data) return [];
-        const formatMenuData = (menus: RouteItem[]): any[] => {
+        const formatMenuData = (menus: MenuModel[]): any[] => {
           return menus.map(menu => {
             return {
               key: menu.id,

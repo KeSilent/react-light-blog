@@ -6,9 +6,11 @@ type RouterGroup struct {
 	ApiRouter
 	BaseRouter
 	UserRouter
+	MenuRouter
 }
 
 var (
 	baseApi = api.ApiGroupApp.SystemApiGroup.BaseApi
 	menuApi = api.ApiGroupApp.SystemApiGroup.MenuApi
+	roleApi = api.ApiGroupApp.SystemApiGroup.RoleApi
 )

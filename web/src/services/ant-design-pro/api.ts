@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import { RouteItem } from '@/models/route-item';
+import { MenuModel } from '@/models/system/menu-model';
 import { request } from '@umijs/max';
 
 /** 获取当前的用户 GET /api/currentUser */

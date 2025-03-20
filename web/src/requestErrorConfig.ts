@@ -1,7 +1,7 @@
 ﻿import type { RequestInterceptor, RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
-import { ResponseResult } from './models/common-model';
+import { ResponseResult } from './models/system/common-model';
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {

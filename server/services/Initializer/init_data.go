@@ -72,7 +72,7 @@ func (i *InitData) initAuthorities() error {
 		{ID: 888, RoleName: "超级管理员", DefaultRouter: "dashboard"},
 		{ID: 999, RoleName: "普通用户", ParentID: 888, DefaultRouter: "dashboard"},
 	}
-	return system.AuthorityServiceApp.CreateAuthorityList(entities)
+	return system.RoleServiceApp.CreateRoleList(entities)
 }
 
 func (i *InitData) initAuthorityMenus() error {
@@ -90,7 +90,7 @@ func (i *InitData) initAuthorityMenus() error {
 	}
 
 	entities := append(adminMenus, userMenus...)
-	return system.AuthorityServiceApp.AddAuthorityMenus(entities)
+	return system.RoleServiceApp.AddRoleMenus(entities)
 }
 
 func (i *InitData) initUserAuthorities() error {

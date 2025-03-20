@@ -1,5 +1,5 @@
-import { UserModel } from "@/models/user-model";
-import { updateUser } from "@/services/user/api";
+import { UserModel } from "@/models/system/user-model";
+import { updateUser } from "@/services/system/userApi";
 import { ActionType, ModalForm, ProForm, ProFormText } from "@ant-design/pro-components";
 import { useRequest } from "@umijs/max";
 import { Form, message } from "antd";

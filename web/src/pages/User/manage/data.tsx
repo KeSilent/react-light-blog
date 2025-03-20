@@ -1,4 +1,4 @@
-import { UserModel } from "@/models/user-model";
+import { UserModel } from "@/models/system/user-model";
 import { ActionType, ProColumns } from "@ant-design/pro-components";
 import { Avatar } from 'antd';
 import { MutableRefObject } from "react";

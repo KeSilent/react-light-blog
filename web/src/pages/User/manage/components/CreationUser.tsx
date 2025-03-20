@@ -1,5 +1,5 @@
-import { UserModel } from "@/models/user-model";
-import { register } from "@/services/user/api";
+import { UserModel } from "@/models/system/user-model";
+import { register } from "@/services/system/userApi";
 import { PlusOutlined } from "@ant-design/icons";
 import { ActionType, ModalForm, ProForm, ProFormText } from "@ant-design/pro-components";
 import { FormattedMessage, useRequest } from "@umijs/max";

@@ -1,5 +1,5 @@
-// src/models/RouteItem.ts
-export interface RouteItem {
+// src/models/MenuItem.ts
+export interface MenuModel {
   id: number;
   menuLevel: number;
   parentId: number;
@@ -14,5 +14,5 @@ export interface RouteItem {
   updateTime: string | null;
   deletedAt: string | null;
   authorities: any[] | null;
-  children: RouteItem[];
+  children: MenuModel[];
 }

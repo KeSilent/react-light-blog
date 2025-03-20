@@ -24,3 +24,20 @@ func (m *MenuApi) Menus(c *gin.Context) {
 		return
 	}
 }
+
+/***
+ * @Author: kesilent
+ * @Description: 获取菜单列表
+ **/
+func (m *MenuApi) GetMenuList(c *gin.Context) {
+	keyWord := c.Query("keyWord")
+	//获取列表
+	menus, err := menuService.GetMenuList(keyWord)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	} else {
+		response.OkWithData(menus, c)
+		return
+	}
+}

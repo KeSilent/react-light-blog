@@ -1,5 +1,5 @@
 
-import { RouteItem } from '@/models/route-item';
+import { MenuModel } from '@/models/system/menu-model';
 import { request } from '@umijs/max';
 
 
@@ -20,7 +20,7 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
  * @returns 
  */
 export async function getDynamicMenus() {
-  return request<API.PageResponse<RouteItem[]>>('/api/authority/menus', {
+  return request<API.PageResponse<MenuModel[]>>('/api/authority/menus', {
     method: 'GET',
   });
 }
