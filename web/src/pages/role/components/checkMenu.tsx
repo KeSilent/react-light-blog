@@ -1,7 +1,7 @@
 import { MenuModel } from '@/models/system/menu-model';
+import { RoleMenuModel } from '@/models/system/role-model';
 import { getMenuList } from '@/services/system/menuApi';
-import { getRoleMenus } from '@/services/system/roleApi';
-import { changePassword } from '@/services/system/userApi';
+import { addRoleMenu, getRoleMenus } from '@/services/system/roleApi';
 import { ActionType, DrawerForm, ProForm } from '@ant-design/pro-components';
 import { useRequest } from '@umijs/max';
 import { Button, Input, message, Tree } from 'antd';
@@ -11,7 +11,7 @@ export type CheckMenuProps = {
   reload?: ActionType['reload'];
   roleId?: string;
 };
-export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
+export default function CheckMenu(props: CheckMenuProps) {
   const { reload, roleId } = props;
   const [messageApi] = message.useMessage();
   const [keyword, setKeyword] = useState('');
@@ -20,7 +20,7 @@ export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
-  const { run, loading } = useRequest<MenuModel>(changePassword, {
+  const { run } = useRequest<MenuModel>(addRoleMenu, {
     manual: true,
     // 添加防抖，避免重复提交
     debounceInterval: 300,
@@ -37,6 +37,7 @@ export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
   });
 
   const getSelectedKeys = () => {
+    if (!roleId) return;
     getRoleMenus(roleId).then((res) => {
       if (res) {
         const menuIdList: string[] = res.map((item) => String(item.sysBaseMenuId));
@@ -45,17 +46,30 @@ export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
     });
   };
 
+  const getMenus = () => {
+    getMenuList({ keyWord: keyword }).then((res) => {
+      if (res) {
+        setTreeData(res);
+        setExpandedKeys(res.map((item) => String(item.id)));
+        getSelectedKeys();
+      }
+    });
+  };
+
   useEffect(() => {
-    if (open) {
-      getMenuList({ keyword: '' }).then((res) => {
-        if (res) {
-          setTreeData(res);
-          setExpandedKeys(res.map((item) => String(item.id)));
-          getSelectedKeys();
-        }
-      });
+    if (open && roleId) {
+      getMenus();
     }
   }, [open, roleId]);
+
+  //输入搜索关键词
+  function handleKeywordChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    setKeyword(e.target.value);
+  }
+  // 选择菜单
+  const onCheckSelect = (selectedKeys: any) => {
+    setSelectedKeys(selectedKeys);
+  };
 
   return (
     <>
@@ -78,8 +92,22 @@ export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
           destroyOnClose: true,
         }}
         submitTimeout={2000}
-        onFinish={async (value) => {
-          await run(value);
+        onFinish={async () => {
+          let roleMenus: RoleMenuModel[] = [];
+          if (!selectedKeys) {
+            roleMenus.push({
+              sysBaseMenuId: '0',
+              sysRoleRoleId: roleId || '',
+            });
+          } else {
+            roleMenus = selectedKeys.map((item) => {
+              return {
+                sysBaseMenuId: item,
+                sysRoleRoleId: roleId || '',
+              };
+            });
+          }
+          await run(roleMenus);
           return true;
         }}
         onOpenChange={(visible) => {
@@ -87,8 +115,10 @@ export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
         }}
       >
         <ProForm.Group>
-          <Input value={keyword} placeholder="筛选" />
-          <Button type="primary">确定</Button>
+          <Input value={keyword} onChange={handleKeywordChange} placeholder="筛选" />
+          <Button type="primary" onClick={getMenus}>
+            确定
+          </Button>
         </ProForm.Group>
         <ProForm.Group>
           <Tree
@@ -97,6 +127,7 @@ export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
             checkedKeys={selectedKeys}
             expandedKeys={expandedKeys}
             treeData={treeData}
+            onCheck={onCheckSelect}
             fieldNames={{ title: 'title', key: 'id', children: 'children' }}
           />
         </ProForm.Group>

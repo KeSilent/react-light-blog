@@ -32,10 +32,10 @@ func newSysDictionaryDetail(db *gorm.DB, opts ...gen.DOOption) sysDictionaryDeta
 	_sysDictionaryDetail.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_sysDictionaryDetail.DeletedAt = field.NewTime(tableName, "deleted_at")
 	_sysDictionaryDetail.Label = field.NewString(tableName, "label")
-	_sysDictionaryDetail.Value = field.NewInt64(tableName, "value")
+	_sysDictionaryDetail.Value = field.NewString(tableName, "value")
 	_sysDictionaryDetail.Status = field.NewInt64(tableName, "status")
 	_sysDictionaryDetail.Sort = field.NewInt64(tableName, "sort")
-	_sysDictionaryDetail.SysDictionaryID = field.NewInt64(tableName, "sys_dictionary_id")
+	_sysDictionaryDetail.SysDictionaryID = field.NewString(tableName, "sys_dictionary_id")
 
 	_sysDictionaryDetail.fillFieldMap()
 
@@ -52,10 +52,10 @@ type sysDictionaryDetail struct {
 	UpdatedAt       field.Time
 	DeletedAt       field.Time
 	Label           field.String // 展示值
-	Value           field.Int64  // 字典值
+	Value           field.String // 字典值
 	Status          field.Int64  // 启用状态
 	Sort            field.Int64  // 排序标记
-	SysDictionaryID field.Int64  // 关联标记
+	SysDictionaryID field.String // 关联标记
 
 	fieldMap map[string]field.Expr
 }
@@ -77,10 +77,10 @@ func (s *sysDictionaryDetail) updateTableName(table string) *sysDictionaryDetail
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 	s.DeletedAt = field.NewTime(table, "deleted_at")
 	s.Label = field.NewString(table, "label")
-	s.Value = field.NewInt64(table, "value")
+	s.Value = field.NewString(table, "value")
 	s.Status = field.NewInt64(table, "status")
 	s.Sort = field.NewInt64(table, "sort")
-	s.SysDictionaryID = field.NewInt64(table, "sys_dictionary_id")
+	s.SysDictionaryID = field.NewString(table, "sys_dictionary_id")
 
 	s.fillFieldMap()
 

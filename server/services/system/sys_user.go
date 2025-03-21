@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/kesilent/react-light-blog/dal/model"
 	"github.com/kesilent/react-light-blog/dal/query"
 	systemReq "github.com/kesilent/react-light-blog/dal/request"
@@ -35,6 +36,7 @@ func (userService *UserService) Register(u model.SysUser) (userInter model.SysUs
 	if err != nil {
 		return userInter, err
 	}
+	u.UUID = uuid.NewString()
 	err = q.WithContext(context.Background()).Save(&u)
 	return u, err
 }
@@ -64,7 +66,7 @@ func (userService *UserService) Login(u *model.SysUser) (userInter *model.SysUse
 func (userService *UserService) ChangePassword(u *model.SysUser, newPassword string) (userInter *model.SysUser, err error) {
 	var user *model.SysUser
 	q := query.Q.SysUser
-	user, err = q.WithContext(context.Background()).Where(q.ID.Eq(u.ID)).First()
+	user, err = q.WithContext(context.Background()).Where(q.UUID.Eq(u.UUID)).First()
 	if err != nil {
 		return nil, err
 	}
@@ -113,9 +115,9 @@ func (userService *UserService) GetUserInfoList(info systemReq.GetUserList) (lis
 // @description: 通过ID获取用户信息
 // @param: id int64
 // @return: *model.SysUser, error
-func (userService *UserService) GetUserInfo(id int64) (*model.SysUser, error) {
+func (userService *UserService) GetUserInfo(UUID string) (*model.SysUser, error) {
 	q := query.Q.SysUser
-	return q.WithContext(context.Background()).Preload(field.NewRelation("Role", "")).Where(query.SysUser.ID.Eq(id)).First()
+	return q.WithContext(context.Background()).Preload(field.NewRelation("Role", "")).Where(query.SysUser.UUID.Eq(UUID)).First()
 }
 
 func (userService *UserService) AddUserRole(userRole []*model.SysUserRole) error {

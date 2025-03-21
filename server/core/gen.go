@@ -47,9 +47,6 @@ func GenStructs() error {
 	generator.UseDB(global.RLB_DB)
 
 	generator.WithJSONTagNameStrategy(func(columnName string) (tagContent string) {
-		if columnName == "id" {
-			return "id,string" // 将 ID 字段的 json 标签设置为 "id,string"
-		}
 		return utils.LowerCamelCase(columnName)
 	})
 
@@ -100,8 +97,8 @@ func GenStructs() error {
 		gen.FieldRelate(field.Many2Many, "Role", role, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_user_role"},
-				"foreignKey":     []string{"id"},
-				"references":     []string{"id"},
+				"foreignKey":     []string{"uuid"},
+				"references":     []string{"uuid"},
 				"joinForeignKey": []string{"sys_user_id"},
 				"joinReferences": []string{"sys_role_id"},
 			},
@@ -120,8 +117,8 @@ func GenStructs() error {
 		gen.FieldRelate(field.Many2Many, "Users", user, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_user_role"},
-				"foreignKey":     []string{"id"},
-				"references":     []string{"id"},
+				"foreignKey":     []string{"uuid"},
+				"references":     []string{"uuid"},
 				"joinForeignKey": []string{"sys_role_id"},
 				"joinReferences": []string{"sys_user_id"},
 			},
@@ -157,7 +154,7 @@ func GenStructs() error {
 		gen.FieldRelate(field.BelongsTo, "Dictionary", dic, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"foreignKey": []string{"sys_dictionary_id"},
-				"references": []string{"id"},
+				"references": []string{"uuid"},
 			},
 		}),
 	)...)

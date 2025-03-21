@@ -28,6 +28,7 @@ func newSysUser(db *gorm.DB, opts ...gen.DOOption) sysUser {
 	tableName := _sysUser.sysUserDo.TableName()
 	_sysUser.ALL = field.NewAsterisk(tableName)
 	_sysUser.ID = field.NewInt64(tableName, "id")
+	_sysUser.UUID = field.NewString(tableName, "uuid")
 	_sysUser.Username = field.NewString(tableName, "username")
 	_sysUser.Password = field.NewString(tableName, "password")
 	_sysUser.NickName = field.NewString(tableName, "nick_name")
@@ -49,7 +50,8 @@ type sysUser struct {
 	sysUserDo sysUserDo
 
 	ALL        field.Asterisk
-	ID         field.Int64  // 用户ID
+	ID         field.Int64 // 用户ID
+	UUID       field.String
 	Username   field.String // 用户名
 	Password   field.String // 密码
 	NickName   field.String // 昵称
@@ -77,6 +79,7 @@ func (s sysUser) As(alias string) *sysUser {
 func (s *sysUser) updateTableName(table string) *sysUser {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewInt64(table, "id")
+	s.UUID = field.NewString(table, "uuid")
 	s.Username = field.NewString(table, "username")
 	s.Password = field.NewString(table, "password")
 	s.NickName = field.NewString(table, "nick_name")
@@ -111,8 +114,9 @@ func (s *sysUser) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysUser) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 11)
+	s.fieldMap = make(map[string]field.Expr, 12)
 	s.fieldMap["id"] = s.ID
+	s.fieldMap["uuid"] = s.UUID
 	s.fieldMap["username"] = s.Username
 	s.fieldMap["password"] = s.Password
 	s.fieldMap["nick_name"] = s.NickName

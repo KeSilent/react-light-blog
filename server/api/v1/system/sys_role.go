@@ -1,10 +1,9 @@
 package system
 
 import (
-	"strconv"
-
 	"github.com/gin-gonic/gin"
 	"github.com/kesilent/react-light-blog/dal/common/response"
+	"github.com/kesilent/react-light-blog/dal/model"
 	systemReq "github.com/kesilent/react-light-blog/dal/request"
 	"github.com/kesilent/react-light-blog/global"
 	"github.com/kesilent/react-light-blog/utils"
@@ -49,14 +48,9 @@ func (r *RoleApi) GetRoleList(c *gin.Context) {
  * @Description: 获取角色菜单
  **/
 func (r *RoleApi) GetRoleMenus(c *gin.Context) {
-	roleIdStr := c.Query("roleId")
-	if roleIdStr == "" {
+	roleId := c.Query("roleId")
+	if roleId == "" {
 		response.FailWithMessage("参数错误", c)
-		return
-	}
-	roleId, err := strconv.ParseInt(roleIdStr, 10, 64)
-	if err != nil {
-		response.FailWithMessage("角色ID格式错误", c)
 		return
 	}
 	menus, err := roleService.GetRoleMenus(roleId)
@@ -66,4 +60,25 @@ func (r *RoleApi) GetRoleMenus(c *gin.Context) {
 		return
 	}
 	response.OkWithDetailed(menus, "获取角色菜单成功", c)
+}
+
+/**
+ * @Author: kesilent
+ * @Description: 添加角色菜单
+ **/
+func (r *RoleApi) AddRoleMenu(c *gin.Context) {
+	var roleMenu []*model.SysRoleMenu
+	err := c.BindJSON(&roleMenu)
+	if err != nil {
+		response.FailWithMessage("参数错误", c)
+		return
+	}
+
+	err = roleService.AddRoleMenus(roleMenu)
+	if err != nil {
+		global.RLB_LOG.Error("添加角色菜单失败!", zap.Error(err))
+		response.FailWithMessage("添加角色菜单失败", c)
+		return
+	}
+	response.OkWithMessage("添加角色菜单成功", c)
 }

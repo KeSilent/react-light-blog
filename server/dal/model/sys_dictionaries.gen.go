@@ -12,7 +12,8 @@ const TableNameSysDictionary = "sys_dictionaries"
 
 // SysDictionary 字典
 type SysDictionary struct {
-	ID        int64                 `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id,string"`
+	ID        int64                 `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
+	UUID      string                `gorm:"column:uuid;type:char(36);not null" json:"uuid"`
 	CreatedAt time.Time             `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
 	UpdatedAt time.Time             `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
 	DeletedAt *time.Time            `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`

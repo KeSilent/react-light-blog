@@ -1,8 +1,12 @@
+/*
+ * @Author: Yang
+ * @Date: 2025-02-21 16:29:20
+ * @Description: 请填写简介
+ */
 package request
 
 import (
 	jwt "github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
 )
 
 // CustomClaims structure
@@ -13,7 +17,7 @@ type CustomClaims struct {
 }
 
 type BaseClaims struct {
-	UUID     uuid.UUID
+	UUID     string
 	ID       int64
 	Username string
 	NickName string

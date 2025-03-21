@@ -8,8 +8,8 @@ const TableNameSysRoleMenu = "sys_role_menus"
 
 // SysRoleMenu mapped from table <sys_role_menus>
 type SysRoleMenu struct {
-	SysRoleRoleID int64 `gorm:"column:sys_role_role_id;type:bigint;primaryKey" json:"sysRoleRoleId"`
-	SysBaseMenuID int64 `gorm:"column:sys_base_menu_id;type:bigint;primaryKey" json:"sysBaseMenuId"`
+	SysRoleRoleID string `gorm:"column:sys_role_role_id;type:char(36);primaryKey" json:"sysRoleRoleId"`
+	SysBaseMenuID string `gorm:"column:sys_base_menu_id;type:char(36);primaryKey" json:"sysBaseMenuId"`
 }
 
 // TableName SysRoleMenu's table name

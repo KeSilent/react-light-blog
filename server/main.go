@@ -19,7 +19,7 @@ func main() {
 	initialize.Timer() //定时任务
 
 	//TODO 生成代码，发布时候注释掉
-	core.GenStructs()
+	// core.GenStructs()
 
 	if global.RLB_DB != nil {
 		query.SetDefault(global.RLB_DB)

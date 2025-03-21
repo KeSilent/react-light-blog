@@ -8,7 +8,6 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/kesilent/react-light-blog/dal/model"
 	systemReq "github.com/kesilent/react-light-blog/dal/request"
 	"github.com/kesilent/react-light-blog/global"
@@ -82,10 +81,10 @@ func GetUserID(c *gin.Context) int64 {
 }
 
 // GetUserUuid 从Gin的Context中获取从jwt解析出来的用户UUID
-func GetUserUuid(c *gin.Context) uuid.UUID {
+func GetUserUuid(c *gin.Context) string {
 	if claims, exists := c.Get("claims"); !exists {
 		if cl, err := GetClaims(c); err != nil {
-			return uuid.UUID{}
+			return ""
 		} else {
 			return cl.UUID
 		}
@@ -141,13 +140,12 @@ func GetUserName(c *gin.Context) string {
 
 func LoginToken(user model.SysUser) (token string, claims systemReq.CustomClaims, err error) {
 	j := NewJWT()
-	parsedUUID, _ := uuid.Parse(fmt.Sprint(user.ID))
 	claims = j.CreateClaims(systemReq.BaseClaims{
-		UUID:     parsedUUID,
+		UUID:     user.UUID,
 		ID:       user.ID,
 		NickName: user.NickName,
 		Username: user.Username,
-		RoleId:   fmt.Sprint(user.Role[0].ID),
+		RoleId:   fmt.Sprint(user.Role[0].UUID),
 	})
 	token, err = j.CreateToken(claims)
 	return

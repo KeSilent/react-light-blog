@@ -40,3 +40,16 @@ export async function getRoleMenus(roleId: string) {
   });
   return result.data;
 }
+
+/**
+ * 添加角色菜单
+ * @param params
+ * @returns
+ */
+export async function addRoleMenu(params: RoleMenuModel) {
+  const result = await request<ResponseResult<RoleModel>>('/api/role/addRoleMenu', {
+    method: 'POST',
+    data: params,
+  });
+  return result.data;
+}

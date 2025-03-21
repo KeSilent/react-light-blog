@@ -28,6 +28,7 @@ func newSysDictionary(db *gorm.DB, opts ...gen.DOOption) sysDictionary {
 	tableName := _sysDictionary.sysDictionaryDo.TableName()
 	_sysDictionary.ALL = field.NewAsterisk(tableName)
 	_sysDictionary.ID = field.NewInt64(tableName, "id")
+	_sysDictionary.UUID = field.NewString(tableName, "uuid")
 	_sysDictionary.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysDictionary.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_sysDictionary.DeletedAt = field.NewTime(tableName, "deleted_at")
@@ -47,6 +48,7 @@ type sysDictionary struct {
 
 	ALL       field.Asterisk
 	ID        field.Int64
+	UUID      field.String
 	CreatedAt field.Time
 	UpdatedAt field.Time
 	DeletedAt field.Time
@@ -71,6 +73,7 @@ func (s sysDictionary) As(alias string) *sysDictionary {
 func (s *sysDictionary) updateTableName(table string) *sysDictionary {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewInt64(table, "id")
+	s.UUID = field.NewString(table, "uuid")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 	s.DeletedAt = field.NewTime(table, "deleted_at")
@@ -106,8 +109,9 @@ func (s *sysDictionary) GetFieldByName(fieldName string) (field.OrderExpr, bool)
 }
 
 func (s *sysDictionary) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 8)
+	s.fieldMap = make(map[string]field.Expr, 9)
 	s.fieldMap["id"] = s.ID
+	s.fieldMap["uuid"] = s.UUID
 	s.fieldMap["created_at"] = s.CreatedAt
 	s.fieldMap["updated_at"] = s.UpdatedAt
 	s.fieldMap["deleted_at"] = s.DeletedAt

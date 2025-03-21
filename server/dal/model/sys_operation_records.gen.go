@@ -12,7 +12,7 @@ const TableNameSysOperationRecord = "sys_operation_records"
 
 // SysOperationRecord 操作记录表
 type SysOperationRecord struct {
-	ID           int64      `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id,string"`
+	ID           int64      `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
 	CreatedAt    time.Time  `gorm:"column:created_at;type:datetime;default:CURRENT_TIMESTAMP" json:"createdAt"`
 	UpdatedAt    time.Time  `gorm:"column:updated_at;type:datetime;default:CURRENT_TIMESTAMP" json:"updatedAt"`
 	DeletedAt    *time.Time `gorm:"column:deleted_at;type:datetime" json:"deletedAt"`

@@ -28,6 +28,7 @@ func newSysBaseMenu(db *gorm.DB, opts ...gen.DOOption) sysBaseMenu {
 	tableName := _sysBaseMenu.sysBaseMenuDo.TableName()
 	_sysBaseMenu.ALL = field.NewAsterisk(tableName)
 	_sysBaseMenu.ID = field.NewInt64(tableName, "id")
+	_sysBaseMenu.UUID = field.NewString(tableName, "uuid")
 	_sysBaseMenu.MenuLevel = field.NewInt32(tableName, "menu_level")
 	_sysBaseMenu.ParentID = field.NewInt64(tableName, "parent_id")
 	_sysBaseMenu.Path = field.NewString(tableName, "path")
@@ -51,7 +52,8 @@ type sysBaseMenu struct {
 	sysBaseMenuDo sysBaseMenuDo
 
 	ALL        field.Asterisk
-	ID         field.Int64  // 菜单ID
+	ID         field.Int64 // 菜单ID
+	UUID       field.String
 	MenuLevel  field.Int32  // 菜单层级
 	ParentID   field.Int64  // 父菜单ID
 	Path       field.String // 路由path
@@ -81,6 +83,7 @@ func (s sysBaseMenu) As(alias string) *sysBaseMenu {
 func (s *sysBaseMenu) updateTableName(table string) *sysBaseMenu {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewInt64(table, "id")
+	s.UUID = field.NewString(table, "uuid")
 	s.MenuLevel = field.NewInt32(table, "menu_level")
 	s.ParentID = field.NewInt64(table, "parent_id")
 	s.Path = field.NewString(table, "path")
@@ -119,8 +122,9 @@ func (s *sysBaseMenu) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysBaseMenu) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 13)
+	s.fieldMap = make(map[string]field.Expr, 14)
 	s.fieldMap["id"] = s.ID
+	s.fieldMap["uuid"] = s.UUID
 	s.fieldMap["menu_level"] = s.MenuLevel
 	s.fieldMap["parent_id"] = s.ParentID
 	s.fieldMap["path"] = s.Path

@@ -1,3 +1,8 @@
+/*
+ * @Author: Yang
+ * @Date: 2025-03-19 19:09:08
+ * @Description: 菜单操作类
+ */
 package system
 
 import (
@@ -40,13 +45,13 @@ func (menuService *MenuService) AddBaseMenuList(menus []*model.SysBaseMenu) erro
 // @description: 获取角色菜单
 // @param: authorId int64
 // @return: 返回类型
-func (menuService *MenuService) GetRoleMenuList(authorId int64) ([]model.SysBaseMenu, error) {
+func (menuService *MenuService) GetRoleMenuList(roleUUID string) ([]model.SysBaseMenu, error) {
 	// 获取权限信息，并预加载菜单
 
 	q := query.Q.SysRole.WithContext(context.Background())
 
-	if authorId != 0 {
-		q = q.Where(query.SysRole.ID.Eq(authorId))
+	if roleUUID != "" {
+		q = q.Where(query.SysRole.UUID.Eq(roleUUID))
 	}
 
 	authority, err := q.
@@ -108,7 +113,7 @@ func (menuService *MenuService) GetMenuList(menuName string) ([]model.SysBaseMen
 	q := query.Q.SysBaseMenu.WithContext(context.Background())
 
 	if menuName != "" {
-		q = q.Where(query.SysBaseMenu.Name.Eq(menuName))
+		q = q.Where(query.SysBaseMenu.Name.Like("%" + menuName + "%"))
 	}
 
 	menus, err := q.Find()

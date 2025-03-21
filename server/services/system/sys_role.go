@@ -11,6 +11,7 @@ import (
 	"github.com/kesilent/react-light-blog/dal/model"
 	"github.com/kesilent/react-light-blog/dal/query"
 	systemReq "github.com/kesilent/react-light-blog/dal/request"
+	"gorm.io/gen"
 )
 
 type RoleService struct{}
@@ -38,7 +39,18 @@ func (role *RoleService) CreateRoleList(authorities []*model.SysRole) error {
  */
 func (role *RoleService) AddRoleMenus(authorityMenus []*model.SysRoleMenu) error {
 	q := query.SysRoleMenu
-	return q.WithContext(context.Background()).Create(authorityMenus...)
+	if _, err := role.DeleteRoleMenu(authorityMenus[0].SysRoleRoleID); err != nil {
+		return err
+	}
+	if authorityMenus[0].SysBaseMenuID != "" {
+		return q.WithContext(context.Background()).Create(authorityMenus...)
+	}
+	return nil
+}
+
+func (role *RoleService) DeleteRoleMenu(roleUUID string) (gen.ResultInfo, error) {
+	q := query.SysRoleMenu
+	return q.WithContext(context.Background()).Where(q.SysRoleRoleID.Eq(roleUUID)).Delete()
 }
 
 /**
@@ -48,9 +60,9 @@ func (role *RoleService) AddRoleMenus(authorityMenus []*model.SysRoleMenu) error
  * @param: roleId int64
  * @return: []*model.SysRoleMenu, error
  */
-func (role *RoleService) GetRoleMenus(roleId int64) ([]*model.SysRoleMenu, error) {
+func (role *RoleService) GetRoleMenus(roleUUID string) ([]*model.SysRoleMenu, error) {
 	q := query.SysRoleMenu
-	return q.WithContext(context.Background()).Where(q.SysRoleRoleID.Eq(roleId)).Find()
+	return q.WithContext(context.Background()).Where(q.SysRoleRoleID.Eq(roleUUID)).Find()
 }
 
 // @author: JackYang

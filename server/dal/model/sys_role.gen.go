@@ -12,7 +12,8 @@ const TableNameSysRole = "sys_role"
 
 // SysRole 角色表
 type SysRole struct {
-	ID            int64         `gorm:"column:id;type:bigint;primaryKey;comment:角色ID" json:"id,string"`                              // 角色ID
+	ID            int64         `gorm:"column:id;type:bigint;primaryKey;comment:角色ID" json:"id"` // 角色ID
+	UUID          string        `gorm:"column:uuid;type:char(36);not null" json:"uuid"`
 	RoleName      string        `gorm:"column:role_name;type:varchar(64);not null;comment:角色名称" json:"roleName"`                     // 角色名称
 	ParentID      int64         `gorm:"column:parent_id;type:bigint;comment:父角色ID" json:"parentId"`                                  // 父角色ID
 	DefaultRouter string        `gorm:"column:default_router;type:varchar(128);default:dashboard;comment:默认路由" json:"defaultRouter"` // 默认路由
@@ -20,7 +21,7 @@ type SysRole struct {
 	UpdateTime    *time.Time    `gorm:"column:update_time;type:datetime" json:"updateTime"`
 	DeletedAt     *time.Time    `gorm:"column:deleted_at;type:datetime" json:"deletedAt"`
 	Menus         []SysBaseMenu `gorm:"joinForeignKey:sys_role_role_id;joinReferences:sys_base_menu_id;many2many:sys_role_menus" json:"menus"`
-	Users         []SysUser     `gorm:"foreignKey:id;joinForeignKey:sys_role_id;joinReferences:sys_user_id;many2many:sys_user_role;references:id" json:"users"`
+	Users         []SysUser     `gorm:"foreignKey:uuid;joinForeignKey:sys_role_id;joinReferences:sys_user_id;many2many:sys_user_role;references:uuid" json:"users"`
 }
 
 // TableName SysRole's table name

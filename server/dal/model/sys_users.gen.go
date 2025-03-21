@@ -12,7 +12,8 @@ const TableNameSysUser = "sys_users"
 
 // SysUser 用户表
 type SysUser struct {
-	ID         int64      `gorm:"column:id;type:bigint;primaryKey;comment:用户ID" json:"id,string"`              // 用户ID
+	ID         int64      `gorm:"column:id;type:bigint;primaryKey;comment:用户ID" json:"id"` // 用户ID
+	UUID       string     `gorm:"column:uuid;type:char(36);not null" json:"uuid"`
 	Username   string     `gorm:"column:username;type:varchar(64);not null;comment:用户名" json:"username"`       // 用户名
 	Password   string     `gorm:"column:password;type:varchar(255);not null;comment:密码" json:"password"`       // 密码
 	NickName   string     `gorm:"column:nick_name;type:varchar(64);comment:昵称" json:"nickName"`                // 昵称
@@ -23,7 +24,7 @@ type SysUser struct {
 	CreateTime time.Time  `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"createTime"`
 	UpdateTime *time.Time `gorm:"column:update_time;type:datetime" json:"updateTime"`
 	DeletedAt  *time.Time `gorm:"column:deleted_at;type:datetime" json:"deletedAt"`
-	Role       []SysRole  `gorm:"foreignKey:id;joinForeignKey:sys_user_id;joinReferences:sys_role_id;many2many:sys_user_role;references:id" json:"role"`
+	Role       []SysRole  `gorm:"foreignKey:uuid;joinForeignKey:sys_user_id;joinReferences:sys_role_id;many2many:sys_user_role;references:uuid" json:"role"`
 }
 
 // TableName SysUser's table name
