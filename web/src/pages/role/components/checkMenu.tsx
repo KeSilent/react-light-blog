@@ -1,21 +1,24 @@
-import { MenuModel } from "@/models/system/menu-model";
-import { getMenuList } from "@/services/system/menuApi";
-import { changePassword } from "@/services/system/userApi";
-import { ActionType, DrawerForm, ProForm, ProFormText } from "@ant-design/pro-components";
-import { useRequest } from "@umijs/max";
-import { Button, Input, message, Tree, TreeDataNode } from "antd";
-import { useEffect, useState } from "react";
+import { MenuModel } from '@/models/system/menu-model';
+import { getMenuList } from '@/services/system/menuApi';
+import { getRoleMenus } from '@/services/system/roleApi';
+import { changePassword } from '@/services/system/userApi';
+import { ActionType, DrawerForm, ProForm } from '@ant-design/pro-components';
+import { useRequest } from '@umijs/max';
+import { Button, Input, message, Tree } from 'antd';
+import { useEffect, useState } from 'react';
 
 export type CheckMenuProps = {
   reload?: ActionType['reload'];
-}
+  roleId?: string;
+};
 export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
-  const { reload } = props;
+  const { reload, roleId } = props;
   const [messageApi] = message.useMessage();
   const [keyword, setKeyword] = useState('');
   const [open, setOpen] = useState(false);
   const [treeData, setTreeData] = useState<MenuModel[]>([]);
-
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
   const { run, loading } = useRequest<MenuModel>(changePassword, {
     manual: true,
@@ -24,7 +27,6 @@ export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
     onSuccess: (res) => {
       if (res) {
         messageApi.success('修改成功！');
-        form.resetFields();
         reload?.();
       }
     },
@@ -32,19 +34,28 @@ export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
       // 处理网络错误等异常情况
       messageApi.error(error?.message || '网络异常，请稍后重试！');
     },
-  })
+  });
 
-  const { run: searchRun } = useRequest<MenuModel>(searchRun, {})
+  const getSelectedKeys = () => {
+    getRoleMenus(roleId).then((res) => {
+      if (res) {
+        const menuIdList: string[] = res.map((item) => String(item.sysBaseMenuId));
+        setSelectedKeys(menuIdList);
+      }
+    });
+  };
 
   useEffect(() => {
     if (open) {
-      getMenuList({ keyword: "" }).then(res => {
+      getMenuList({ keyword: '' }).then((res) => {
         if (res) {
-          setTreeData(res)
+          setTreeData(res);
+          setExpandedKeys(res.map((item) => String(item.id)));
+          getSelectedKeys();
         }
-      })
+      });
     }
-  }, [open]);
+  }, [open, roleId]);
 
   return (
     <>
@@ -54,9 +65,6 @@ export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
       }>
         title="设置权限"
         resize={{
-          onResize() {
-            console.log('resize!');
-          },
           maxWidth: window.innerWidth * 0.8,
           minWidth: 500,
         }}
@@ -85,11 +93,14 @@ export default function CheckMenu<CheckMenuProps>(props: CheckMenuProps) {
         <ProForm.Group>
           <Tree
             checkable
+            multiple={true}
+            checkedKeys={selectedKeys}
+            expandedKeys={expandedKeys}
             treeData={treeData}
-            fieldNames={{ title: "title", key: "id", children: "children" }}
+            fieldNames={{ title: 'title', key: 'id', children: 'children' }}
           />
         </ProForm.Group>
       </DrawerForm>
     </>
-  )
+  );
 }

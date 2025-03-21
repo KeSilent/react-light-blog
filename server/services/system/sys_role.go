@@ -1,3 +1,8 @@
+/*
+ * @Author: Yang
+ * @Date: 2025-03-19 19:09:08
+ * @Description: 角色操作类
+ */
 package system
 
 import (
@@ -34,6 +39,18 @@ func (role *RoleService) CreateRoleList(authorities []*model.SysRole) error {
 func (role *RoleService) AddRoleMenus(authorityMenus []*model.SysRoleMenu) error {
 	q := query.SysRoleMenu
 	return q.WithContext(context.Background()).Create(authorityMenus...)
+}
+
+/**
+ * @author: JackYang
+ * @function: GetRoleMenus
+ * @description: 获取角色菜单
+ * @param: roleId int64
+ * @return: []*model.SysRoleMenu, error
+ */
+func (role *RoleService) GetRoleMenus(roleId int64) ([]*model.SysRoleMenu, error) {
+	q := query.SysRoleMenu
+	return q.WithContext(context.Background()).Where(q.SysRoleRoleID.Eq(roleId)).Find()
 }
 
 // @author: JackYang
