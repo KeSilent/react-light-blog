@@ -24,7 +24,7 @@ type SysUser struct {
 	CreateTime time.Time  `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"createTime"`
 	UpdateTime *time.Time `gorm:"column:update_time;type:datetime" json:"updateTime"`
 	DeletedAt  *time.Time `gorm:"column:deleted_at;type:datetime" json:"deletedAt"`
-	Role       []SysRole  `gorm:"foreignKey:uuid;joinForeignKey:sys_user_id;joinReferences:sys_role_id;many2many:sys_user_role;references:uuid" json:"role"`
+	Role       []SysRole  `gorm:"foreignKey:uuid;joinForeignKey:sys_user_uuid;joinReferences:sys_role_uuid;many2many:sys_user_role;references:uuid" json:"role"`
 }
 
 // TableName SysUser's table name

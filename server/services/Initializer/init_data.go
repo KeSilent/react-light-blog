@@ -74,15 +74,15 @@ func (i *InitData) initAuthorities() error {
 func (i *InitData) initAuthorityMenus() error {
 	// 超级管理员拥有所有菜单权限
 	adminMenus := []*model.SysRoleMenu{
-		{SysRoleRoleID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", SysBaseMenuID: "b51cf3a4-73ca-4981-9f28-dc2e7521dcba"},
-		{SysRoleRoleID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", SysBaseMenuID: "dc6f1752-25d3-41aa-8764-8de484bee73c"},
-		{SysRoleRoleID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", SysBaseMenuID: "e84d2d69-5300-45d0-9ad9-811898f8440e"},
-		{SysRoleRoleID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", SysBaseMenuID: "ec350c05-78d8-4b2a-b588-6d71ed0b9960"},
-		{SysRoleRoleID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", SysBaseMenuID: "f1344409-c286-492f-be6c-d6798d5d3e6f"},
+		{SysRoleUUID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", SysBaseMenuUUID: "b51cf3a4-73ca-4981-9f28-dc2e7521dcba"},
+		{SysRoleUUID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", SysBaseMenuUUID: "dc6f1752-25d3-41aa-8764-8de484bee73c"},
+		{SysRoleUUID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", SysBaseMenuUUID: "e84d2d69-5300-45d0-9ad9-811898f8440e"},
+		{SysRoleUUID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", SysBaseMenuUUID: "ec350c05-78d8-4b2a-b588-6d71ed0b9960"},
+		{SysRoleUUID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", SysBaseMenuUUID: "f1344409-c286-492f-be6c-d6798d5d3e6f"},
 	}
 	// 普通用户只有仪表盘权限
 	userMenus := []*model.SysRoleMenu{
-		{SysRoleRoleID: "c311fdcc-65ae-4140-96a1-846dd54ba9ca", SysBaseMenuID: "b51cf3a4-73ca-4981-9f28-dc2e7521dcba"},
+		{SysRoleUUID: "c311fdcc-65ae-4140-96a1-846dd54ba9ca", SysBaseMenuUUID: "b51cf3a4-73ca-4981-9f28-dc2e7521dcba"},
 	}
 
 	entities := append(adminMenus, userMenus...)
@@ -91,8 +91,8 @@ func (i *InitData) initAuthorityMenus() error {
 
 func (i *InitData) initUserAuthorities() error {
 	entities := []*model.SysUserRole{
-		{SysUserID: "815b6a0e-756e-4aa4-ac3c-e271518a5f93", SysRoleID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928"},
-		{SysUserID: "c311fdcc-65ae-4140-96a1-846dd54ba9ca", SysRoleID: "ad43c17d-69a7-4b05-aa09-f5577892c684"},
+		{SysUserUUID: "815b6a0e-756e-4aa4-ac3c-e271518a5f93", SysRoleUUID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928"},
+		{SysUserUUID: "c311fdcc-65ae-4140-96a1-846dd54ba9ca", SysRoleUUID: "ad43c17d-69a7-4b05-aa09-f5577892c684"},
 	}
 	return system.UserServiceApp.AddUserRole(entities)
 }

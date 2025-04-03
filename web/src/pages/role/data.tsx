@@ -26,7 +26,7 @@ export const columns = (
     dataIndex: 'option',
     valueType: 'option',
     render: (_, record) => [
-      <CheckMenu key="checkMenu" roleId={record.id} reload={actionRef.current?.reload} />,
+      <CheckMenu key="checkMenu" roleId={record.uuid} reload={actionRef.current?.reload} />,
     ],
   },
 ];

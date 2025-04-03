@@ -99,8 +99,8 @@ func GenStructs() error {
 				"many2many":      []string{"sys_user_role"},
 				"foreignKey":     []string{"uuid"},
 				"references":     []string{"uuid"},
-				"joinForeignKey": []string{"sys_user_id"},
-				"joinReferences": []string{"sys_role_id"},
+				"joinForeignKey": []string{"sys_user_uuid"}, // 使用 uuid
+				"joinReferences": []string{"sys_role_uuid"}, // 使用 uuid
 			},
 		}),
 	)...)
@@ -110,8 +110,10 @@ func GenStructs() error {
 		gen.FieldRelate(field.Many2Many, "Menus", menu, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_role_menus"},
-				"joinForeignKey": []string{"sys_role_role_id"},
-				"joinReferences": []string{"sys_base_menu_id"},
+				"foreignKey":     []string{"uuid"},
+				"references":     []string{"uuid"},
+				"joinForeignKey": []string{"sys_role_uuid"},      // 使用 uuid
+				"joinReferences": []string{"sys_base_menu_uuid"}, // 使用 uuid
 			},
 		}),
 		gen.FieldRelate(field.Many2Many, "Users", user, &field.RelateConfig{
@@ -119,8 +121,8 @@ func GenStructs() error {
 				"many2many":      []string{"sys_user_role"},
 				"foreignKey":     []string{"uuid"},
 				"references":     []string{"uuid"},
-				"joinForeignKey": []string{"sys_role_id"},
-				"joinReferences": []string{"sys_user_id"},
+				"joinForeignKey": []string{"sys_role_uuid"}, // 使用 uuid
+				"joinReferences": []string{"sys_user_uuid"}, // 使用 uuid
 			},
 		}),
 	)...)
@@ -130,8 +132,8 @@ func GenStructs() error {
 		gen.FieldRelate(field.Many2Many, "Role", role, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_role_menus"},
-				"joinForeignKey": []string{"sys_base_menu_id"},
-				"joinReferences": []string{"sys_role_role_id"},
+				"joinForeignKey": []string{"sys_base_menu_uuid"}, // 使用 uuid
+				"joinReferences": []string{"sys_role_uuid"},      // 使用 uuid
 			},
 		}),
 		gen.FieldRelate(field.HasMany, "Children", menu, &field.RelateConfig{

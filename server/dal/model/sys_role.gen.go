@@ -20,8 +20,8 @@ type SysRole struct {
 	CreateTime    time.Time     `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"createTime"`
 	UpdateTime    *time.Time    `gorm:"column:update_time;type:datetime" json:"updateTime"`
 	DeletedAt     *time.Time    `gorm:"column:deleted_at;type:datetime" json:"deletedAt"`
-	Menus         []SysBaseMenu `gorm:"joinForeignKey:sys_role_role_id;joinReferences:sys_base_menu_id;many2many:sys_role_menus" json:"menus"`
-	Users         []SysUser     `gorm:"foreignKey:uuid;joinForeignKey:sys_role_id;joinReferences:sys_user_id;many2many:sys_user_role;references:uuid" json:"users"`
+	Menus         []SysBaseMenu `gorm:"foreignKey:uuid;joinForeignKey:sys_role_uuid;joinReferences:sys_base_menu_uuid;many2many:sys_role_menus;references:uuid" json:"menus"`
+	Users         []SysUser     `gorm:"foreignKey:uuid;joinForeignKey:sys_role_uuid;joinReferences:sys_user_uuid;many2many:sys_user_role;references:uuid" json:"users"`
 }
 
 // TableName SysRole's table name

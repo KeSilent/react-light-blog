@@ -39,10 +39,10 @@ func (role *RoleService) CreateRoleList(authorities []*model.SysRole) error {
  */
 func (role *RoleService) AddRoleMenus(authorityMenus []*model.SysRoleMenu) error {
 	q := query.SysRoleMenu
-	if _, err := role.DeleteRoleMenu(authorityMenus[0].SysRoleRoleID); err != nil {
+	if _, err := role.DeleteRoleMenu(authorityMenus[0].SysBaseMenuUUID); err != nil {
 		return err
 	}
-	if authorityMenus[0].SysBaseMenuID != "" {
+	if authorityMenus[0].SysBaseMenuUUID != "" {
 		return q.WithContext(context.Background()).Create(authorityMenus...)
 	}
 	return nil
@@ -50,7 +50,7 @@ func (role *RoleService) AddRoleMenus(authorityMenus []*model.SysRoleMenu) error
 
 func (role *RoleService) DeleteRoleMenu(roleUUID string) (gen.ResultInfo, error) {
 	q := query.SysRoleMenu
-	return q.WithContext(context.Background()).Where(q.SysRoleRoleID.Eq(roleUUID)).Delete()
+	return q.WithContext(context.Background()).Where(q.SysRoleUUID.Eq(roleUUID)).Delete()
 }
 
 /**
@@ -62,7 +62,7 @@ func (role *RoleService) DeleteRoleMenu(roleUUID string) (gen.ResultInfo, error)
  */
 func (role *RoleService) GetRoleMenus(roleUUID string) ([]*model.SysRoleMenu, error) {
 	q := query.SysRoleMenu
-	return q.WithContext(context.Background()).Where(q.SysRoleRoleID.Eq(roleUUID)).Find()
+	return q.WithContext(context.Background()).Where(q.SysRoleUUID.Eq(roleUUID)).Find()
 }
 
 // @author: JackYang

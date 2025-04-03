@@ -1,6 +1,7 @@
 // src/models/MenuItem.ts
 export interface MenuModel {
   id: number;
+  uuid: string;
   menuLevel: number;
   parentId: number;
   path: string;

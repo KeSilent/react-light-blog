@@ -56,7 +56,7 @@ func (menuService *MenuService) GetRoleMenuList(roleUUID string) ([]model.SysBas
 
 	authority, err := q.
 		Preload(field.NewRelation("Menus", "")).
-		Preload(field.NewRelation("Menus.Children", "")).
+		Preload(field.NewRelation("Menus.Children", "")).Debug().
 		First()
 
 	if err != nil {

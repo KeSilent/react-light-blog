@@ -40,7 +40,7 @@ export default function CheckMenu(props: CheckMenuProps) {
     if (!roleId) return;
     getRoleMenus(roleId).then((res) => {
       if (res) {
-        const menuIdList: string[] = res.map((item) => String(item.sysBaseMenuId));
+        const menuIdList: string[] = res.map((item) => String(item.sysBaseMenuUuid));
         setSelectedKeys(menuIdList);
       }
     });
@@ -50,7 +50,7 @@ export default function CheckMenu(props: CheckMenuProps) {
     getMenuList({ keyWord: keyword }).then((res) => {
       if (res) {
         setTreeData(res);
-        setExpandedKeys(res.map((item) => String(item.id)));
+        setExpandedKeys(res.map((item) => String(item.uuid)));
         getSelectedKeys();
       }
     });
@@ -96,14 +96,14 @@ export default function CheckMenu(props: CheckMenuProps) {
           let roleMenus: RoleMenuModel[] = [];
           if (!selectedKeys) {
             roleMenus.push({
-              sysBaseMenuId: '0',
-              sysRoleRoleId: roleId || '',
+              sysBaseMenuUuid: '0',
+              sysRoleUuid: roleId || '',
             });
           } else {
             roleMenus = selectedKeys.map((item) => {
               return {
-                sysBaseMenuId: item,
-                sysRoleRoleId: roleId || '',
+                sysBaseMenuUuid: item,
+                sysRoleUuid: roleId || '',
               };
             });
           }
@@ -123,12 +123,14 @@ export default function CheckMenu(props: CheckMenuProps) {
         <ProForm.Group>
           <Tree
             checkable
+            selectable={false}
             multiple={true}
             checkedKeys={selectedKeys}
             expandedKeys={expandedKeys}
             treeData={treeData}
             onCheck={onCheckSelect}
-            fieldNames={{ title: 'title', key: 'id', children: 'children' }}
+            onExpand={(keys) => setExpandedKeys(keys.map(key => String(key)))}
+            fieldNames={{ title: 'title', key: 'uuid', children: 'children' }}
           />
         </ProForm.Group>
       </DrawerForm>

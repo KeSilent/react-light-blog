@@ -27,8 +27,8 @@ func newSysRoleMenu(db *gorm.DB, opts ...gen.DOOption) sysRoleMenu {
 
 	tableName := _sysRoleMenu.sysRoleMenuDo.TableName()
 	_sysRoleMenu.ALL = field.NewAsterisk(tableName)
-	_sysRoleMenu.SysRoleRoleID = field.NewString(tableName, "sys_role_role_id")
-	_sysRoleMenu.SysBaseMenuID = field.NewString(tableName, "sys_base_menu_id")
+	_sysRoleMenu.SysRoleUUID = field.NewString(tableName, "sys_role_uuid")
+	_sysRoleMenu.SysBaseMenuUUID = field.NewString(tableName, "sys_base_menu_uuid")
 
 	_sysRoleMenu.fillFieldMap()
 
@@ -38,9 +38,9 @@ func newSysRoleMenu(db *gorm.DB, opts ...gen.DOOption) sysRoleMenu {
 type sysRoleMenu struct {
 	sysRoleMenuDo sysRoleMenuDo
 
-	ALL           field.Asterisk
-	SysRoleRoleID field.String
-	SysBaseMenuID field.String
+	ALL             field.Asterisk
+	SysRoleUUID     field.String
+	SysBaseMenuUUID field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -57,8 +57,8 @@ func (s sysRoleMenu) As(alias string) *sysRoleMenu {
 
 func (s *sysRoleMenu) updateTableName(table string) *sysRoleMenu {
 	s.ALL = field.NewAsterisk(table)
-	s.SysRoleRoleID = field.NewString(table, "sys_role_role_id")
-	s.SysBaseMenuID = field.NewString(table, "sys_base_menu_id")
+	s.SysRoleUUID = field.NewString(table, "sys_role_uuid")
+	s.SysBaseMenuUUID = field.NewString(table, "sys_base_menu_uuid")
 
 	s.fillFieldMap()
 
@@ -86,8 +86,8 @@ func (s *sysRoleMenu) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 
 func (s *sysRoleMenu) fillFieldMap() {
 	s.fieldMap = make(map[string]field.Expr, 2)
-	s.fieldMap["sys_role_role_id"] = s.SysRoleRoleID
-	s.fieldMap["sys_base_menu_id"] = s.SysBaseMenuID
+	s.fieldMap["sys_role_uuid"] = s.SysRoleUUID
+	s.fieldMap["sys_base_menu_uuid"] = s.SysBaseMenuUUID
 }
 
 func (s sysRoleMenu) clone(db *gorm.DB) sysRoleMenu {

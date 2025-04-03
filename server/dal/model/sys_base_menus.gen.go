@@ -26,7 +26,7 @@ type SysBaseMenu struct {
 	CreateTime time.Time     `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"createTime"`
 	UpdateTime *time.Time    `gorm:"column:update_time;type:datetime" json:"updateTime"`
 	DeletedAt  *time.Time    `gorm:"column:deleted_at;type:datetime" json:"deletedAt"`
-	Role       []SysRole     `gorm:"joinForeignKey:sys_base_menu_id;joinReferences:sys_role_role_id;many2many:sys_role_menus" json:"role"`
+	Role       []SysRole     `gorm:"joinForeignKey:sys_base_menu_uuid;joinReferences:sys_role_uuid;many2many:sys_role_menus" json:"role"`
 	Children   []SysBaseMenu `gorm:"foreignKey:parent_id" json:"children"`
 }
 

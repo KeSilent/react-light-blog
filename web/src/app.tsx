@@ -1,13 +1,12 @@
-import { Footer,AvatarDropdown, AvatarName } from '@/components';
+import { AvatarDropdown, AvatarName, Footer } from '@/components';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
-import { errorConfig, tokenInit } from './requestErrorConfig';
-import React from 'react';
-import { getDynamicMenus } from './services/base/api';
 import { MenuModel } from './models/system/menu-model';
+import { errorConfig, tokenInit } from './requestErrorConfig';
+import { getDynamicMenus } from './services/base/api';
 import { createIcon } from './utils/MenuItemRender';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -21,10 +20,9 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
-
   const fetchUserInfo = async () => {
     try {
-      return JSON.parse(localStorage.getItem("userInfo") || '{}');
+      return JSON.parse(localStorage.getItem('userInfo') || '{}');
     } catch (error) {
       history.push(loginPath);
     }
@@ -53,21 +51,20 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     menu: {
       locale: false,
       params: initialState,
+      autoClose: false,
       request: async () => {
         const menuData = await getDynamicMenus();
         if (!menuData.data) return [];
         const formatMenuData = (menus: MenuModel[]): any[] => {
-          return menus.map(menu => {
+          return menus.map((menu) => {
             return {
-              key: menu.id,
+              key: menu.path,
               path: menu.path,
               name: menu.title,
               icon: createIcon(menu.icon),
               component: menu.component,
               hideInMenu: menu.hidden,
-              children: menu.children?.length
-                ? formatMenuData(menu.children)
-                : undefined,
+              children: menu.children?.length ? formatMenuData(menu.children) : undefined,
               sort: menu.sort,
             };
           });
