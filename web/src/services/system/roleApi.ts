@@ -51,5 +51,5 @@ export async function addRoleMenu(params: RoleMenuModel) {
     method: 'POST',
     data: params,
   });
-  return result.data;
+  return { data: result.code === 0 }
 }

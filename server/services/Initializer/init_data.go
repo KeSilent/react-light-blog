@@ -7,6 +7,7 @@ package initializer
 
 import (
 	"github.com/kesilent/react-light-blog/dal/model"
+	"github.com/kesilent/react-light-blog/dal/request"
 	"github.com/kesilent/react-light-blog/services/system"
 )
 
@@ -86,7 +87,7 @@ func (i *InitData) initAuthorityMenus() error {
 	}
 
 	entities := append(adminMenus, userMenus...)
-	return system.RoleServiceApp.AddRoleMenus(entities)
+	return system.RoleServiceApp.AddRoleMenus(request.RoleMenuReq{Rolemenus: entities, RoleUUID: ""})
 }
 
 func (i *InitData) initUserAuthorities() error {

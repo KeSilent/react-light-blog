@@ -1,9 +1,13 @@
+/*
+ * @Author: Yang
+ * @Date: 2025-03-19 17:03:23
+ * @Description: 角色权限API
+ */
 package system
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/kesilent/react-light-blog/dal/common/response"
-	"github.com/kesilent/react-light-blog/dal/model"
 	systemReq "github.com/kesilent/react-light-blog/dal/request"
 	"github.com/kesilent/react-light-blog/global"
 	"github.com/kesilent/react-light-blog/utils"
@@ -67,7 +71,7 @@ func (r *RoleApi) GetRoleMenus(c *gin.Context) {
  * @Description: 添加角色菜单
  **/
 func (r *RoleApi) AddRoleMenu(c *gin.Context) {
-	var roleMenu []*model.SysRoleMenu
+	var roleMenu systemReq.RoleMenuReq
 	err := c.BindJSON(&roleMenu)
 	if err != nil {
 		response.FailWithMessage("参数错误", c)

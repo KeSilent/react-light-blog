@@ -37,13 +37,13 @@ func (role *RoleService) CreateRoleList(authorities []*model.SysRole) error {
  * @param: authorityMenus []*model.SysRoleMenu
  * @return: error
  */
-func (role *RoleService) AddRoleMenus(authorityMenus []*model.SysRoleMenu) error {
+func (role *RoleService) AddRoleMenus(authorityMenus systemReq.RoleMenuReq) error {
 	q := query.SysRoleMenu
-	if _, err := role.DeleteRoleMenu(authorityMenus[0].SysBaseMenuUUID); err != nil {
+	if _, err := role.DeleteRoleMenu(authorityMenus.RoleUUID); err != nil {
 		return err
 	}
-	if authorityMenus[0].SysBaseMenuUUID != "" {
-		return q.WithContext(context.Background()).Create(authorityMenus...)
+	if len(authorityMenus.Rolemenus) > 0 {
+		return q.WithContext(context.Background()).Create(authorityMenus.Rolemenus...)
 	}
 	return nil
 }

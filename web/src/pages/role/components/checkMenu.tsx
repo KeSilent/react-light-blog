@@ -13,7 +13,7 @@ export type CheckMenuProps = {
 };
 export default function CheckMenu(props: CheckMenuProps) {
   const { reload, roleId } = props;
-  const [messageApi] = message.useMessage();
+  const [messageApi, contextHolder] = message.useMessage();
   const [keyword, setKeyword] = useState('');
   const [open, setOpen] = useState(false);
   const [treeData, setTreeData] = useState<MenuModel[]>([]);
@@ -22,7 +22,6 @@ export default function CheckMenu(props: CheckMenuProps) {
 
   const { run } = useRequest<MenuModel>(addRoleMenu, {
     manual: true,
-    // 添加防抖，避免重复提交
     debounceInterval: 300,
     onSuccess: (res) => {
       if (res) {
@@ -31,12 +30,13 @@ export default function CheckMenu(props: CheckMenuProps) {
       }
     },
     onError: (error) => {
-      // 处理网络错误等异常情况
       messageApi.error(error?.message || '网络异常，请稍后重试！');
     },
   });
 
   const getSelectedKeys = () => {
+    console.log('roleId', roleId);
+
     if (!roleId) return;
     getRoleMenus(roleId).then((res) => {
       if (res) {
@@ -73,6 +73,7 @@ export default function CheckMenu(props: CheckMenuProps) {
 
   return (
     <>
+      {contextHolder}
       <DrawerForm<{
         name: string;
         company: string;
@@ -107,7 +108,7 @@ export default function CheckMenu(props: CheckMenuProps) {
               };
             });
           }
-          await run(roleMenus);
+          await run({ rolemenus: roleMenus, roleUUID: roleId });
           return true;
         }}
         onOpenChange={(visible) => {
@@ -129,7 +130,7 @@ export default function CheckMenu(props: CheckMenuProps) {
             expandedKeys={expandedKeys}
             treeData={treeData}
             onCheck={onCheckSelect}
-            onExpand={(keys) => setExpandedKeys(keys.map(key => String(key)))}
+            onExpand={(keys) => setExpandedKeys(keys.map((key) => String(key)))}
             fieldNames={{ title: 'title', key: 'uuid', children: 'children' }}
           />
         </ProForm.Group>
