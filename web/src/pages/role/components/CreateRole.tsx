@@ -64,6 +64,7 @@ export default function CreateRole(props: CreateRoleProps) {
           )
         }
         form={form}
+        layout='horizontal'
         autoFocusFirstInput
         modalProps={{ okButtonProps: { loading } }}
         onFinish={async (value) => {
