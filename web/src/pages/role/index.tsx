@@ -41,7 +41,7 @@ const UserList: React.FC = () => {
           labelWidth: 120,
         }}
         toolBarRender={() => [
-          <CreateRole key="updateUser" isUpdate={false} reload={actionRef.current?.reload} />,
+          <CreateRole key="updateUser" reload={actionRef.current?.reload} />,
         ]}
         request={handleGetUserList}
         columns={columns(actionRef, handleDelete)}

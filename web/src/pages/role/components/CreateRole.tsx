@@ -7,12 +7,12 @@ import { Button, Form, message } from 'antd';
 import { useEffect, useState } from 'react';
 
 export type CreateRoleProps = {
-  isUpdate?: boolean;
+  role?: RoleModel;
   reload?: ActionType['reload'];
 };
 
 export default function CreateRole(props: CreateRoleProps) {
-  const { isUpdate, reload } = props;
+  const { role, reload } = props;
   const [messageApi, contextHolder] = message.useMessage();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm<RoleModel>();
@@ -33,17 +33,21 @@ export default function CreateRole(props: CreateRoleProps) {
 
   useEffect(() => {
     if (open) {
-      form.setFieldsValue({});
+      if (role) {
+        form.setFieldsValue(role);
+      } else {
+        form.setFieldsValue({});
+      }
     }
-  }, [open, form]);
+  }, [open, form, role]);
 
   return (
     <>
       {contextHolder}
       <ModalForm<RoleModel>
-        title={isUpdate ? '编辑角色' : '新建角色'}
+        title={role ? '编辑角色' : '新建角色'}
         trigger={
-          isUpdate ? (
+          role ? (
             <Button color="primary" variant="link" onClick={() => setOpen(true)}>
               编辑角色
             </Button>

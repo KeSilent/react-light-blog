@@ -30,7 +30,7 @@ export const columns = (
     valueType: 'option',
     render: (_, record) => [
       <CheckMenu key="checkMenu" roleId={record.uuid} reload={actionRef.current?.reload} />,
-      <CreateRole key="updateUser" isUpdate={true} reload={actionRef.current?.reload} />,
+      <CreateRole key="updateUser" role={record} reload={actionRef.current?.reload} />,
       <Popconfirm
         key="delete"
         title="Delete the task"
