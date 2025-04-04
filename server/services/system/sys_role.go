@@ -32,6 +32,30 @@ func (role *RoleService) CreateRoleList(authorities []*model.SysRole) error {
 
 /**
  * @author: JackYang
+ * @function: SaveRole
+ * @description: 保存角色
+ * @param: model *model.SysRole
+ * @return: error
+ */
+func (role *RoleService) SaveRole(model *model.SysRole) error {
+	q := query.SysRole.WithContext(context.Background())
+	return q.Save(model)
+}
+
+/**
+ * @author: JackYang
+ * @function: DeleteRole
+ * @description: 删除角色
+ * @param: roleUUID string
+ * @return: gen.ResultInfo, error
+ */
+func (role *RoleService) DeleteRole(roleUUID string) (gen.ResultInfo, error) {
+	q := query.SysRole.WithContext(context.Background())
+	return q.Where(query.SysRole.UUID.Eq(roleUUID)).Delete()
+}
+
+/**
+ * @author: JackYang
  * @function: AddRoleMenus
  * @description: 角色菜单绑定
  * @param: authorityMenus []*model.SysRoleMenu

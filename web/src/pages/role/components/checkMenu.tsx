@@ -25,7 +25,7 @@ export default function CheckMenu(props: CheckMenuProps) {
     debounceInterval: 300,
     onSuccess: (res) => {
       if (res) {
-        messageApi.success('修改成功！');
+        messageApi.success('设置成功！');
         reload?.();
       }
     },
@@ -84,9 +84,9 @@ export default function CheckMenu(props: CheckMenuProps) {
           minWidth: 500,
         }}
         trigger={
-          <a type="primary" onClick={() => setOpen(true)}>
+          <Button color="primary" variant="link" onClick={() => setOpen(true)}>
             设置权限
-          </a>
+          </Button>
         }
         autoFocusFirstInput
         drawerProps={{

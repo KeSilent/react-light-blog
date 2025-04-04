@@ -6,8 +6,12 @@
 package system
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/kesilent/react-light-blog/dal/common/response"
+	"github.com/kesilent/react-light-blog/dal/model"
 	systemReq "github.com/kesilent/react-light-blog/dal/request"
 	"github.com/kesilent/react-light-blog/global"
 	"github.com/kesilent/react-light-blog/utils"
@@ -15,6 +19,42 @@ import (
 )
 
 type RoleApi struct{}
+
+/**
+ * @Author: kesilent
+ * @Description: 保存角色
+ **/
+func (r *RoleApi) SaveRole(c *gin.Context) {
+	var role model.SysRole
+	err := c.ShouldBindJSON(&role)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if role.ID == 0 {
+		role.ID, _ = utils.GenID(0)
+		role.UUID = uuid.NewString()
+	}
+	err = roleService.SaveRole(&role)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+	}
+	response.Ok(c)
+}
+
+/**
+ * @Author: kesilent
+ * @Description: 删除角色
+ **/
+func (r *RoleApi) DeleteRole(c *gin.Context) {
+	uuId := c.Query("id")
+	resultInfo, err := roleService.DeleteRole(uuId)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+	}
+
+	response.OkWithMessage("删除"+fmt.Sprintf("%d", resultInfo.RowsAffected)+"条", c)
+}
 
 /**
  * @Author: kesilent

@@ -51,5 +51,30 @@ export async function addRoleMenu(params: RoleMenuModel) {
     method: 'POST',
     data: params,
   });
-  return { data: result.code === 0 }
+  return { data: result.code === 0 };
+}
+
+/**
+ * 保存角色信息
+ * @param params 角色信息
+ * @returns
+ */
+export async function saveRole(params: RoleModel) {
+  const result = await request<ResponseResult<RoleModel>>('/api/role/saveRole', {
+    method: 'POST',
+    data: params,
+  });
+  return { data: result.code === 0 };
+}
+/**
+ * 删除角色信息
+ * @param params 角色信息
+ * @returns
+ */
+export async function deleteRole(roleUUId: string) {
+  const result = await request<ResponseResult>('/api/role/deleteRole', {
+    method: 'DELETE',
+    params: { id: roleUUId },
+  });
+  return { data: result.code === 0 };
 }

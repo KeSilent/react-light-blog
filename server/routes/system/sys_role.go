@@ -19,6 +19,8 @@ func (s *RoleRouter) InitRoleRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
 		authorityRouter.GET("getRoleList", roleApi.GetRoleList)
 		authorityRouter.GET("getRoleMenus", roleApi.GetRoleMenus)
 		authorityRouter.POST("addRoleMenu", roleApi.AddRoleMenu)
+		authorityRouter.POST("saveRole", roleApi.SaveRole)
+		authorityRouter.DELETE("deleteRole", roleApi.DeleteRole)
 	}
 	return authorityRouter
 }

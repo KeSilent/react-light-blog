@@ -1,7 +1,13 @@
+/*
+ * @Author: Yang
+ * @Date: 2025-03-04 16:05:13
+ * @Description: 请填写简介
+ */
 package utils
 
 import (
 	"fmt"
+
 	"github.com/bwmarrin/snowflake"
 )
 
