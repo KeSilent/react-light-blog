@@ -89,11 +89,13 @@ func (role *RoleService) GetRoleMenus(roleUUID string) ([]*model.SysRoleMenu, er
 	return q.WithContext(context.Background()).Where(q.SysRoleUUID.Eq(roleUUID)).Find()
 }
 
-// @author: JackYang
-// @function: GetRoleList
-// @description: 分页获取数据
-// @param: info request.GetRoleListReq
-// @return: err error, list interface{}, total int64
+/**
+ * @author: JackYang
+ * @function: GetRoleMenus
+ * @description: 分页获取数据
+ * @param: roleId int64
+ * @return: []*model.SysRoleMenu, error
+ */
 func (role *RoleService) GetRoleList(info systemReq.GetRoleListReq) (list []*model.SysRole, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Current - 1)

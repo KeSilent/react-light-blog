@@ -1,6 +1,6 @@
 import { MenuModel } from '@/models/system/menu-model';
 import { RoleMenuModel } from '@/models/system/role-model';
-import { getMenuList } from '@/services/system/menuApi';
+import { getMenuByKey } from '@/services/system/menuApi';
 import { addRoleMenu, getRoleMenus } from '@/services/system/roleApi';
 import { ActionType, DrawerForm, ProForm } from '@ant-design/pro-components';
 import { useRequest } from '@umijs/max';
@@ -47,7 +47,7 @@ export default function CheckMenu(props: CheckMenuProps) {
   };
 
   const getMenus = () => {
-    getMenuList({ keyWord: keyword }).then((res) => {
+    getMenuByKey({ keyWord: keyword }).then((res) => {
       if (res) {
         setTreeData(res);
         setExpandedKeys(res.map((item) => String(item.uuid)));

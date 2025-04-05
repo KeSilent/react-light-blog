@@ -12,7 +12,7 @@ const TableNameSysBaseMenu = "sys_base_menus"
 
 // SysBaseMenu 菜单表
 type SysBaseMenu struct {
-	ID         int64         `gorm:"column:id;type:bigint;primaryKey;comment:菜单ID" json:"id"` // 菜单ID
+	ID         int64         `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true;comment:菜单ID" json:"id"` // 菜单ID
 	UUID       string        `gorm:"column:uuid;type:char(36);not null" json:"uuid"`
 	MenuLevel  int32         `gorm:"column:menu_level;type:int;comment:菜单层级" json:"menuLevel"`             // 菜单层级
 	ParentID   int64         `gorm:"column:parent_id;type:bigint;comment:父菜单ID" json:"parentId"`           // 父菜单ID

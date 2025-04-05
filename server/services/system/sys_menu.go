@@ -12,6 +12,7 @@ import (
 
 	"github.com/kesilent/react-light-blog/dal/model"
 	"github.com/kesilent/react-light-blog/dal/query"
+	req "github.com/kesilent/react-light-blog/dal/request"
 	"gorm.io/gen/field"
 	"gorm.io/gorm"
 )
@@ -107,7 +108,13 @@ func sortMenus(menus []model.SysBaseMenu) {
 	}
 }
 
-func (menuService *MenuService) GetMenuList(menuName string) ([]model.SysBaseMenu, error) {
+/**
+ * @Author: Yang
+ * @description: 通过关键字查询菜单
+ * @param {string} menuName
+ * @return {[]model.SysBaseMenu, error}
+ */
+func (menuService *MenuService) GetMenuByKey(menuName string) ([]model.SysBaseMenu, error) {
 	// 获取权限信息，并预加载菜单
 
 	q := query.Q.SysBaseMenu.WithContext(context.Background())
@@ -128,6 +135,37 @@ func (menuService *MenuService) GetMenuList(menuName string) ([]model.SysBaseMen
 	sortMenus(treeMenus)
 
 	return treeMenus, nil
+}
+
+/**
+ * @Author: Yang
+ * @description:
+ * @param {req.GetMenuListReq} info
+ * @return {*}
+ */
+func (menuService *MenuService) GetMenuListByPage(info req.GetMenuListReq) (list []model.SysBaseMenu, total int64, err error) {
+	limit := info.PageSize
+	offset := info.PageSize * (info.Current - 1)
+
+	db := query.Q.SysBaseMenu.WithContext(context.Background())
+
+	if info.Name != "" {
+		db = db.Where(query.SysBaseMenu.Name.Like("%" + info.Name + "%"))
+	}
+
+	total, err = db.Count()
+	if err != nil {
+		return
+	}
+
+	userList, err := db.Limit(limit).Offset(offset).Find()
+
+	treeMenus := buildTree(userList, 0)
+
+	// 对每个级别的菜单按 Sort 排序
+	sortMenus(treeMenus)
+
+	return treeMenus, int64(len(treeMenus)), err
 }
 
 // 构建树形结构

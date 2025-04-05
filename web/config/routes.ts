@@ -56,12 +56,17 @@ export default [
   },
   {
     name: '用户列表',
-    path: '/user/list',
+    path: '/system/user',
     component: './user/manage'
   },
   {
     name: '角色列表',
-    path: '/role',
+    path: '/system/role',
     component: './role'
+  },
+  {
+    name: '菜单列表',
+    path: '/system/menu',
+    component: './menu'
   },
 ];

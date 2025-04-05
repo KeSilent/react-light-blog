@@ -1,13 +1,14 @@
-import { PageList } from "@/models/system/common-model";
-import { MenuModel } from "@/models/system/menu-model";
-import { request } from "@umijs/max";
+import { PageList, ResponseResult } from '@/models/system/common-model';
+import { MenuModel } from '@/models/system/menu-model';
+import { request } from '@umijs/max';
 
-export async function getMenuList(
-  params: {
-    keyWord: string
-  },
-) {
-  const result = await request<PageList<MenuModel[]>>('/api/menu/list', {
+/**
+ * @Author: Yang
+ * @description: 通过关键词获取全部菜单
+ * @return {*}
+ */
+export async function getMenuByKey(params: { keyWord: string }) {
+  const result = await request<PageList<MenuModel[]>>('/api/menu/getMenuByKey', {
     method: 'GET',
     params: {
       ...params,
@@ -15,4 +16,45 @@ export async function getMenuList(
   });
 
   return result.data || [];
+}
+
+/**
+ * @Author: Yang
+ * @description: 获取菜单列表
+ * @return {*}
+ */
+export async function getMenuList(
+  params: {
+    current?: number;
+    pageSize?: number;
+  },
+  options?: { [keyword: string]: any },
+) {
+  const result = await request<ResponseResult<PageList<MenuModel[]>>>(
+    '/api/menu/getMenuListByPage',
+    {
+      method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+  return result.data;
+}
+
+/**
+ * @Author: Yang
+ * @description: 删除菜单信息
+ * @param {string} menuId
+ * @return {*}
+ */
+export async function deleteMenu(menuId: string) {
+  const result = await request<ResponseResult<string>>('/api/menu/deleteMenu', {
+    method: 'DELETE',
+    params: {
+      menuId: menuId,
+    },
+  });
+  return result.data;
 }
