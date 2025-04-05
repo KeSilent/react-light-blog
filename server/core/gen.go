@@ -92,6 +92,9 @@ func GenStructs() error {
 	// 生成菜单模型
 	menu := generator.GenerateModel("sys_base_menus")
 
+	// 生成部门模型
+	dept := generator.GenerateModel("sys_dept")
+
 	// 重新配置用户模型的关联关系
 	user := generator.GenerateModel("sys_users", append(fieldOpts,
 		gen.FieldRelate(field.Many2Many, "Role", role, &field.RelateConfig{
@@ -99,8 +102,17 @@ func GenStructs() error {
 				"many2many":      []string{"sys_user_role"},
 				"foreignKey":     []string{"uuid"},
 				"references":     []string{"uuid"},
-				"joinForeignKey": []string{"sys_user_uuid"}, // 使用 uuid
-				"joinReferences": []string{"sys_role_uuid"}, // 使用 uuid
+				"joinForeignKey": []string{"sys_user_uuid"},
+				"joinReferences": []string{"sys_role_uuid"},
+			},
+		}),
+		gen.FieldRelate(field.Many2Many, "Dept", dept, &field.RelateConfig{
+			GORMTag: field.GormTag{
+				"many2many":      []string{"sys_user_dept"},
+				"foreignKey":     []string{"uuid"},
+				"references":     []string{"uuid"},
+				"joinForeignKey": []string{"sys_user_uuid"},
+				"joinReferences": []string{"sys_dept_uuid"},
 			},
 		}),
 	)...)
@@ -112,8 +124,8 @@ func GenStructs() error {
 				"many2many":      []string{"sys_role_menus"},
 				"foreignKey":     []string{"uuid"},
 				"references":     []string{"uuid"},
-				"joinForeignKey": []string{"sys_role_uuid"},      // 使用 uuid
-				"joinReferences": []string{"sys_base_menu_uuid"}, // 使用 uuid
+				"joinForeignKey": []string{"sys_role_uuid"},
+				"joinReferences": []string{"sys_base_menu_uuid"},
 			},
 		}),
 		gen.FieldRelate(field.Many2Many, "Users", user, &field.RelateConfig{
@@ -121,8 +133,8 @@ func GenStructs() error {
 				"many2many":      []string{"sys_user_role"},
 				"foreignKey":     []string{"uuid"},
 				"references":     []string{"uuid"},
-				"joinForeignKey": []string{"sys_role_uuid"}, // 使用 uuid
-				"joinReferences": []string{"sys_user_uuid"}, // 使用 uuid
+				"joinForeignKey": []string{"sys_role_uuid"},
+				"joinReferences": []string{"sys_user_uuid"},
 			},
 		}),
 	)...)
@@ -132,8 +144,8 @@ func GenStructs() error {
 		gen.FieldRelate(field.Many2Many, "Role", role, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_role_menus"},
-				"joinForeignKey": []string{"sys_base_menu_uuid"}, // 使用 uuid
-				"joinReferences": []string{"sys_role_uuid"},      // 使用 uuid
+				"joinForeignKey": []string{"sys_base_menu_uuid"},
+				"joinReferences": []string{"sys_role_uuid"},
 			},
 		}),
 		gen.FieldRelate(field.HasMany, "Children", menu, &field.RelateConfig{
@@ -170,6 +182,7 @@ func GenStructs() error {
 		menu,
 		dic,
 		dicDetails,
+		dept,
 	)
 
 	// 执行并生成代码

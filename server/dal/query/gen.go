@@ -19,6 +19,7 @@ var (
 	Q                   = new(Query)
 	JwtBlacklist        *jwtBlacklist
 	SysBaseMenu         *sysBaseMenu
+	SysDept             *sysDept
 	SysDictionary       *sysDictionary
 	SysDictionaryDetail *sysDictionaryDetail
 	SysOperationRecord  *sysOperationRecord
@@ -32,6 +33,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	JwtBlacklist = &Q.JwtBlacklist
 	SysBaseMenu = &Q.SysBaseMenu
+	SysDept = &Q.SysDept
 	SysDictionary = &Q.SysDictionary
 	SysDictionaryDetail = &Q.SysDictionaryDetail
 	SysOperationRecord = &Q.SysOperationRecord
@@ -46,6 +48,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		db:                  db,
 		JwtBlacklist:        newJwtBlacklist(db, opts...),
 		SysBaseMenu:         newSysBaseMenu(db, opts...),
+		SysDept:             newSysDept(db, opts...),
 		SysDictionary:       newSysDictionary(db, opts...),
 		SysDictionaryDetail: newSysDictionaryDetail(db, opts...),
 		SysOperationRecord:  newSysOperationRecord(db, opts...),
@@ -61,6 +64,7 @@ type Query struct {
 
 	JwtBlacklist        jwtBlacklist
 	SysBaseMenu         sysBaseMenu
+	SysDept             sysDept
 	SysDictionary       sysDictionary
 	SysDictionaryDetail sysDictionaryDetail
 	SysOperationRecord  sysOperationRecord
@@ -77,6 +81,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		db:                  db,
 		JwtBlacklist:        q.JwtBlacklist.clone(db),
 		SysBaseMenu:         q.SysBaseMenu.clone(db),
+		SysDept:             q.SysDept.clone(db),
 		SysDictionary:       q.SysDictionary.clone(db),
 		SysDictionaryDetail: q.SysDictionaryDetail.clone(db),
 		SysOperationRecord:  q.SysOperationRecord.clone(db),
@@ -100,6 +105,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		db:                  db,
 		JwtBlacklist:        q.JwtBlacklist.replaceDB(db),
 		SysBaseMenu:         q.SysBaseMenu.replaceDB(db),
+		SysDept:             q.SysDept.replaceDB(db),
 		SysDictionary:       q.SysDictionary.replaceDB(db),
 		SysDictionaryDetail: q.SysDictionaryDetail.replaceDB(db),
 		SysOperationRecord:  q.SysOperationRecord.replaceDB(db),
@@ -113,6 +119,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 type queryCtx struct {
 	JwtBlacklist        *jwtBlacklistDo
 	SysBaseMenu         *sysBaseMenuDo
+	SysDept             *sysDeptDo
 	SysDictionary       *sysDictionaryDo
 	SysDictionaryDetail *sysDictionaryDetailDo
 	SysOperationRecord  *sysOperationRecordDo
@@ -126,6 +133,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		JwtBlacklist:        q.JwtBlacklist.WithContext(ctx),
 		SysBaseMenu:         q.SysBaseMenu.WithContext(ctx),
+		SysDept:             q.SysDept.WithContext(ctx),
 		SysDictionary:       q.SysDictionary.WithContext(ctx),
 		SysDictionaryDetail: q.SysDictionaryDetail.WithContext(ctx),
 		SysOperationRecord:  q.SysOperationRecord.WithContext(ctx),
