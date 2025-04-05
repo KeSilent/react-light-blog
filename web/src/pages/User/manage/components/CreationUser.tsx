@@ -1,11 +1,19 @@
-import { UserModel } from "@/models/system/user-model";
-import { register } from "@/services/system/userApi";
-import { PlusOutlined } from "@ant-design/icons";
-import { ActionType, ModalForm, ProForm, ProFormText } from "@ant-design/pro-components";
-import { FormattedMessage, useRequest } from "@umijs/max";
-import { Button, Form, message } from "antd";
-import { useEffect, useState } from "react";
-
+import { RoleModel } from '@/models/system/role-model';
+import { UserModel } from '@/models/system/user-model';
+import { getAllRoleKeyValueList } from '@/services/system/roleApi';
+import { register } from '@/services/system/userApi';
+import { PlusOutlined } from '@ant-design/icons';
+import {
+  ActionType,
+  ModalForm,
+  ProForm,
+  ProFormSelect,
+  ProFormText,
+} from '@ant-design/pro-components';
+import { FormattedMessage, useRequest } from '@umijs/max';
+import { Button, Form, message, Upload, UploadFile, UploadProps } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import { useEffect, useState } from 'react';
 
 export type CreationFormProps = {
   reload?: ActionType['reload'];
@@ -17,6 +25,17 @@ const CreationUser: React.FC<CreationFormProps> = (props) => {
 
   const [form] = Form.useForm<UserModel>();
   const [open, setOpen] = useState(false);
+
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const onPreview = async (file: UploadFile) => {
+    let src = file.url as string;
+    if (!src) {
+      src = await new Promise((resolve) => {});
+    }
+  };
+  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
 
   const { run, loading } = useRequest<UserModel>(register, {
     manual: true,
@@ -30,7 +49,7 @@ const CreationUser: React.FC<CreationFormProps> = (props) => {
       // 处理网络错误等异常情况
       messageApi.error(error?.message || '网络异常，请稍后重试！');
     },
-  })
+  });
 
   useEffect(() => {
     if (open) {
@@ -38,12 +57,11 @@ const CreationUser: React.FC<CreationFormProps> = (props) => {
     }
   }, [open, form]); // 添加 open 依赖
 
-  // const { } = userRequest(addR)
-
   return (
     <>
       {contextHolder}
-      <ModalForm<UserModel> title="编辑用户"
+      <ModalForm<UserModel>
+        title="编辑用户"
         trigger={
           <Button
             type="primary"
@@ -71,15 +89,8 @@ const CreationUser: React.FC<CreationFormProps> = (props) => {
           }
         }}
       >
-
         <ProForm.Group>
-          <ProFormText
-            label="ID"
-            placeholder="id"
-            width="md"
-            name="id"
-            hidden={true}
-          />
+          <ProFormText label="ID" placeholder="id" width="md" name="id" hidden={true} />
         </ProForm.Group>
         <ProForm.Group>
           <ProFormText
@@ -91,7 +102,7 @@ const CreationUser: React.FC<CreationFormProps> = (props) => {
               {
                 required: true,
                 message: '请输入昵称',
-              }
+              },
             ]}
           />
           <ProFormText
@@ -103,7 +114,7 @@ const CreationUser: React.FC<CreationFormProps> = (props) => {
               {
                 required: true,
                 message: '请输入用户名',
-              }
+              },
             ]}
           />
         </ProForm.Group>
@@ -124,7 +135,11 @@ const CreationUser: React.FC<CreationFormProps> = (props) => {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || !getFieldValue('newPassword') || value === getFieldValue('newPassword')) {
+                  if (
+                    !value ||
+                    !getFieldValue('newPassword') ||
+                    value === getFieldValue('newPassword')
+                  ) {
                     return Promise.resolve();
                   }
                   return Promise.reject(new Error('两次输入的密码不一致！'));
@@ -154,25 +169,47 @@ const CreationUser: React.FC<CreationFormProps> = (props) => {
             dependencies={['newPassword']} // 添加依赖，当 newPassword 变化时重新验证
           />
         </ProForm.Group>
-
         <ProForm.Group>
-          <ProFormText
-            label="手机号"
-            placeholder="手机号"
+          <ProFormSelect
+            label="角色"
+            placeholder="角色"
             width="md"
-            name="phone"
+            name="role"
+            debounceTime={300}
+            request={async () => {
+              const response = await getAllRoleKeyValueList();
+              return response || [];
+            }}
+            rules={[
+              {
+                required: true,
+                message: '请选择角色',
+              },
+            ]}
           />
-          <ProFormText
-            label="邮箱"
-            placeholder="邮箱"
-            width="md"
-            name="email"
-          />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormText label="手机号" placeholder="手机号" width="md" name="phone" />
+          <ProFormText label="邮箱" placeholder="邮箱" width="md" name="email" />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProForm.Item label="头像" name="customField">
+            <ImgCrop cropShape="round">
+              <Upload
+                action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                onPreview={onPreview}
+              >
+                {fileList.length < 1 && '+ Upload'}
+              </Upload>
+            </ImgCrop>
+          </ProForm.Item>
         </ProForm.Group>
       </ModalForm>
     </>
   );
 };
-
 
 export default CreationUser;

@@ -1,6 +1,7 @@
 package system
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -222,4 +223,19 @@ func (b *BaseApi) UpdateUser(c *gin.Context) {
 		return
 	}
 	response.OkWithMessage("更新成功", c)
+}
+
+/**
+ * @description: 删除用户
+ * @param {string} userUUID
+ * @return {*}
+ */
+func (b *BaseApi) DeleteUser(c *gin.Context) {
+	userUUID := c.Param("id")
+	resultInfo, err := userService.DeleteUser(userUUID)
+	if err != nil {
+		response.FailWithMessage("删除失败", c)
+		return
+	}
+	response.OkWithMessage("删除成功"+fmt.Sprintf("%d", resultInfo.RowsAffected)+"条", c)
 }

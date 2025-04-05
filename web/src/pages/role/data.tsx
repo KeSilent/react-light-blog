@@ -33,8 +33,7 @@ export const columns = (
       <CreateRole key="updateUser" role={record} reload={actionRef.current?.reload} />,
       <Popconfirm
         key="delete"
-        title="Delete the task"
-        description="Are you sure to delete this task?"
+        title="是否确认删除角色"
         onConfirm={() => handleDelete(record.uuid)}
         okText="Yes"
         cancelText="No"

@@ -9,6 +9,7 @@ import (
 	"github.com/kesilent/react-light-blog/dal/query"
 	systemReq "github.com/kesilent/react-light-blog/dal/request"
 	"github.com/kesilent/react-light-blog/utils"
+	"gorm.io/gen"
 	"gorm.io/gen/field"
 	"gorm.io/gorm"
 )
@@ -137,4 +138,16 @@ func (UserService *UserService) UpdateUser(u *model.SysUser) error {
 		return result.Error
 	}
 	return nil
+}
+
+/**
+ * @author: JackYang
+ * @function: DeleteUser
+ * @description: 删除用户
+ * @param:   uuid string
+ * @return:  gen.ResultInfo, error
+ */
+func (UserService *UserService) DeleteUser(uuid string) (gen.ResultInfo, error) {
+	q := query.Q.SysUser
+	return q.WithContext(context.Background()).Where(q.UUID.Eq(uuid)).Delete()
 }

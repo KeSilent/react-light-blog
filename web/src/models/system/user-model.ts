@@ -1,6 +1,7 @@
 //用户模型
 export interface UserModel {
   id?: number;
+  uuid?: string;
   username?: string;
   nickName?: string;
   avatar?: string;

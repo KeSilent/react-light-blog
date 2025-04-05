@@ -1,10 +1,9 @@
-import { UserModel } from "@/models/system/user-model";
-import { updateUser } from "@/services/system/userApi";
-import { ActionType, ModalForm, ProForm, ProFormText } from "@ant-design/pro-components";
-import { useRequest } from "@umijs/max";
-import { Form, message } from "antd";
-import { useEffect, useState } from "react";
-
+import { UserModel } from '@/models/system/user-model';
+import { updateUser } from '@/services/system/userApi';
+import { ActionType, ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
+import { useRequest } from '@umijs/max';
+import { Button, Form, message } from 'antd';
+import { useEffect, useState } from 'react';
 
 export type UpdateFormProps = {
   record?: UserModel;
@@ -31,7 +30,7 @@ const UpdateUser: React.FC<UpdateFormProps> = (props) => {
     onError: (error) => {
       messageApi.error(error?.message || '网络异常，请稍后重试！');
     },
-  })
+  });
 
   useEffect(() => {
     if (open && record) {
@@ -42,11 +41,12 @@ const UpdateUser: React.FC<UpdateFormProps> = (props) => {
   return (
     <>
       {contextHolder}
-      <ModalForm<UserModel> title="编辑用户"
+      <ModalForm<UserModel>
+        title="编辑用户"
         trigger={
-          <a type="primary" onClick={() => setOpen(true)}>
+          <Button color="primary" variant="link" onClick={() => setOpen(true)}>
             编辑
-          </a>
+          </Button>
         }
         form={form}
         autoFocusFirstInput
@@ -64,15 +64,8 @@ const UpdateUser: React.FC<UpdateFormProps> = (props) => {
           }
         }}
       >
-
         <ProForm.Group>
-          <ProFormText
-            label="ID"
-            placeholder="id"
-            width="md"
-            name="id"
-            hidden={true}
-          />
+          <ProFormText label="ID" placeholder="id" width="md" name="id" hidden={true} />
         </ProForm.Group>
         <ProForm.Group>
           <ProFormText
@@ -84,7 +77,7 @@ const UpdateUser: React.FC<UpdateFormProps> = (props) => {
               {
                 required: true,
                 message: '请输入昵称',
-              }
+              },
             ]}
           />
           <ProFormText
@@ -96,29 +89,18 @@ const UpdateUser: React.FC<UpdateFormProps> = (props) => {
               {
                 required: true,
                 message: '请输入用户名',
-              }
+              },
             ]}
           />
         </ProForm.Group>
 
         <ProForm.Group>
-          <ProFormText
-            label="手机号"
-            placeholder="手机号"
-            width="md"
-            name="phone"
-          />
-          <ProFormText
-            label="邮箱"
-            placeholder="邮箱"
-            width="md"
-            name="email"
-          />
+          <ProFormText label="手机号" placeholder="手机号" width="md" name="phone" />
+          <ProFormText label="邮箱" placeholder="邮箱" width="md" name="email" />
         </ProForm.Group>
       </ModalForm>
     </>
   );
 };
-
 
 export default UpdateUser;

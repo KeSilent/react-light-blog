@@ -1,3 +1,8 @@
+/*
+ * @Author: Yang
+ * @Date: 2025-03-19 19:09:08
+ * @Description: 用户基础路由
+ */
 package system
 
 import (
@@ -17,6 +22,7 @@ func (s *UserRouter) InitUserRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
 		authorityRouter.GET("getUserList", baseApi.GetUserList)
 		authorityRouter.POST("changePassword", baseApi.ChangePassword)
 		authorityRouter.POST("updateUser", baseApi.UpdateUser)
+		authorityRouter.DELETE("deleteUser", baseApi.DeleteUser)
 	}
 	return baseRouter
 }

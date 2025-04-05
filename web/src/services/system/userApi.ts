@@ -1,12 +1,12 @@
-import { PageList, ResponseResult } from "@/models/system/common-model";
-import { ChangePasswordReq, UserModel } from "@/models/system/user-model";
-import { request } from "@umijs/max";
+import { PageList, ResponseResult } from '@/models/system/common-model';
+import { ChangePasswordReq, UserModel } from '@/models/system/user-model';
+import { request } from '@umijs/max';
 
 /**
  * 获取用户列表
- * @param params 
- * @param options 
- * @returns 
+ * @param params
+ * @param options
+ * @returns
  */
 export async function getUserList(
   params: {
@@ -23,15 +23,18 @@ export async function getUserList(
     ...(options || {}),
   });
 
-  return result.data
+  return result.data;
 }
 
 export async function register(params: UserModel) {
-  const result = await request<ResponseResult>('/api/user/register', {
-    method: 'POST',
-    data: params
-  })
-  return { data: result.code === 0 }
+  console.log(params);
+
+  // const result = await request<ResponseResult>('/api/user/register', {
+  //   method: 'POST',
+  //   data: params,
+  // });
+  // return { data: result.code === 0 };
+  return true;
 }
 
 export async function changePassword(params: ChangePasswordReq) {
@@ -40,14 +43,15 @@ export async function changePassword(params: ChangePasswordReq) {
     data: params,
   });
 
-  return { data: result.code === 0 }
+  return { data: result.code === 0 };
 }
 
-export async function deleteUser(params: { id: number }) {
-  return request('/api/user/deleteUser', {
+export async function deleteUser(params: { id: string }) {
+  const result = await request('/api/user/deleteUser', {
     method: 'POST',
     data: params,
   });
+  return { data: result.code === 0 };
 }
 export async function updateUser(params: UserModel) {
   const result = await request<ResponseResult>('/api/user/updateUser', {
@@ -55,5 +59,5 @@ export async function updateUser(params: UserModel) {
     data: params,
   });
 
-  return { data: result.code === 0 }
+  return { data: result.code === 0 };
 }

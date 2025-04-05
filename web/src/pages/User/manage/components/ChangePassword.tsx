@@ -1,9 +1,9 @@
-import { ResponseResult } from "@/models/system/common-model";
-import { ChangePasswordReq } from "@/models/system/user-model";
-import { changePassword } from "@/services/system/userApi";
-import { ActionType, ModalForm, ProForm, ProFormText } from "@ant-design/pro-components";
-import { useRequest } from "@umijs/max";
-import { Form, message } from "antd";
+import { ResponseResult } from '@/models/system/common-model';
+import { ChangePasswordReq } from '@/models/system/user-model';
+import { changePassword } from '@/services/system/userApi';
+import { ActionType, ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
+import { useRequest } from '@umijs/max';
+import { Button, Form, message } from 'antd';
 
 export type UpdateFormProps = {
   reload?: ActionType['reload'];
@@ -28,16 +28,17 @@ const ChangePassword: React.FC<UpdateFormProps> = (props) => {
       // 处理网络错误等异常情况
       messageApi.error(error?.message || '网络异常，请稍后重试！');
     },
-  })
+  });
 
   return (
     <>
       {contextHolder}
-      <ModalForm<ChangePasswordReq> title="修改密码"
+      <ModalForm<ChangePasswordReq>
+        title="修改密码"
         trigger={
-          <a type="primary">
+          <Button color="primary" variant="link">
             修改密码
-          </a>
+          </Button>
         }
         form={form}
         autoFocusFirstInput
@@ -55,13 +56,11 @@ const ChangePassword: React.FC<UpdateFormProps> = (props) => {
         <ProForm.Group>
           <ProFormText.Password
             label="原密码"
-            placeholder={"原密码"}
+            placeholder={'原密码'}
             rules={[
               {
                 required: true,
-                message: (
-                  "请填写原密码"
-                ),
+                message: '请填写原密码',
               },
             ]}
             width="md"
@@ -86,7 +85,11 @@ const ChangePassword: React.FC<UpdateFormProps> = (props) => {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || !getFieldValue('newPassword2') || value === getFieldValue('newPassword2')) {
+                  if (
+                    !value ||
+                    !getFieldValue('newPassword2') ||
+                    value === getFieldValue('newPassword2')
+                  ) {
                     return Promise.resolve();
                   }
                   return Promise.reject(new Error('两次输入的密码不一致！'));
@@ -106,7 +109,11 @@ const ChangePassword: React.FC<UpdateFormProps> = (props) => {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || !getFieldValue('newPassword') || getFieldValue('newPassword') === value) {
+                  if (
+                    !value ||
+                    !getFieldValue('newPassword') ||
+                    getFieldValue('newPassword') === value
+                  ) {
                     return Promise.resolve();
                   }
                   return Promise.reject(new Error('两次输入的密码不一致！'));
@@ -118,7 +125,7 @@ const ChangePassword: React.FC<UpdateFormProps> = (props) => {
         </ProForm.Group>
       </ModalForm>
     </>
-  )
-}
+  );
+};
 
-export default ChangePassword
+export default ChangePassword;

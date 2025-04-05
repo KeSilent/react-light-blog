@@ -26,6 +26,27 @@ export async function getRoleList(
   return result.data;
 }
 
+export async function getAllRoleKeyValueList() {
+  const result = await request<ResponseResult<PageList<RoleModel[]>>>('/api/role/getRoleList', {
+    method: 'GET',
+    params: {
+      current: 0,
+      pageSize: 999,
+    },
+  });
+  if (result.data) {
+    if (result.data.data) {
+      return result.data.data.map((item) => {
+        return {
+          label: item.roleName,
+          value: item.uuid,
+        };
+      });
+    }
+  }
+  return [];
+}
+
 /**
  * 获取角色菜单
  * @param roleId
