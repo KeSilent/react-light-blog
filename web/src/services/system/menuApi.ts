@@ -66,7 +66,7 @@ export async function deleteMenu(menuId: string) {
  * @return {*}
  */
 export async function saveMenu(params: MenuModel) {
-  const result = await request<ResponseResult<string>>('/api/menu/saveMenu', {
+  const result = await request<ResponseResult<string>>('/api/menu/saveBaseMenu', {
     method: 'POST',
     data: params,
   });

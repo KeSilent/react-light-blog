@@ -20,6 +20,15 @@ func LowerCamelCase(name string) string {
 	return strings.ToLower(name[:1]) + name[1:]
 }
 
+// 首字母大写
+func Capitalize(s string) string {
+	if s == "" {
+		return ""
+	}
+
+	return strings.ToUpper(s[:1]) + s[1:]
+}
+
 func Uncaptialize(s string) string {
 	if s == "" {
 		return ""

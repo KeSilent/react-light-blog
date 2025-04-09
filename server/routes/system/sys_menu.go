@@ -17,6 +17,7 @@ func (s *MenuRouter) InitMenuRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
 	{
 		authorityRouter.GET("getMenuByKey", menuApi.GetMenuByKey)
 		authorityRouter.GET("getMenuListByPage", menuApi.GetMenuListByPage)
+		authorityRouter.POST("saveBaseMenu", menuApi.SaveBaseMenu)
 	}
 	return authorityRouter
 }

@@ -57,10 +57,10 @@ export default function CreateMenu(props: CreateMenuProps) {
 
   // 动态生成图标的 valueEnum
   const iconOptions = Object.keys(icons)
-    .filter((key) => key.endsWith('Outlined')) // 只选择 Outlined 类型的图标
+    .filter((key) => key.endsWith('Outlined'))
     .reduce((acc, key) => {
-      const IconComponent = icons[key]; // 获取图标组件
-      acc[key] = <IconComponent />; // 将图标组件作为值
+      const IconComponent = icons[key as keyof typeof icons] as React.FC; // 明确类型为 React.FC
+      acc[key] = <IconComponent />;
       return acc;
     }, {} as Record<string, JSX.Element>);
 
@@ -163,7 +163,7 @@ export default function CreateMenu(props: CreateMenuProps) {
             debounceTime={300}
             fieldProps={{
               variant: 'outlined',
-              bordered: undefined, 
+              bordered: undefined,
               fieldNames: {
                 label: 'title',
                 value: 'uuid',
@@ -202,9 +202,12 @@ export default function CreateMenu(props: CreateMenuProps) {
             width="md"
             label="是否隐藏"
             valueEnum={{
-              0: '不隐藏',
-              1: '隐藏',
+              1: '不隐藏',
+              0: '隐藏',
             }}
+            transform={(value) => ({
+              hidden: value === '0' ? true : false,
+            })}
           />
           <ProFormDigit width="md" min={1} label="排序" name="sort" />
         </ProForm.Group>

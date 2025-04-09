@@ -3,7 +3,7 @@
  * @Date: 2025-03-19 19:04:24
  * @Description:菜单操作类
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2025-04-05 10:24:28
+ * @LastEditTime: 2025-04-09 22:15:33
  * @FilePath: /server/api/v1/system/sys_menu.go
  *
  * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
@@ -13,6 +13,7 @@ package system
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/kesilent/react-light-blog/dal/common/response"
+	"github.com/kesilent/react-light-blog/dal/model"
 	req "github.com/kesilent/react-light-blog/dal/request"
 	"github.com/kesilent/react-light-blog/global"
 	"github.com/kesilent/react-light-blog/utils"
@@ -87,4 +88,27 @@ func (m *MenuApi) GetMenuListByPage(c *gin.Context) {
 		PageSize: pageInfo.PageSize,
 		Success:  true,
 	}, "获取成功", c)
+}
+
+/**
+ * @Author: Yang
+ * @description: 保存菜单
+ * @param {*gin.Context} c
+ * @return {*}
+ */
+func (m *MenuApi) SaveBaseMenu(c *gin.Context) {
+	var menu model.SysBaseMenu
+	err := c.ShouldBindJSON(&menu)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if err := menuService.SaveBaseMenu(menu); err != nil {
+		global.RLB_LOG.Error("添加失败!", zap.Error(err))
+		response.FailWithMessage("添加失败", c)
+		return
+	} else {
+		response.OkWithMessage("添加成功", c)
+		return
+	}
 }

@@ -30,7 +30,7 @@ func newSysBaseMenu(db *gorm.DB, opts ...gen.DOOption) sysBaseMenu {
 	_sysBaseMenu.ID = field.NewInt64(tableName, "id")
 	_sysBaseMenu.UUID = field.NewString(tableName, "uuid")
 	_sysBaseMenu.MenuLevel = field.NewInt32(tableName, "menu_level")
-	_sysBaseMenu.ParentID = field.NewInt64(tableName, "parent_id")
+	_sysBaseMenu.ParentID = field.NewString(tableName, "parent_id")
 	_sysBaseMenu.Path = field.NewString(tableName, "path")
 	_sysBaseMenu.Name = field.NewString(tableName, "name")
 	_sysBaseMenu.Hidden = field.NewBool(tableName, "hidden")
@@ -55,7 +55,7 @@ type sysBaseMenu struct {
 	ID         field.Int64 // 菜单ID
 	UUID       field.String
 	MenuLevel  field.Int32  // 菜单层级
-	ParentID   field.Int64  // 父菜单ID
+	ParentID   field.String // 父菜单ID
 	Path       field.String // 路由path
 	Name       field.String // 路由name
 	Hidden     field.Bool   // 是否隐藏
@@ -85,7 +85,7 @@ func (s *sysBaseMenu) updateTableName(table string) *sysBaseMenu {
 	s.ID = field.NewInt64(table, "id")
 	s.UUID = field.NewString(table, "uuid")
 	s.MenuLevel = field.NewInt32(table, "menu_level")
-	s.ParentID = field.NewInt64(table, "parent_id")
+	s.ParentID = field.NewString(table, "parent_id")
 	s.Path = field.NewString(table, "path")
 	s.Name = field.NewString(table, "name")
 	s.Hidden = field.NewBool(table, "hidden")

@@ -10,9 +10,11 @@ import (
 	"errors"
 	"sort"
 
+	"github.com/google/uuid"
 	"github.com/kesilent/react-light-blog/dal/model"
 	"github.com/kesilent/react-light-blog/dal/query"
 	req "github.com/kesilent/react-light-blog/dal/request"
+	"github.com/kesilent/react-light-blog/utils"
 	"gorm.io/gen/field"
 	"gorm.io/gorm"
 )
@@ -22,18 +24,32 @@ type MenuService struct{}
 var MenuServiceApp = new(MenuService)
 
 //@author: JackYang
-//@function: AddBaseMenu
+//@function: SaveBaseMenu
 //@description: 增加菜单
 //@param: menu model.SysBaseMenu
 //@return: error
 
-func (menuService *MenuService) AddBaseMenu(menu model.SysBaseMenu) error {
+func (menuService *MenuService) SaveBaseMenu(menu model.SysBaseMenu) error {
 	db := query.Q.SysBaseMenu.WithContext(context.Background())
-	_, err := db.Where(query.SysBaseMenu.Name.Eq(menu.Name)).First()
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return errors.New("存在重复name，请修改name")
+
+	if menu.UUID == "" {
+		_, err := db.Where(query.SysBaseMenu.Name.Eq(menu.Name)).First()
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("存在重复name，请修改name")
+		}
+		menu.UUID = uuid.NewString()
 	}
-	return db.Create(&menu)
+	//字符串转成首字母大写
+	menu.Name = utils.Capitalize(menu.Name)
+
+	//查询父级菜单的级别
+	parentMenu, err := db.Where(query.SysBaseMenu.UUID.Eq(menu.ParentID)).First()
+	if err != nil {
+		return err
+	}
+	menu.MenuLevel = parentMenu.MenuLevel + 1
+
+	return db.Save(&menu)
 }
 
 func (menuService *MenuService) AddBaseMenuList(menus []*model.SysBaseMenu) error {
@@ -63,29 +79,12 @@ func (menuService *MenuService) GetRoleMenuList(roleUUID string) ([]model.SysBas
 	if err != nil {
 		return nil, err
 	}
-	var menus = authority.Menus
-	// 构建树形结构
-	menuMap := make(map[int64]*model.SysBaseMenu)
-	var rootMenus []model.SysBaseMenu
-
-	// 首先构建一个 ID 到菜单的映射
-	for _, menu := range menus {
-		menuCopy := menu
-		menuMap[menu.ID] = &menuCopy
+	var menusPtr []*model.SysBaseMenu
+	for i := range authority.Menus {
+		menusPtr = append(menusPtr, &authority.Menus[i])
 	}
 
-	// 构建树形结构
-	for _, menu := range menus {
-		if menu.ParentID == 0 {
-			// 这是根菜单
-			rootMenus = append(rootMenus, menu)
-		} else {
-			// 找到父菜单并添加到其子菜单中
-			if parent, ok := menuMap[menu.ParentID]; ok {
-				parent.Children = append(parent.Children, menu)
-			}
-		}
-	}
+	rootMenus := buildTree(menusPtr, "")
 
 	// 对每个级别的菜单按 Sort 排序
 	sortMenus(rootMenus)
@@ -129,7 +128,7 @@ func (menuService *MenuService) GetMenuByKey(menuName string) ([]model.SysBaseMe
 		return nil, err
 	}
 
-	treeMenus := buildTree(menus, 0)
+	treeMenus := buildTree(menus, "")
 
 	// 对每个级别的菜单按 Sort 排序
 	sortMenus(treeMenus)
@@ -160,7 +159,7 @@ func (menuService *MenuService) GetMenuListByPage(info req.GetMenuListReq) (list
 
 	userList, err := db.Limit(limit).Offset(offset).Find()
 
-	treeMenus := buildTree(userList, 0)
+	treeMenus := buildTree(userList, "")
 
 	// 对每个级别的菜单按 Sort 排序
 	sortMenus(treeMenus)
@@ -169,7 +168,7 @@ func (menuService *MenuService) GetMenuListByPage(info req.GetMenuListReq) (list
 }
 
 // 构建树形结构
-func buildTree(menus []*model.SysBaseMenu, parentID int64) []model.SysBaseMenu {
+func buildTree(menus []*model.SysBaseMenu, parentID string) []model.SysBaseMenu {
 	var tree []model.SysBaseMenu
 
 	for _, menu := range menus {
@@ -177,7 +176,7 @@ func buildTree(menus []*model.SysBaseMenu, parentID int64) []model.SysBaseMenu {
 			// 复制当前菜单节点
 			node := *menu
 			// 递归构建子菜单
-			node.Children = buildTree(menus, menu.ID)
+			node.Children = buildTree(menus, menu.UUID)
 			tree = append(tree, node)
 		}
 	}

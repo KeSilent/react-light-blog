@@ -57,9 +57,9 @@ func (i *InitData) initMenus() error {
 	entities := []*model.SysBaseMenu{
 		{ID: 1, UUID: "f1344409-c286-492f-be6c-d6798d5d3e6f", Path: "dashboard", Name: "Dashboard", Component: "@/pages/dashboard/index", Sort: 1, Title: "仪表盘", Icon: "DashboardOutlined"},
 		{ID: 2, UUID: "ec350c05-78d8-4b2a-b588-6d71ed0b9960", Path: "system", Name: "System", Component: "@/layouts/RouteView", Sort: 2, Title: "系统管理", Icon: "SettingOutlined"},
-		{ID: 3, UUID: "e84d2d69-5300-45d0-9ad9-811898f8440e", ParentID: 2, Path: "menu", Name: "Menu", Component: "@/pages/system/menu/index", Sort: 1, Title: "菜单管理", Icon: "MenuOutlined"},
-		{ID: 4, UUID: "b51cf3a4-73ca-4981-9f28-dc2e7521dcba", ParentID: 2, Path: "role", Name: "Role", Component: "@/pages/system/role/index", Sort: 2, Title: "角色管理", Icon: "TeamOutlined"},
-		{ID: 5, UUID: "dc6f1752-25d3-41aa-8764-8de484bee73c", ParentID: 2, Path: "user", Name: "User", Component: "@/pages/system/user/index", Sort: 3, Title: "用户管理", Icon: "UserOutlined"},
+		{ID: 3, UUID: "e84d2d69-5300-45d0-9ad9-811898f8440e", ParentID: "ec350c05-78d8-4b2a-b588-6d71ed0b9960", Path: "menu", Name: "Menu", Component: "@/pages/system/menu/index", Sort: 1, Title: "菜单管理", Icon: "MenuOutlined"},
+		{ID: 4, UUID: "b51cf3a4-73ca-4981-9f28-dc2e7521dcba", ParentID: "ec350c05-78d8-4b2a-b588-6d71ed0b9960", Path: "role", Name: "Role", Component: "@/pages/system/role/index", Sort: 2, Title: "角色管理", Icon: "TeamOutlined"},
+		{ID: 5, UUID: "dc6f1752-25d3-41aa-8764-8de484bee73c", ParentID: "ec350c05-78d8-4b2a-b588-6d71ed0b9960", Path: "user", Name: "User", Component: "@/pages/system/user/index", Sort: 3, Title: "用户管理", Icon: "UserOutlined"},
 	}
 	return system.MenuServiceApp.AddBaseMenuList(entities)
 }
