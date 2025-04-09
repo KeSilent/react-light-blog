@@ -7,13 +7,13 @@ export const columns = (
   handleDelete: (roleId: string) => void,
 ): ProColumns<MenuModel>[] => [
   {
-    title: '菜单中文名称',
+    title: '菜单显示名称',
     dataIndex: 'title',
     key: 'title',
     width: '20%',
   },
   {
-    title: '菜单名称',
+    title: '菜单路由名称',
     dataIndex: 'name',
     key: 'name',
     width: '20%',

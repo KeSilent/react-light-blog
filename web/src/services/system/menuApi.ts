@@ -58,3 +58,17 @@ export async function deleteMenu(menuId: string) {
   });
   return result.data;
 }
+
+/**
+ * @Author: Yang
+ * @description: 保存菜单信息
+ * @param {MenuModel} params
+ * @return {*}
+ */
+export async function saveMenu(params: MenuModel) {
+  const result = await request<ResponseResult<string>>('/api/menu/saveMenu', {
+    method: 'POST',
+    data: params,
+  });
+  return result.data;
+}

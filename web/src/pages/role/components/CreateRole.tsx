@@ -49,7 +49,7 @@ export default function CreateRole(props: CreateRoleProps) {
         trigger={
           role ? (
             <Button color="primary" variant="link" onClick={() => setOpen(true)}>
-              编辑角色
+              编辑
             </Button>
           ) : (
             <Button

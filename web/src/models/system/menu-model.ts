@@ -14,6 +14,5 @@ export interface MenuModel {
   createTime: string;
   updateTime: string | null;
   deletedAt: string | null;
-  authorities: any[] | null;
   children: MenuModel[];
 }
