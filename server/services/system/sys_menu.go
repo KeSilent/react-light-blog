@@ -33,11 +33,12 @@ var MenuServiceApp = new(MenuService)
 func (menuService *MenuService) SaveBaseMenu(menu model.SysBaseMenu) error {
 	db := query.Q.SysBaseMenu.WithContext(context.Background())
 
-	if menu.UUID == "" {
+	if menu.ID == 0 {
 		_, err := db.Where(query.SysBaseMenu.Name.Eq(menu.Name)).First()
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("存在重复name，请修改name")
 		}
+		menu.ID = model.SnowflakeID(utils.GenID(0))
 		menu.UUID = uuid.NewString()
 	}
 	//字符串转成首字母大写
@@ -50,7 +51,7 @@ func (menuService *MenuService) SaveBaseMenu(menu model.SysBaseMenu) error {
 	}
 	menu.MenuLevel = parentMenu.MenuLevel + 1
 
-	return db.Debug().Save(&menu)
+	return db.Save(&menu)
 }
 
 func (menuService *MenuService) AddBaseMenuList(menus []*model.SysBaseMenu) error {
@@ -74,7 +75,7 @@ func (menuService *MenuService) GetRoleMenuList(roleUUID string) ([]model.SysBas
 
 	authority, err := q.
 		Preload(field.NewRelation("Menus", "")).
-		Preload(field.NewRelation("Menus.Children", "")).Debug().
+		Preload(field.NewRelation("Menus.Children", "")).
 		First()
 
 	if err != nil {
@@ -115,15 +116,14 @@ func sortMenus(menus []model.SysBaseMenu) {
  * @return {[]model.SysBaseMenu, error}
  */
 func (menuService *MenuService) GetMenuByKey(menuName string) ([]model.SysBaseMenu, error) {
-	// 获取权限信息，并预加载菜单
 
-	q := query.Q.SysBaseMenu.WithContext(context.Background())
+	db := query.Q.SysBaseMenu.WithContext(context.Background())
 
 	if menuName != "" {
-		q = q.Where(query.SysBaseMenu.Name.Like("%" + menuName + "%"))
+		db = db.Where(query.SysBaseMenu.Name.Like("%" + menuName + "%"))
 	}
 
-	menus, err := q.Find()
+	menus, err := db.Debug().Find()
 
 	if err != nil {
 		return nil, err

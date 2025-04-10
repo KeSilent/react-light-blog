@@ -71,7 +71,7 @@ func OperationRecord() gin.HandlerFunc {
 			Path:   c.Request.URL.Path,
 			Agent:  c.Request.UserAgent(),
 			Body:   "",
-			UserID: userId,
+			UserID: model.SnowflakeID(userId),
 		}
 
 		// 上传文件时候 中间件日志进行裁断操作

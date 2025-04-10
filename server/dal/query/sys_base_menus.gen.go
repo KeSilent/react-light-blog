@@ -27,7 +27,7 @@ func newSysBaseMenu(db *gorm.DB, opts ...gen.DOOption) sysBaseMenu {
 
 	tableName := _sysBaseMenu.sysBaseMenuDo.TableName()
 	_sysBaseMenu.ALL = field.NewAsterisk(tableName)
-	_sysBaseMenu.ID = field.NewInt64(tableName, "id")
+	_sysBaseMenu.ID = field.NewField(tableName, "id")
 	_sysBaseMenu.UUID = field.NewString(tableName, "uuid")
 	_sysBaseMenu.MenuLevel = field.NewInt32(tableName, "menu_level")
 	_sysBaseMenu.ParentID = field.NewString(tableName, "parent_id")
@@ -52,7 +52,7 @@ type sysBaseMenu struct {
 	sysBaseMenuDo sysBaseMenuDo
 
 	ALL        field.Asterisk
-	ID         field.Int64 // 菜单ID
+	ID         field.Field // 菜单ID
 	UUID       field.String
 	MenuLevel  field.Int32  // 菜单层级
 	ParentID   field.String // 父菜单ID
@@ -82,7 +82,7 @@ func (s sysBaseMenu) As(alias string) *sysBaseMenu {
 
 func (s *sysBaseMenu) updateTableName(table string) *sysBaseMenu {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt64(table, "id")
+	s.ID = field.NewField(table, "id")
 	s.UUID = field.NewString(table, "uuid")
 	s.MenuLevel = field.NewInt32(table, "menu_level")
 	s.ParentID = field.NewString(table, "parent_id")

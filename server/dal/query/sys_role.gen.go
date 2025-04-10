@@ -27,7 +27,7 @@ func newSysRole(db *gorm.DB, opts ...gen.DOOption) sysRole {
 
 	tableName := _sysRole.sysRoleDo.TableName()
 	_sysRole.ALL = field.NewAsterisk(tableName)
-	_sysRole.ID = field.NewInt32(tableName, "id")
+	_sysRole.ID = field.NewField(tableName, "id")
 	_sysRole.UUID = field.NewString(tableName, "uuid")
 	_sysRole.RoleName = field.NewString(tableName, "role_name")
 	_sysRole.ParentID = field.NewString(tableName, "parent_id")
@@ -46,7 +46,7 @@ type sysRole struct {
 	sysRoleDo sysRoleDo
 
 	ALL           field.Asterisk
-	ID            field.Int32 // 角色ID
+	ID            field.Field // 角色ID
 	UUID          field.String
 	RoleName      field.String // 角色名称
 	ParentID      field.String // 父角色ID
@@ -70,7 +70,7 @@ func (s sysRole) As(alias string) *sysRole {
 
 func (s *sysRole) updateTableName(table string) *sysRole {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt32(table, "id")
+	s.ID = field.NewField(table, "id")
 	s.UUID = field.NewString(table, "uuid")
 	s.RoleName = field.NewString(table, "role_name")
 	s.ParentID = field.NewString(table, "parent_id")

@@ -27,7 +27,7 @@ func newSysDictionary(db *gorm.DB, opts ...gen.DOOption) sysDictionary {
 
 	tableName := _sysDictionary.sysDictionaryDo.TableName()
 	_sysDictionary.ALL = field.NewAsterisk(tableName)
-	_sysDictionary.ID = field.NewInt32(tableName, "id")
+	_sysDictionary.ID = field.NewField(tableName, "id")
 	_sysDictionary.UUID = field.NewString(tableName, "uuid")
 	_sysDictionary.Name = field.NewString(tableName, "name")
 	_sysDictionary.Type = field.NewString(tableName, "type")
@@ -47,7 +47,7 @@ type sysDictionary struct {
 	sysDictionaryDo sysDictionaryDo
 
 	ALL       field.Asterisk
-	ID        field.Int32
+	ID        field.Field
 	UUID      field.String
 	Name      field.String // 字典名（中）
 	Type      field.String // 字典名（英）
@@ -72,7 +72,7 @@ func (s sysDictionary) As(alias string) *sysDictionary {
 
 func (s *sysDictionary) updateTableName(table string) *sysDictionary {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt32(table, "id")
+	s.ID = field.NewField(table, "id")
 	s.UUID = field.NewString(table, "uuid")
 	s.Name = field.NewString(table, "name")
 	s.Type = field.NewString(table, "type")

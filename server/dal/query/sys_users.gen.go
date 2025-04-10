@@ -27,7 +27,7 @@ func newSysUser(db *gorm.DB, opts ...gen.DOOption) sysUser {
 
 	tableName := _sysUser.sysUserDo.TableName()
 	_sysUser.ALL = field.NewAsterisk(tableName)
-	_sysUser.ID = field.NewInt32(tableName, "id")
+	_sysUser.ID = field.NewField(tableName, "id")
 	_sysUser.UUID = field.NewString(tableName, "uuid")
 	_sysUser.Username = field.NewString(tableName, "username")
 	_sysUser.Password = field.NewString(tableName, "password")
@@ -50,7 +50,7 @@ type sysUser struct {
 	sysUserDo sysUserDo
 
 	ALL        field.Asterisk
-	ID         field.Int32 // 用户ID
+	ID         field.Field // 用户ID
 	UUID       field.String
 	Username   field.String // 用户名
 	Password   field.String // 密码
@@ -78,7 +78,7 @@ func (s sysUser) As(alias string) *sysUser {
 
 func (s *sysUser) updateTableName(table string) *sysUser {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt32(table, "id")
+	s.ID = field.NewField(table, "id")
 	s.UUID = field.NewString(table, "uuid")
 	s.Username = field.NewString(table, "username")
 	s.Password = field.NewString(table, "password")

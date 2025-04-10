@@ -12,7 +12,7 @@ const TableNameSysDictionaryDetail = "sys_dictionary_details"
 
 // SysDictionaryDetail 字典值
 type SysDictionaryDetail struct {
-	ID              int32         `gorm:"column:id;type:int unsigned;primaryKey;autoIncrement:true" json:"id"`
+	ID              SnowflakeID   `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
 	Label           string        `gorm:"column:label;type:varchar(191);comment:展示值" json:"label"`                               // 展示值
 	Value           string        `gorm:"column:value;type:varchar(255);comment:字典值" json:"value"`                               // 字典值
 	Status          bool          `gorm:"column:status;type:tinyint(1);comment:启用状态" json:"status"`                              // 启用状态

@@ -55,7 +55,7 @@ func GenStructs() error {
 	dataMap := map[string]func(detailType gorm.ColumnType) (dataType string){
 		"varchar": func(detailType gorm.ColumnType) (dataType string) { return "string" },
 		"bigint": func(detailType gorm.ColumnType) (dataType string) {
-			return "utils.SnowflakeID"
+			return "SnowflakeID"
 		},
 		"tinyint": func(detailType gorm.ColumnType) (dataType string) { return "bool" },
 		"timestamp": func(detailType gorm.ColumnType) (dataType string) {

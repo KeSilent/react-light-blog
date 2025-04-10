@@ -27,7 +27,7 @@ func newSysDictionaryDetail(db *gorm.DB, opts ...gen.DOOption) sysDictionaryDeta
 
 	tableName := _sysDictionaryDetail.sysDictionaryDetailDo.TableName()
 	_sysDictionaryDetail.ALL = field.NewAsterisk(tableName)
-	_sysDictionaryDetail.ID = field.NewInt32(tableName, "id")
+	_sysDictionaryDetail.ID = field.NewField(tableName, "id")
 	_sysDictionaryDetail.Label = field.NewString(tableName, "label")
 	_sysDictionaryDetail.Value = field.NewString(tableName, "value")
 	_sysDictionaryDetail.Status = field.NewBool(tableName, "status")
@@ -47,7 +47,7 @@ type sysDictionaryDetail struct {
 	sysDictionaryDetailDo sysDictionaryDetailDo
 
 	ALL             field.Asterisk
-	ID              field.Int32
+	ID              field.Field
 	Label           field.String // 展示值
 	Value           field.String // 字典值
 	Status          field.Bool   // 启用状态
@@ -72,7 +72,7 @@ func (s sysDictionaryDetail) As(alias string) *sysDictionaryDetail {
 
 func (s *sysDictionaryDetail) updateTableName(table string) *sysDictionaryDetail {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt32(table, "id")
+	s.ID = field.NewField(table, "id")
 	s.Label = field.NewString(table, "label")
 	s.Value = field.NewString(table, "value")
 	s.Status = field.NewBool(table, "status")

@@ -27,10 +27,10 @@ func newSysDept(db *gorm.DB, opts ...gen.DOOption) sysDept {
 
 	tableName := _sysDept.sysDeptDo.TableName()
 	_sysDept.ALL = field.NewAsterisk(tableName)
-	_sysDept.ID = field.NewInt32(tableName, "id")
+	_sysDept.ID = field.NewField(tableName, "id")
 	_sysDept.DeptName = field.NewString(tableName, "dept_name")
 	_sysDept.ParentID = field.NewString(tableName, "parent_id")
-	_sysDept.OrderNo = field.NewInt64(tableName, "order_no")
+	_sysDept.OrderNo = field.NewField(tableName, "order_no")
 	_sysDept.Remark = field.NewString(tableName, "remark")
 	_sysDept.Status = field.NewBool(tableName, "status")
 	_sysDept.Parent = field.NewString(tableName, "parent")
@@ -49,10 +49,10 @@ type sysDept struct {
 	sysDeptDo sysDeptDo
 
 	ALL       field.Asterisk
-	ID        field.Int32
+	ID        field.Field
 	DeptName  field.String // 部门名称
 	ParentID  field.String // 父部门ID
-	OrderNo   field.Int64  // 显示顺序
+	OrderNo   field.Field  // 显示顺序
 	Remark    field.String // 备注
 	Status    field.Bool   // 部门状态
 	Parent    field.String // 上下级关系
@@ -76,10 +76,10 @@ func (s sysDept) As(alias string) *sysDept {
 
 func (s *sysDept) updateTableName(table string) *sysDept {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt32(table, "id")
+	s.ID = field.NewField(table, "id")
 	s.DeptName = field.NewString(table, "dept_name")
 	s.ParentID = field.NewString(table, "parent_id")
-	s.OrderNo = field.NewInt64(table, "order_no")
+	s.OrderNo = field.NewField(table, "order_no")
 	s.Remark = field.NewString(table, "remark")
 	s.Status = field.NewBool(table, "status")
 	s.Parent = field.NewString(table, "parent")

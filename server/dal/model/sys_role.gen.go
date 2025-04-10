@@ -12,7 +12,7 @@ const TableNameSysRole = "sys_role"
 
 // SysRole 角色表
 type SysRole struct {
-	ID            int32         `gorm:"column:id;type:int unsigned;primaryKey;autoIncrement:true;comment:角色ID" json:"id"` // 角色ID
+	ID            SnowflakeID   `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true;comment:角色ID" json:"id"` // 角色ID
 	UUID          string        `gorm:"column:uuid;type:char(36);not null" json:"uuid"`
 	RoleName      string        `gorm:"column:role_name;type:varchar(64);not null;comment:角色名称" json:"roleName"`                     // 角色名称
 	ParentID      string        `gorm:"column:parent_id;type:char(36);primaryKey;comment:父角色ID" json:"parentId"`                     // 父角色ID

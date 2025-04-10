@@ -12,7 +12,7 @@ const TableNameSysDictionary = "sys_dictionaries"
 
 // SysDictionary 字典
 type SysDictionary struct {
-	ID        int32                 `gorm:"column:id;type:int unsigned;primaryKey;autoIncrement:true" json:"id"`
+	ID        SnowflakeID           `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
 	UUID      string                `gorm:"column:uuid;type:char(36);not null" json:"uuid"`
 	Name      string                `gorm:"column:name;type:varchar(191);comment:字典名（中）" json:"name"` // 字典名（中）
 	Type      string                `gorm:"column:type;type:varchar(191);comment:字典名（英）" json:"type"` // 字典名（英）

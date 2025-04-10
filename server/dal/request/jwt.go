@@ -7,6 +7,7 @@ package request
 
 import (
 	jwt "github.com/golang-jwt/jwt/v5"
+	"github.com/kesilent/react-light-blog/dal/model"
 )
 
 // CustomClaims structure
@@ -18,7 +19,7 @@ type CustomClaims struct {
 
 type BaseClaims struct {
 	UUID     string
-	ID       int32
+	ID       model.SnowflakeID
 	Username string
 	NickName string
 	RoleId   string

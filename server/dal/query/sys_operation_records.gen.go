@@ -27,7 +27,7 @@ func newSysOperationRecord(db *gorm.DB, opts ...gen.DOOption) sysOperationRecord
 
 	tableName := _sysOperationRecord.sysOperationRecordDo.TableName()
 	_sysOperationRecord.ALL = field.NewAsterisk(tableName)
-	_sysOperationRecord.ID = field.NewInt64(tableName, "id")
+	_sysOperationRecord.ID = field.NewField(tableName, "id")
 	_sysOperationRecord.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysOperationRecord.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_sysOperationRecord.DeletedAt = field.NewTime(tableName, "deleted_at")
@@ -40,7 +40,7 @@ func newSysOperationRecord(db *gorm.DB, opts ...gen.DOOption) sysOperationRecord
 	_sysOperationRecord.ErrorMessage = field.NewString(tableName, "error_message")
 	_sysOperationRecord.Body = field.NewString(tableName, "body")
 	_sysOperationRecord.Resp = field.NewString(tableName, "resp")
-	_sysOperationRecord.UserID = field.NewInt64(tableName, "user_id")
+	_sysOperationRecord.UserID = field.NewField(tableName, "user_id")
 
 	_sysOperationRecord.fillFieldMap()
 
@@ -52,7 +52,7 @@ type sysOperationRecord struct {
 	sysOperationRecordDo sysOperationRecordDo
 
 	ALL          field.Asterisk
-	ID           field.Int64
+	ID           field.Field
 	CreatedAt    field.Time
 	UpdatedAt    field.Time
 	DeletedAt    field.Time
@@ -65,7 +65,7 @@ type sysOperationRecord struct {
 	ErrorMessage field.String // 错误信息
 	Body         field.String // 请求Body
 	Resp         field.String // 响应Body
-	UserID       field.Int64  // 用户uuid
+	UserID       field.Field  // 用户uuid
 
 	fieldMap map[string]field.Expr
 }
@@ -82,7 +82,7 @@ func (s sysOperationRecord) As(alias string) *sysOperationRecord {
 
 func (s *sysOperationRecord) updateTableName(table string) *sysOperationRecord {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt64(table, "id")
+	s.ID = field.NewField(table, "id")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 	s.DeletedAt = field.NewTime(table, "deleted_at")
@@ -95,7 +95,7 @@ func (s *sysOperationRecord) updateTableName(table string) *sysOperationRecord {
 	s.ErrorMessage = field.NewString(table, "error_message")
 	s.Body = field.NewString(table, "body")
 	s.Resp = field.NewString(table, "resp")
-	s.UserID = field.NewInt64(table, "user_id")
+	s.UserID = field.NewField(table, "user_id")
 
 	s.fillFieldMap()
 
