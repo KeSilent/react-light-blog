@@ -6,7 +6,7 @@ export interface MenuModel {
   parentId: number;
   path: string;
   name: string;
-  hidden: boolean;
+  hidden: boolean | string;
   component: string;
   sort: number;
   title: string;

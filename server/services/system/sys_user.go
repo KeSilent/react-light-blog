@@ -33,7 +33,6 @@ func (userService *UserService) Register(u model.SysUser) (userInter model.SysUs
 	}
 	// 否则 附加uuid 密码hash加密 注册
 	u.Password = utils.BcryptHash(u.Password)
-	u.ID, err = utils.GenID(0)
 	if err != nil {
 		return userInter, err
 	}

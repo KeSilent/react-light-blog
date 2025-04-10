@@ -12,15 +12,15 @@ const TableNameSysDictionary = "sys_dictionaries"
 
 // SysDictionary 字典
 type SysDictionary struct {
-	ID        int64                 `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
+	ID        int32                 `gorm:"column:id;type:int unsigned;primaryKey;autoIncrement:true" json:"id"`
 	UUID      string                `gorm:"column:uuid;type:char(36);not null" json:"uuid"`
+	Name      string                `gorm:"column:name;type:varchar(191);comment:字典名（中）" json:"name"` // 字典名（中）
+	Type      string                `gorm:"column:type;type:varchar(191);comment:字典名（英）" json:"type"` // 字典名（英）
+	Status    bool                  `gorm:"column:status;type:tinyint(1);comment:状态" json:"status"`   // 状态
+	Desc      string                `gorm:"column:desc;type:varchar(191);comment:描述" json:"desc"`     // 描述
 	CreatedAt time.Time             `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
 	UpdatedAt time.Time             `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
 	DeletedAt *time.Time            `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`
-	Name      string                `gorm:"column:name;type:varchar(191);comment:字典名（中）" json:"name"` // 字典名（中）
-	Type      string                `gorm:"column:type;type:varchar(191);comment:字典名（英）" json:"type"` // 字典名（英）
-	Status    int64                 `gorm:"column:status;type:bigint;comment:状态" json:"status"`       // 状态
-	Desc      string                `gorm:"column:desc;type:varchar(191);comment:描述" json:"desc"`     // 描述
 	Details   []SysDictionaryDetail `gorm:"foreignKey:sys_dictionary_id" json:"details"`
 }
 

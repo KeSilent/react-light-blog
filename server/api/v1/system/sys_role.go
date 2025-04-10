@@ -32,7 +32,6 @@ func (r *RoleApi) SaveRole(c *gin.Context) {
 		return
 	}
 	if role.ID == 0 {
-		role.ID, _ = utils.GenID(0)
 		role.UUID = uuid.NewString()
 	}
 	err = roleService.SaveRole(&role)

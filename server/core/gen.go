@@ -54,6 +54,9 @@ func GenStructs() error {
 	// 统一数字类型为int64,兼容protobuf和thrift
 	dataMap := map[string]func(detailType gorm.ColumnType) (dataType string){
 		"varchar": func(detailType gorm.ColumnType) (dataType string) { return "string" },
+		"bigint": func(detailType gorm.ColumnType) (dataType string) {
+			return "utils.SnowflakeID"
+		},
 		"tinyint": func(detailType gorm.ColumnType) (dataType string) { return "bool" },
 		"timestamp": func(detailType gorm.ColumnType) (dataType string) {
 			// 只将 update_time 和 deleted_at 设置为指针类型

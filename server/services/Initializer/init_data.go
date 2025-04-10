@@ -67,7 +67,7 @@ func (i *InitData) initMenus() error {
 func (i *InitData) initAuthorities() error {
 	entities := []*model.SysRole{
 		{ID: 888, UUID: "9f60b4b9-ffc1-4e83-aa80-9d48ff291928", RoleName: "超级管理员", DefaultRouter: "dashboard"},
-		{ID: 999, UUID: "ad43c17d-69a7-4b05-aa09-f5577892c684", RoleName: "普通用户", ParentID: 888, DefaultRouter: "dashboard"},
+		{ID: 999, UUID: "ad43c17d-69a7-4b05-aa09-f5577892c684", RoleName: "普通用户", DefaultRouter: "dashboard"},
 	}
 	return system.RoleServiceApp.CreateRoleList(entities)
 }

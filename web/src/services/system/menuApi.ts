@@ -70,5 +70,5 @@ export async function saveMenu(params: MenuModel) {
     method: 'POST',
     data: params,
   });
-  return result.data;
+  return {data:result.code};
 }

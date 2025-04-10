@@ -12,17 +12,17 @@ const TableNameSysDept = "sys_dept"
 
 // SysDept 部门
 type SysDept struct {
-	ID        int64      `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
+	ID        int32      `gorm:"column:id;type:int unsigned;primaryKey;autoIncrement:true" json:"id"`
+	DeptName  string     `gorm:"column:dept_name;type:varchar(200);comment:部门名称" json:"deptName"`         // 部门名称
+	ParentID  string     `gorm:"column:parent_id;type:char(36);primaryKey;comment:父部门ID" json:"parentId"` // 父部门ID
+	OrderNo   int64      `gorm:"column:order_no;type:bigint;comment:显示顺序" json:"orderNo"`                 // 显示顺序
+	Remark    string     `gorm:"column:remark;type:varchar(200);comment:备注" json:"remark"`                // 备注
+	Status    bool       `gorm:"column:status;type:tinyint(1);comment:部门状态" json:"status"`                // 部门状态
+	Parent    string     `gorm:"column:parent;type:varchar(200);comment:上下级关系" json:"parent"`             // 上下级关系
+	UUID      string     `gorm:"column:uuid;type:char(36);not null" json:"uuid"`
 	CreatedAt time.Time  `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
 	UpdatedAt time.Time  `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
 	DeletedAt *time.Time `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`
-	DeptName  string     `gorm:"column:dept_name;type:varchar(200);comment:部门名称" json:"deptName"` // 部门名称
-	ParentID  int64      `gorm:"column:parent_id;type:bigint;comment:父部门ID" json:"parentId"`      // 父部门ID
-	OrderNo   int64      `gorm:"column:order_no;type:bigint;comment:显示顺序" json:"orderNo"`         // 显示顺序
-	Remark    string     `gorm:"column:remark;type:varchar(200);comment:备注" json:"remark"`        // 备注
-	Status    string     `gorm:"column:status;type:varchar(200);comment:部门状态" json:"status"`      // 部门状态
-	Parent    string     `gorm:"column:parent;type:varchar(200);comment:上下级关系" json:"parent"`     // 上下级关系
-	UUID      string     `gorm:"column:uuid;type:char(36);not null" json:"uuid"`
 }
 
 // TableName SysDept's table name

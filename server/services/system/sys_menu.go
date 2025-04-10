@@ -50,7 +50,7 @@ func (menuService *MenuService) SaveBaseMenu(menu model.SysBaseMenu) error {
 	}
 	menu.MenuLevel = parentMenu.MenuLevel + 1
 
-	return db.Save(&menu)
+	return db.Debug().Save(&menu)
 }
 
 func (menuService *MenuService) AddBaseMenuList(menus []*model.SysBaseMenu) error {

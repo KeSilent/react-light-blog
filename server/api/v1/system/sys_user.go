@@ -158,8 +158,8 @@ func (b *BaseApi) ChangePassword(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	uid := utils.GetUserID(c)
-	u := &model.SysUser{ID: int64(uid), Password: req.Password}
+	uuid := utils.GetUserUuid(c)
+	u := &model.SysUser{UUID: uuid, Password: req.Password}
 	_, err = userService.ChangePassword(u, req.NewPassword)
 	if err != nil {
 		global.RLB_LOG.Error("修改失败!", zap.Error(err))

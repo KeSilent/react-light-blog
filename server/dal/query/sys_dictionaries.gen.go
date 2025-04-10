@@ -27,15 +27,15 @@ func newSysDictionary(db *gorm.DB, opts ...gen.DOOption) sysDictionary {
 
 	tableName := _sysDictionary.sysDictionaryDo.TableName()
 	_sysDictionary.ALL = field.NewAsterisk(tableName)
-	_sysDictionary.ID = field.NewInt64(tableName, "id")
+	_sysDictionary.ID = field.NewInt32(tableName, "id")
 	_sysDictionary.UUID = field.NewString(tableName, "uuid")
+	_sysDictionary.Name = field.NewString(tableName, "name")
+	_sysDictionary.Type = field.NewString(tableName, "type")
+	_sysDictionary.Status = field.NewBool(tableName, "status")
+	_sysDictionary.Desc = field.NewString(tableName, "desc")
 	_sysDictionary.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysDictionary.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_sysDictionary.DeletedAt = field.NewTime(tableName, "deleted_at")
-	_sysDictionary.Name = field.NewString(tableName, "name")
-	_sysDictionary.Type = field.NewString(tableName, "type")
-	_sysDictionary.Status = field.NewInt64(tableName, "status")
-	_sysDictionary.Desc = field.NewString(tableName, "desc")
 
 	_sysDictionary.fillFieldMap()
 
@@ -47,15 +47,15 @@ type sysDictionary struct {
 	sysDictionaryDo sysDictionaryDo
 
 	ALL       field.Asterisk
-	ID        field.Int64
+	ID        field.Int32
 	UUID      field.String
+	Name      field.String // 字典名（中）
+	Type      field.String // 字典名（英）
+	Status    field.Bool   // 状态
+	Desc      field.String // 描述
 	CreatedAt field.Time
 	UpdatedAt field.Time
 	DeletedAt field.Time
-	Name      field.String // 字典名（中）
-	Type      field.String // 字典名（英）
-	Status    field.Int64  // 状态
-	Desc      field.String // 描述
 
 	fieldMap map[string]field.Expr
 }
@@ -72,15 +72,15 @@ func (s sysDictionary) As(alias string) *sysDictionary {
 
 func (s *sysDictionary) updateTableName(table string) *sysDictionary {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt64(table, "id")
+	s.ID = field.NewInt32(table, "id")
 	s.UUID = field.NewString(table, "uuid")
+	s.Name = field.NewString(table, "name")
+	s.Type = field.NewString(table, "type")
+	s.Status = field.NewBool(table, "status")
+	s.Desc = field.NewString(table, "desc")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 	s.DeletedAt = field.NewTime(table, "deleted_at")
-	s.Name = field.NewString(table, "name")
-	s.Type = field.NewString(table, "type")
-	s.Status = field.NewInt64(table, "status")
-	s.Desc = field.NewString(table, "desc")
 
 	s.fillFieldMap()
 
@@ -112,13 +112,13 @@ func (s *sysDictionary) fillFieldMap() {
 	s.fieldMap = make(map[string]field.Expr, 9)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["uuid"] = s.UUID
-	s.fieldMap["created_at"] = s.CreatedAt
-	s.fieldMap["updated_at"] = s.UpdatedAt
-	s.fieldMap["deleted_at"] = s.DeletedAt
 	s.fieldMap["name"] = s.Name
 	s.fieldMap["type"] = s.Type
 	s.fieldMap["status"] = s.Status
 	s.fieldMap["desc"] = s.Desc
+	s.fieldMap["created_at"] = s.CreatedAt
+	s.fieldMap["updated_at"] = s.UpdatedAt
+	s.fieldMap["deleted_at"] = s.DeletedAt
 }
 
 func (s sysDictionary) clone(db *gorm.DB) sysDictionary {

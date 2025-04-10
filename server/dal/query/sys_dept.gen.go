@@ -27,17 +27,17 @@ func newSysDept(db *gorm.DB, opts ...gen.DOOption) sysDept {
 
 	tableName := _sysDept.sysDeptDo.TableName()
 	_sysDept.ALL = field.NewAsterisk(tableName)
-	_sysDept.ID = field.NewInt64(tableName, "id")
+	_sysDept.ID = field.NewInt32(tableName, "id")
+	_sysDept.DeptName = field.NewString(tableName, "dept_name")
+	_sysDept.ParentID = field.NewString(tableName, "parent_id")
+	_sysDept.OrderNo = field.NewInt64(tableName, "order_no")
+	_sysDept.Remark = field.NewString(tableName, "remark")
+	_sysDept.Status = field.NewBool(tableName, "status")
+	_sysDept.Parent = field.NewString(tableName, "parent")
+	_sysDept.UUID = field.NewString(tableName, "uuid")
 	_sysDept.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysDept.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_sysDept.DeletedAt = field.NewTime(tableName, "deleted_at")
-	_sysDept.DeptName = field.NewString(tableName, "dept_name")
-	_sysDept.ParentID = field.NewInt64(tableName, "parent_id")
-	_sysDept.OrderNo = field.NewInt64(tableName, "order_no")
-	_sysDept.Remark = field.NewString(tableName, "remark")
-	_sysDept.Status = field.NewString(tableName, "status")
-	_sysDept.Parent = field.NewString(tableName, "parent")
-	_sysDept.UUID = field.NewString(tableName, "uuid")
 
 	_sysDept.fillFieldMap()
 
@@ -49,17 +49,17 @@ type sysDept struct {
 	sysDeptDo sysDeptDo
 
 	ALL       field.Asterisk
-	ID        field.Int64
+	ID        field.Int32
+	DeptName  field.String // 部门名称
+	ParentID  field.String // 父部门ID
+	OrderNo   field.Int64  // 显示顺序
+	Remark    field.String // 备注
+	Status    field.Bool   // 部门状态
+	Parent    field.String // 上下级关系
+	UUID      field.String
 	CreatedAt field.Time
 	UpdatedAt field.Time
 	DeletedAt field.Time
-	DeptName  field.String // 部门名称
-	ParentID  field.Int64  // 父部门ID
-	OrderNo   field.Int64  // 显示顺序
-	Remark    field.String // 备注
-	Status    field.String // 部门状态
-	Parent    field.String // 上下级关系
-	UUID      field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -76,17 +76,17 @@ func (s sysDept) As(alias string) *sysDept {
 
 func (s *sysDept) updateTableName(table string) *sysDept {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt64(table, "id")
+	s.ID = field.NewInt32(table, "id")
+	s.DeptName = field.NewString(table, "dept_name")
+	s.ParentID = field.NewString(table, "parent_id")
+	s.OrderNo = field.NewInt64(table, "order_no")
+	s.Remark = field.NewString(table, "remark")
+	s.Status = field.NewBool(table, "status")
+	s.Parent = field.NewString(table, "parent")
+	s.UUID = field.NewString(table, "uuid")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 	s.DeletedAt = field.NewTime(table, "deleted_at")
-	s.DeptName = field.NewString(table, "dept_name")
-	s.ParentID = field.NewInt64(table, "parent_id")
-	s.OrderNo = field.NewInt64(table, "order_no")
-	s.Remark = field.NewString(table, "remark")
-	s.Status = field.NewString(table, "status")
-	s.Parent = field.NewString(table, "parent")
-	s.UUID = field.NewString(table, "uuid")
 
 	s.fillFieldMap()
 
@@ -113,9 +113,6 @@ func (s *sysDept) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 func (s *sysDept) fillFieldMap() {
 	s.fieldMap = make(map[string]field.Expr, 11)
 	s.fieldMap["id"] = s.ID
-	s.fieldMap["created_at"] = s.CreatedAt
-	s.fieldMap["updated_at"] = s.UpdatedAt
-	s.fieldMap["deleted_at"] = s.DeletedAt
 	s.fieldMap["dept_name"] = s.DeptName
 	s.fieldMap["parent_id"] = s.ParentID
 	s.fieldMap["order_no"] = s.OrderNo
@@ -123,6 +120,9 @@ func (s *sysDept) fillFieldMap() {
 	s.fieldMap["status"] = s.Status
 	s.fieldMap["parent"] = s.Parent
 	s.fieldMap["uuid"] = s.UUID
+	s.fieldMap["created_at"] = s.CreatedAt
+	s.fieldMap["updated_at"] = s.UpdatedAt
+	s.fieldMap["deleted_at"] = s.DeletedAt
 }
 
 func (s sysDept) clone(db *gorm.DB) sysDept {

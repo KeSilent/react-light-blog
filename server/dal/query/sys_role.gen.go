@@ -27,10 +27,10 @@ func newSysRole(db *gorm.DB, opts ...gen.DOOption) sysRole {
 
 	tableName := _sysRole.sysRoleDo.TableName()
 	_sysRole.ALL = field.NewAsterisk(tableName)
-	_sysRole.ID = field.NewInt64(tableName, "id")
+	_sysRole.ID = field.NewInt32(tableName, "id")
 	_sysRole.UUID = field.NewString(tableName, "uuid")
 	_sysRole.RoleName = field.NewString(tableName, "role_name")
-	_sysRole.ParentID = field.NewInt64(tableName, "parent_id")
+	_sysRole.ParentID = field.NewString(tableName, "parent_id")
 	_sysRole.DefaultRouter = field.NewString(tableName, "default_router")
 	_sysRole.CreateTime = field.NewTime(tableName, "create_time")
 	_sysRole.UpdateTime = field.NewTime(tableName, "update_time")
@@ -46,10 +46,10 @@ type sysRole struct {
 	sysRoleDo sysRoleDo
 
 	ALL           field.Asterisk
-	ID            field.Int64 // 角色ID
+	ID            field.Int32 // 角色ID
 	UUID          field.String
 	RoleName      field.String // 角色名称
-	ParentID      field.Int64  // 父角色ID
+	ParentID      field.String // 父角色ID
 	DefaultRouter field.String // 默认路由
 	CreateTime    field.Time
 	UpdateTime    field.Time
@@ -70,10 +70,10 @@ func (s sysRole) As(alias string) *sysRole {
 
 func (s *sysRole) updateTableName(table string) *sysRole {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt64(table, "id")
+	s.ID = field.NewInt32(table, "id")
 	s.UUID = field.NewString(table, "uuid")
 	s.RoleName = field.NewString(table, "role_name")
-	s.ParentID = field.NewInt64(table, "parent_id")
+	s.ParentID = field.NewString(table, "parent_id")
 	s.DefaultRouter = field.NewString(table, "default_router")
 	s.CreateTime = field.NewTime(table, "create_time")
 	s.UpdateTime = field.NewTime(table, "update_time")

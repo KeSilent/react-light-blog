@@ -34,10 +34,14 @@ export default function CreateMenu(props: CreateMenuProps) {
   const { run, loading } = useRequest<MenuModel>(saveMenu, {
     manual: true,
     debounceInterval: 300,
-    onSuccess: () => {
-      messageApi.success('保存成功！');
-      form.resetFields();
-      reload?.();
+    onSuccess: (res) => {
+      if (!res) {
+        messageApi.success('保存成功！');
+        form.resetFields();
+        reload?.();
+      } else {
+        messageApi.error('保存失败！');
+      }
     },
     onError: (error) => {
       // 处理网络错误等异常情况
@@ -48,7 +52,10 @@ export default function CreateMenu(props: CreateMenuProps) {
   useEffect(() => {
     if (open) {
       if (menu) {
-        form.setFieldsValue(menu);
+        form.setFieldsValue({
+          ...menu,
+          hidden: menu.hidden?.toString(),
+        });
       } else {
         form.setFieldsValue({});
       }
@@ -202,14 +209,28 @@ export default function CreateMenu(props: CreateMenuProps) {
             width="md"
             label="是否隐藏"
             valueEnum={{
-              1: '不隐藏',
-              0: '隐藏',
+              true: '不隐藏',
+              false: '隐藏',
             }}
             transform={(value) => ({
-              hidden: value === '0' ? true : false,
+              hidden: value === 'true' ? true : false,
             })}
           />
           <ProFormDigit width="md" min={1} label="排序" name="sort" />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormText
+            label="菜单唯一标识"
+            width="md"
+            name="uuid"
+            hidden={true}
+          />
+          <ProFormText
+            label="id"
+            width="md"
+            name="id"
+            hidden={true}
+          />
         </ProForm.Group>
       </ModalForm>
     </>

@@ -27,15 +27,15 @@ func newSysDictionaryDetail(db *gorm.DB, opts ...gen.DOOption) sysDictionaryDeta
 
 	tableName := _sysDictionaryDetail.sysDictionaryDetailDo.TableName()
 	_sysDictionaryDetail.ALL = field.NewAsterisk(tableName)
-	_sysDictionaryDetail.ID = field.NewInt64(tableName, "id")
+	_sysDictionaryDetail.ID = field.NewInt32(tableName, "id")
+	_sysDictionaryDetail.Label = field.NewString(tableName, "label")
+	_sysDictionaryDetail.Value = field.NewString(tableName, "value")
+	_sysDictionaryDetail.Status = field.NewBool(tableName, "status")
+	_sysDictionaryDetail.Sort = field.NewBool(tableName, "sort")
+	_sysDictionaryDetail.SysDictionaryID = field.NewString(tableName, "sys_dictionary_id")
 	_sysDictionaryDetail.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysDictionaryDetail.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_sysDictionaryDetail.DeletedAt = field.NewTime(tableName, "deleted_at")
-	_sysDictionaryDetail.Label = field.NewString(tableName, "label")
-	_sysDictionaryDetail.Value = field.NewString(tableName, "value")
-	_sysDictionaryDetail.Status = field.NewInt64(tableName, "status")
-	_sysDictionaryDetail.Sort = field.NewInt64(tableName, "sort")
-	_sysDictionaryDetail.SysDictionaryID = field.NewString(tableName, "sys_dictionary_id")
 
 	_sysDictionaryDetail.fillFieldMap()
 
@@ -47,15 +47,15 @@ type sysDictionaryDetail struct {
 	sysDictionaryDetailDo sysDictionaryDetailDo
 
 	ALL             field.Asterisk
-	ID              field.Int64
+	ID              field.Int32
+	Label           field.String // 展示值
+	Value           field.String // 字典值
+	Status          field.Bool   // 启用状态
+	Sort            field.Bool   // 排序标记
+	SysDictionaryID field.String // 关联标记
 	CreatedAt       field.Time
 	UpdatedAt       field.Time
 	DeletedAt       field.Time
-	Label           field.String // 展示值
-	Value           field.String // 字典值
-	Status          field.Int64  // 启用状态
-	Sort            field.Int64  // 排序标记
-	SysDictionaryID field.String // 关联标记
 
 	fieldMap map[string]field.Expr
 }
@@ -72,15 +72,15 @@ func (s sysDictionaryDetail) As(alias string) *sysDictionaryDetail {
 
 func (s *sysDictionaryDetail) updateTableName(table string) *sysDictionaryDetail {
 	s.ALL = field.NewAsterisk(table)
-	s.ID = field.NewInt64(table, "id")
+	s.ID = field.NewInt32(table, "id")
+	s.Label = field.NewString(table, "label")
+	s.Value = field.NewString(table, "value")
+	s.Status = field.NewBool(table, "status")
+	s.Sort = field.NewBool(table, "sort")
+	s.SysDictionaryID = field.NewString(table, "sys_dictionary_id")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 	s.DeletedAt = field.NewTime(table, "deleted_at")
-	s.Label = field.NewString(table, "label")
-	s.Value = field.NewString(table, "value")
-	s.Status = field.NewInt64(table, "status")
-	s.Sort = field.NewInt64(table, "sort")
-	s.SysDictionaryID = field.NewString(table, "sys_dictionary_id")
 
 	s.fillFieldMap()
 
@@ -111,14 +111,14 @@ func (s *sysDictionaryDetail) GetFieldByName(fieldName string) (field.OrderExpr,
 func (s *sysDictionaryDetail) fillFieldMap() {
 	s.fieldMap = make(map[string]field.Expr, 9)
 	s.fieldMap["id"] = s.ID
-	s.fieldMap["created_at"] = s.CreatedAt
-	s.fieldMap["updated_at"] = s.UpdatedAt
-	s.fieldMap["deleted_at"] = s.DeletedAt
 	s.fieldMap["label"] = s.Label
 	s.fieldMap["value"] = s.Value
 	s.fieldMap["status"] = s.Status
 	s.fieldMap["sort"] = s.Sort
 	s.fieldMap["sys_dictionary_id"] = s.SysDictionaryID
+	s.fieldMap["created_at"] = s.CreatedAt
+	s.fieldMap["updated_at"] = s.UpdatedAt
+	s.fieldMap["deleted_at"] = s.DeletedAt
 }
 
 func (s sysDictionaryDetail) clone(db *gorm.DB) sysDictionaryDetail {
