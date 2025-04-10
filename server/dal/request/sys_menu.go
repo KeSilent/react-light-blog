@@ -5,9 +5,12 @@
  */
 package request
 
-import common "github.com/kesilent/react-light-blog/dal/common/request"
+import (
+	common "github.com/kesilent/react-light-blog/dal/common/request"
+	"github.com/kesilent/react-light-blog/dal/model"
+)
 
 type GetMenuListReq struct {
 	common.PageInfo
-	Name string `json:"name" form:"name"`
+	model.SysBaseMenu
 }

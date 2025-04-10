@@ -22,7 +22,7 @@ const UserList: React.FC = () => {
   };
   const handleDelete = async (roleUUId: string) => {
     try {
-      if (await deleteRole(roleUUId)) {
+      if (!(await deleteRole(roleUUId))) {
         message.success('删除成功');
         actionRef.current?.reload();
       }
@@ -40,9 +40,7 @@ const UserList: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        toolBarRender={() => [
-          <CreateRole key="updateUser" reload={actionRef.current?.reload} />,
-        ]}
+        toolBarRender={() => [<CreateRole key="updateUser" reload={actionRef.current?.reload} />]}
         request={handleGetUserList}
         columns={columns(actionRef, handleDelete)}
       />

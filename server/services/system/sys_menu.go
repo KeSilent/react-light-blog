@@ -15,6 +15,7 @@ import (
 	"github.com/kesilent/react-light-blog/dal/query"
 	req "github.com/kesilent/react-light-blog/dal/request"
 	"github.com/kesilent/react-light-blog/utils"
+	"gorm.io/gen"
 	"gorm.io/gen/field"
 	"gorm.io/gorm"
 )
@@ -151,6 +152,15 @@ func (menuService *MenuService) GetMenuListByPage(info req.GetMenuListReq) (list
 	if info.Name != "" {
 		db = db.Where(query.SysBaseMenu.Name.Like("%" + info.Name + "%"))
 	}
+	if info.Path != "" {
+		db = db.Where(query.SysBaseMenu.Path.Like("%" + info.Path + "%"))
+	}
+	if info.Title != "" {
+		db = db.Where(query.SysBaseMenu.Title.Like("%" + info.Title + "%"))
+	}
+	if info.Component != "" {
+		db = db.Where(query.SysBaseMenu.Component.Like("%" + info.Component + "%"))
+	}
 
 	total, err = db.Count()
 	if err != nil {
@@ -165,6 +175,23 @@ func (menuService *MenuService) GetMenuListByPage(info req.GetMenuListReq) (list
 	sortMenus(treeMenus)
 
 	return treeMenus, int64(len(treeMenus)), err
+}
+
+/**
+ * @Author: Yang
+ * @description: 删除菜单
+ * @param {string} menuUUID
+ * @return {*}
+ */
+func (menuService *MenuService) DeleteMenu(menuUUID string) (gen.ResultInfo, error) {
+	db := query.Q.SysBaseMenu.WithContext(context.Background())
+
+	resultInfo, err := db.Where(query.SysBaseMenu.UUID.Eq(menuUUID)).Delete()
+	if err != nil {
+		return resultInfo, err
+	}
+
+	return resultInfo, nil
 }
 
 // 构建树形结构

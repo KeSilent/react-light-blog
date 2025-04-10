@@ -53,10 +53,10 @@ export async function deleteMenu(menuId: string) {
   const result = await request<ResponseResult<string>>('/api/menu/deleteMenu', {
     method: 'DELETE',
     params: {
-      menuId: menuId,
+      id: menuId,
     },
   });
-  return result.data;
+  return result.code;
 }
 
 /**

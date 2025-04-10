@@ -3,7 +3,7 @@
  * @Date: 2025-03-19 19:04:24
  * @Description:菜单操作类
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2025-04-09 22:15:33
+ * @LastEditTime: 2025-04-10 16:12:01
  * @FilePath: /server/api/v1/system/sys_menu.go
  *
  * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
@@ -11,6 +11,8 @@
 package system
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/kesilent/react-light-blog/dal/common/response"
 	"github.com/kesilent/react-light-blog/dal/model"
@@ -109,6 +111,29 @@ func (m *MenuApi) SaveBaseMenu(c *gin.Context) {
 		return
 	} else {
 		response.OkWithMessage("添加成功", c)
+		return
+	}
+}
+
+/**
+ * @Author: Yang
+ * @description: 删除菜单
+ * @param {*gin.Context} c
+ * @return {*}
+ */
+func (m *MenuApi) DeleteMenu(c *gin.Context) {
+	uuid := c.Query("id")
+	resultInfo, err := menuService.DeleteMenu(uuid)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	} else {
+		if resultInfo.RowsAffected > 0 {
+			response.OkWithMessage("删除"+fmt.Sprintf("%d", resultInfo.RowsAffected)+"条", c)
+
+		} else {
+			response.FailWithMessage("删除失败", c)
+		}
 		return
 	}
 }

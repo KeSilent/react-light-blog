@@ -35,8 +35,9 @@ export const columns = (
         key="delete"
         title="是否确认删除角色"
         onConfirm={() => handleDelete(record.uuid)}
-        okText="Yes"
-        cancelText="No"
+        okType="danger"
+        okText="删除"
+        cancelText="取消"
       >
         <Button color="danger" variant="link">
           <DeleteOutlined /> 删除

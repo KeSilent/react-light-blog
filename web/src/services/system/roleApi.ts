@@ -97,5 +97,5 @@ export async function deleteRole(roleUUId: string) {
     method: 'DELETE',
     params: { id: roleUUId },
   });
-  return { data: result.code === 0 };
+  return result.code;
 }

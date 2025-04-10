@@ -9,8 +9,8 @@ import { deleteMenu, getMenuList } from '@/services/system/menuApi';
 import { ActionType, PageContainer, ProTable } from '@ant-design/pro-components';
 import { message } from 'antd';
 import { useRef } from 'react';
-import { columns } from './data';
 import CreateMenu from './components/CreateMenu';
+import { columns } from './data';
 
 export default function Menu() {
   const actionRef = useRef<ActionType>();
@@ -28,7 +28,7 @@ export default function Menu() {
 
   const handleDelete = async (roleUUId: string) => {
     try {
-      if (await deleteMenu(roleUUId)) {
+      if (!(await deleteMenu(roleUUId))) {
         message.success('删除成功');
         actionRef.current?.reload();
       }
@@ -40,7 +40,7 @@ export default function Menu() {
     <PageContainer>
       <ProTable<MenuModel, PageParams>
         rowKey="id"
-        headerTitle="角色列表"
+        headerTitle="菜单列表"
         actionRef={actionRef}
         search={{
           labelWidth: 120,
