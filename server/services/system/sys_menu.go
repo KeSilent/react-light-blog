@@ -38,7 +38,7 @@ func (menuService *MenuService) SaveBaseMenu(menu model.SysBaseMenu) error {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("存在重复name，请修改name")
 		}
-		menu.ID = model.SnowflakeID(utils.GenID(0))
+		menu.ID = model.SnowflakeID(utils.GenID(1))
 		menu.UUID = uuid.NewString()
 	}
 	//字符串转成首字母大写
