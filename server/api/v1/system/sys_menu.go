@@ -3,7 +3,7 @@
  * @Date: 2025-03-19 19:04:24
  * @Description:菜单操作类
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2025-04-10 16:12:01
+ * @LastEditTime: 2025-04-10 16:16:36
  * @FilePath: /server/api/v1/system/sys_menu.go
  *
  * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
@@ -127,13 +127,11 @@ func (m *MenuApi) DeleteMenu(c *gin.Context) {
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
-	} else {
-		if resultInfo.RowsAffected > 0 {
-			response.OkWithMessage("删除"+fmt.Sprintf("%d", resultInfo.RowsAffected)+"条", c)
+	}
+	if resultInfo.RowsAffected > 0 {
+		response.OkWithMessage("删除"+fmt.Sprintf("%d", resultInfo.RowsAffected)+"条", c)
 
-		} else {
-			response.FailWithMessage("删除失败", c)
-		}
-		return
+	} else {
+		response.FailWithMessage("删除失败", c)
 	}
 }

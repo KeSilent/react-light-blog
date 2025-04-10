@@ -53,7 +53,12 @@ func (r *RoleApi) DeleteRole(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 	}
 
-	response.OkWithMessage("删除"+fmt.Sprintf("%d", resultInfo.RowsAffected)+"条", c)
+	if resultInfo.RowsAffected > 0 {
+		response.OkWithMessage("删除"+fmt.Sprintf("%d", resultInfo.RowsAffected)+"条", c)
+
+	} else {
+		response.FailWithMessage("删除失败", c)
+	}
 }
 
 /**
