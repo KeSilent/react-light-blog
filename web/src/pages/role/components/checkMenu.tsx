@@ -11,6 +11,23 @@ export type CheckMenuProps = {
   reload?: ActionType['reload'];
   roleId?: string;
 };
+
+function getLeafNodeIds(tree: MenuModel[]): string[] {
+  const result: string[] = [];
+
+  const dfs = (nodes: MenuModel[]) => {
+    for (const node of nodes) {
+      if (!node.children || node.children.length === 0) {
+        result.push(String(node.id));
+      } else {
+        dfs(node.children);
+      }
+    }
+  };
+
+  dfs(tree);
+  return result;
+}
 export default function CheckMenu(props: CheckMenuProps) {
   const { reload, roleId } = props;
   const [messageApi, contextHolder] = message.useMessage();
@@ -34,16 +51,17 @@ export default function CheckMenu(props: CheckMenuProps) {
     },
   });
 
-  const getSelectedKeys = () => {
+  const getSelectedKeys = async () => {
     if (!roleId) return;
-    getRoleMenus(roleId).then((res) => {
-      if (res) {
-        const menuIdList: string[] = res.map((item) => String(item.sysBaseMenuId));
-        setSelectedKeys(menuIdList);
-      }
-    });
+    const res = await getRoleMenus(roleId);
+    const menus = await getMenuByKey({ keyWord: '' }); // 用于结构参考
+    if (res && menus) {
+      const selectedKeySet = new Set(res.map((item) => String(item.sysBaseMenuId)));
+      const leafKeys = getLeafNodeIds(menus);
+      const filtered = leafKeys.filter((key) => selectedKeySet.has(key));
+      setSelectedKeys(filtered);
+    }
   };
-
   const getMenus = () => {
     getMenuByKey({ keyWord: keyword }).then((res) => {
       if (res) {
