@@ -6,10 +6,10 @@ package model
 
 const TableNameSysUserRole = "sys_user_role"
 
-// SysUserRole 用户角色关联表
+// SysUserRole mapped from table <sys_user_role>
 type SysUserRole struct {
-	SysUserUUID string `gorm:"column:sys_user_uuid;type:varchar(255);primaryKey" json:"sysUserUuid"`
-	SysRoleUUID string `gorm:"column:sys_role_uuid;type:varchar(255);primaryKey" json:"sysRoleUuid"`
+	SysUserID SnowflakeID `gorm:"column:sys_user_id;type:bigint;not null" json:"sysUserId"`
+	SysRoleID SnowflakeID `gorm:"column:sys_role_id;type:bigint;not null" json:"sysRoleId"`
 }
 
 // TableName SysUserRole's table name

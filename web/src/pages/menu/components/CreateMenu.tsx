@@ -173,7 +173,7 @@ export default function CreateMenu(props: CreateMenuProps) {
               bordered: undefined,
               fieldNames: {
                 label: 'title',
-                value: 'uuid',
+                value: 'id',
                 children: 'children',
               },
             }}

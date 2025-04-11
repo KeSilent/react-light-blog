@@ -9,7 +9,6 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/kesilent/react-light-blog/dal/common/response"
 	"github.com/kesilent/react-light-blog/dal/model"
 	systemReq "github.com/kesilent/react-light-blog/dal/request"
@@ -31,8 +30,15 @@ func (r *RoleApi) SaveRole(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+
+	err = utils.Verify(role, utils.SysRoleVerify)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
 	if role.ID == 0 {
-		role.UUID = uuid.NewString()
+		role.ID = model.SnowflakeID(utils.GenID(1))
 	}
 	err = roleService.SaveRole(&role)
 	if err != nil {
@@ -46,8 +52,13 @@ func (r *RoleApi) SaveRole(c *gin.Context) {
  * @Description: 删除角色
  **/
 func (r *RoleApi) DeleteRole(c *gin.Context) {
-	uuId := c.Query("id")
-	resultInfo, err := roleService.DeleteRole(uuId)
+	id := c.Query("id")
+	if id == "" {
+		response.FailWithMessage("id不能为空", c)
+		return
+	}
+	idInt, _ := utils.StrToInt64(id)
+	resultInfo, err := roleService.DeleteRole(idInt)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 	}
@@ -98,10 +109,11 @@ func (r *RoleApi) GetRoleList(c *gin.Context) {
 func (r *RoleApi) GetRoleMenus(c *gin.Context) {
 	roleId := c.Query("roleId")
 	if roleId == "" {
-		response.FailWithMessage("参数错误", c)
+		response.FailWithMessage("角色ID不能为空", c)
 		return
 	}
-	menus, err := roleService.GetRoleMenus(roleId)
+	roleIdInt, _ := utils.StrToInt64(roleId)
+	menus, err := roleService.GetRoleMenus(roleIdInt)
 	if err != nil {
 		global.RLB_LOG.Error("获取角色菜单失败!", zap.Error(err))
 		response.FailWithMessage("获取角色菜单失败", c)
@@ -119,6 +131,12 @@ func (r *RoleApi) AddRoleMenu(c *gin.Context) {
 	err := c.BindJSON(&roleMenu)
 	if err != nil {
 		response.FailWithMessage("参数错误", c)
+		return
+	}
+
+	err = utils.Verify(roleMenu, utils.RoleMenuReqVerify)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
 		return
 	}
 

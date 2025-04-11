@@ -28,7 +28,6 @@ func newSysDictionary(db *gorm.DB, opts ...gen.DOOption) sysDictionary {
 	tableName := _sysDictionary.sysDictionaryDo.TableName()
 	_sysDictionary.ALL = field.NewAsterisk(tableName)
 	_sysDictionary.ID = field.NewField(tableName, "id")
-	_sysDictionary.UUID = field.NewString(tableName, "uuid")
 	_sysDictionary.Name = field.NewString(tableName, "name")
 	_sysDictionary.Type = field.NewString(tableName, "type")
 	_sysDictionary.Status = field.NewBool(tableName, "status")
@@ -48,7 +47,6 @@ type sysDictionary struct {
 
 	ALL       field.Asterisk
 	ID        field.Field
-	UUID      field.String
 	Name      field.String // 字典名（中）
 	Type      field.String // 字典名（英）
 	Status    field.Bool   // 状态
@@ -73,7 +71,6 @@ func (s sysDictionary) As(alias string) *sysDictionary {
 func (s *sysDictionary) updateTableName(table string) *sysDictionary {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewField(table, "id")
-	s.UUID = field.NewString(table, "uuid")
 	s.Name = field.NewString(table, "name")
 	s.Type = field.NewString(table, "type")
 	s.Status = field.NewBool(table, "status")
@@ -109,9 +106,8 @@ func (s *sysDictionary) GetFieldByName(fieldName string) (field.OrderExpr, bool)
 }
 
 func (s *sysDictionary) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 9)
+	s.fieldMap = make(map[string]field.Expr, 8)
 	s.fieldMap["id"] = s.ID
-	s.fieldMap["uuid"] = s.UUID
 	s.fieldMap["name"] = s.Name
 	s.fieldMap["type"] = s.Type
 	s.fieldMap["status"] = s.Status

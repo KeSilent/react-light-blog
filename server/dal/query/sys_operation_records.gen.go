@@ -65,7 +65,7 @@ type sysOperationRecord struct {
 	ErrorMessage field.String // 错误信息
 	Body         field.String // 请求Body
 	Resp         field.String // 响应Body
-	UserID       field.Field  // 用户uuid
+	UserID       field.Field  // 用户id
 
 	fieldMap map[string]field.Expr
 }

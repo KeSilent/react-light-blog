@@ -103,19 +103,19 @@ func GenStructs() error {
 		gen.FieldRelate(field.Many2Many, "Role", role, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_user_role"},
-				"foreignKey":     []string{"uuid"},
-				"references":     []string{"uuid"},
-				"joinForeignKey": []string{"sys_user_uuid"},
-				"joinReferences": []string{"sys_role_uuid"},
+				"foreignKey":     []string{"id"},
+				"references":     []string{"id"},
+				"joinForeignKey": []string{"sys_user_id"},
+				"joinReferences": []string{"sys_role_id"},
 			},
 		}),
 		gen.FieldRelate(field.Many2Many, "Dept", dept, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_user_dept"},
-				"foreignKey":     []string{"uuid"},
-				"references":     []string{"uuid"},
-				"joinForeignKey": []string{"sys_user_uuid"},
-				"joinReferences": []string{"sys_dept_uuid"},
+				"foreignKey":     []string{"id"},
+				"references":     []string{"id"},
+				"joinForeignKey": []string{"sys_user_id"},
+				"joinReferences": []string{"sys_dept_id"},
 			},
 		}),
 	)...)
@@ -125,19 +125,19 @@ func GenStructs() error {
 		gen.FieldRelate(field.Many2Many, "Menus", menu, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_role_menus"},
-				"foreignKey":     []string{"uuid"},
-				"references":     []string{"uuid"},
-				"joinForeignKey": []string{"sys_role_uuid"},
-				"joinReferences": []string{"sys_base_menu_uuid"},
+				"foreignKey":     []string{"id"},
+				"references":     []string{"id"},
+				"joinForeignKey": []string{"sys_role_id"},
+				"joinReferences": []string{"sys_base_menu_id"},
 			},
 		}),
 		gen.FieldRelate(field.Many2Many, "Users", user, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_user_role"},
-				"foreignKey":     []string{"uuid"},
-				"references":     []string{"uuid"},
-				"joinForeignKey": []string{"sys_role_uuid"},
-				"joinReferences": []string{"sys_user_uuid"},
+				"foreignKey":     []string{"id"},
+				"references":     []string{"id"},
+				"joinForeignKey": []string{"sys_role_id"},
+				"joinReferences": []string{"sys_user_id"},
 			},
 		}),
 	)...)
@@ -147,8 +147,8 @@ func GenStructs() error {
 		gen.FieldRelate(field.Many2Many, "Role", role, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"many2many":      []string{"sys_role_menus"},
-				"joinForeignKey": []string{"sys_base_menu_uuid"},
-				"joinReferences": []string{"sys_role_uuid"},
+				"joinForeignKey": []string{"sys_base_menu_id"},
+				"joinReferences": []string{"sys_role_id"},
 			},
 		}),
 		gen.FieldRelate(field.HasMany, "Children", menu, &field.RelateConfig{
@@ -171,7 +171,7 @@ func GenStructs() error {
 		gen.FieldRelate(field.BelongsTo, "Dictionary", dic, &field.RelateConfig{
 			GORMTag: field.GormTag{
 				"foreignKey": []string{"sys_dictionary_id"},
-				"references": []string{"uuid"},
+				"references": []string{"id"},
 			},
 		}),
 	)...)

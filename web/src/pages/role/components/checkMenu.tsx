@@ -35,12 +35,10 @@ export default function CheckMenu(props: CheckMenuProps) {
   });
 
   const getSelectedKeys = () => {
-    console.log('roleId', roleId);
-
     if (!roleId) return;
     getRoleMenus(roleId).then((res) => {
       if (res) {
-        const menuIdList: string[] = res.map((item) => String(item.sysBaseMenuUuid));
+        const menuIdList: string[] = res.map((item) => String(item.sysBaseMenuId));
         setSelectedKeys(menuIdList);
       }
     });
@@ -97,14 +95,14 @@ export default function CheckMenu(props: CheckMenuProps) {
           let roleMenus: RoleMenuModel[] = [];
           if (!selectedKeys) {
             roleMenus.push({
-              sysBaseMenuUuid: '0',
-              sysRoleUuid: roleId || '',
+              sysBaseMenuId: '0',
+              sysRoleId: roleId || '',
             });
           } else {
             roleMenus = selectedKeys.map((item) => {
               return {
-                sysBaseMenuUuid: item,
-                sysRoleUuid: roleId || '',
+                sysBaseMenuId: item,
+                sysRoleId: roleId || '',
               };
             });
           }
@@ -131,7 +129,7 @@ export default function CheckMenu(props: CheckMenuProps) {
             treeData={treeData}
             onCheck={onCheckSelect}
             onExpand={(keys) => setExpandedKeys(keys.map((key) => String(key)))}
-            fieldNames={{ title: 'title', key: 'uuid', children: 'children' }}
+            fieldNames={{ title: 'title', key: 'id', children: 'children' }}
           />
         </ProForm.Group>
       </DrawerForm>

@@ -18,7 +18,6 @@ type CustomClaims struct {
 }
 
 type BaseClaims struct {
-	UUID     string
 	ID       model.SnowflakeID
 	Username string
 	NickName string

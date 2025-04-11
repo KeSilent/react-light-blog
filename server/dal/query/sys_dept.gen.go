@@ -29,12 +29,11 @@ func newSysDept(db *gorm.DB, opts ...gen.DOOption) sysDept {
 	_sysDept.ALL = field.NewAsterisk(tableName)
 	_sysDept.ID = field.NewField(tableName, "id")
 	_sysDept.DeptName = field.NewString(tableName, "dept_name")
-	_sysDept.ParentID = field.NewString(tableName, "parent_id")
+	_sysDept.ParentID = field.NewField(tableName, "parent_id")
 	_sysDept.OrderNo = field.NewField(tableName, "order_no")
 	_sysDept.Remark = field.NewString(tableName, "remark")
 	_sysDept.Status = field.NewBool(tableName, "status")
 	_sysDept.Parent = field.NewString(tableName, "parent")
-	_sysDept.UUID = field.NewString(tableName, "uuid")
 	_sysDept.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysDept.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_sysDept.DeletedAt = field.NewTime(tableName, "deleted_at")
@@ -51,12 +50,11 @@ type sysDept struct {
 	ALL       field.Asterisk
 	ID        field.Field
 	DeptName  field.String // 部门名称
-	ParentID  field.String // 父部门ID
+	ParentID  field.Field  // 父部门ID
 	OrderNo   field.Field  // 显示顺序
 	Remark    field.String // 备注
 	Status    field.Bool   // 部门状态
 	Parent    field.String // 上下级关系
-	UUID      field.String
 	CreatedAt field.Time
 	UpdatedAt field.Time
 	DeletedAt field.Time
@@ -78,12 +76,11 @@ func (s *sysDept) updateTableName(table string) *sysDept {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewField(table, "id")
 	s.DeptName = field.NewString(table, "dept_name")
-	s.ParentID = field.NewString(table, "parent_id")
+	s.ParentID = field.NewField(table, "parent_id")
 	s.OrderNo = field.NewField(table, "order_no")
 	s.Remark = field.NewString(table, "remark")
 	s.Status = field.NewBool(table, "status")
 	s.Parent = field.NewString(table, "parent")
-	s.UUID = field.NewString(table, "uuid")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 	s.DeletedAt = field.NewTime(table, "deleted_at")
@@ -111,7 +108,7 @@ func (s *sysDept) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysDept) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 11)
+	s.fieldMap = make(map[string]field.Expr, 10)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["dept_name"] = s.DeptName
 	s.fieldMap["parent_id"] = s.ParentID
@@ -119,7 +116,6 @@ func (s *sysDept) fillFieldMap() {
 	s.fieldMap["remark"] = s.Remark
 	s.fieldMap["status"] = s.Status
 	s.fieldMap["parent"] = s.Parent
-	s.fieldMap["uuid"] = s.UUID
 	s.fieldMap["created_at"] = s.CreatedAt
 	s.fieldMap["updated_at"] = s.UpdatedAt
 	s.fieldMap["deleted_at"] = s.DeletedAt

@@ -49,6 +49,11 @@ func (b *BaseApi) Login(c *gin.Context) {
 			response.FailWithMessage("用户名不存在或者密码错误", c)
 			return
 		}
+		if len(user.Role) == 0 {
+			global.RLB_LOG.Error("登陆失败! 用户不存在角色信息!", zap.Error(err))
+			response.FailWithMessage("用户不存在角色信息", c)
+			return
+		}
 		b.TokenNext(c, *user)
 		return
 	}
@@ -158,8 +163,8 @@ func (b *BaseApi) ChangePassword(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	uuid := utils.GetUserUuid(c)
-	u := &model.SysUser{UUID: uuid, Password: req.Password}
+	id := utils.GetUserID(c)
+	u := &model.SysUser{ID: model.SnowflakeID(id), Password: req.Password}
 	_, err = userService.ChangePassword(u, req.NewPassword)
 	if err != nil {
 		global.RLB_LOG.Error("修改失败!", zap.Error(err))
@@ -231,8 +236,9 @@ func (b *BaseApi) UpdateUser(c *gin.Context) {
  * @return {*}
  */
 func (b *BaseApi) DeleteUser(c *gin.Context) {
-	userUUID := c.Param("id")
-	resultInfo, err := userService.DeleteUser(userUUID)
+	id := c.Param("id")
+	idInt, _ := utils.StrToInt64(id)
+	resultInfo, err := userService.DeleteUser(idInt)
 	if err != nil {
 		response.FailWithMessage("删除失败", c)
 		return

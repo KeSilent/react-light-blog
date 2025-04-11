@@ -28,9 +28,8 @@ func newSysBaseMenu(db *gorm.DB, opts ...gen.DOOption) sysBaseMenu {
 	tableName := _sysBaseMenu.sysBaseMenuDo.TableName()
 	_sysBaseMenu.ALL = field.NewAsterisk(tableName)
 	_sysBaseMenu.ID = field.NewField(tableName, "id")
-	_sysBaseMenu.UUID = field.NewString(tableName, "uuid")
 	_sysBaseMenu.MenuLevel = field.NewInt32(tableName, "menu_level")
-	_sysBaseMenu.ParentID = field.NewString(tableName, "parent_id")
+	_sysBaseMenu.ParentID = field.NewField(tableName, "parent_id")
 	_sysBaseMenu.Path = field.NewString(tableName, "path")
 	_sysBaseMenu.Name = field.NewString(tableName, "name")
 	_sysBaseMenu.Hidden = field.NewBool(tableName, "hidden")
@@ -52,10 +51,9 @@ type sysBaseMenu struct {
 	sysBaseMenuDo sysBaseMenuDo
 
 	ALL        field.Asterisk
-	ID         field.Field // 菜单ID
-	UUID       field.String
+	ID         field.Field  // 菜单ID
 	MenuLevel  field.Int32  // 菜单层级
-	ParentID   field.String // 父菜单ID
+	ParentID   field.Field  // 父菜单ID
 	Path       field.String // 路由path
 	Name       field.String // 路由name
 	Hidden     field.Bool   // 是否隐藏
@@ -83,9 +81,8 @@ func (s sysBaseMenu) As(alias string) *sysBaseMenu {
 func (s *sysBaseMenu) updateTableName(table string) *sysBaseMenu {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewField(table, "id")
-	s.UUID = field.NewString(table, "uuid")
 	s.MenuLevel = field.NewInt32(table, "menu_level")
-	s.ParentID = field.NewString(table, "parent_id")
+	s.ParentID = field.NewField(table, "parent_id")
 	s.Path = field.NewString(table, "path")
 	s.Name = field.NewString(table, "name")
 	s.Hidden = field.NewBool(table, "hidden")
@@ -122,9 +119,8 @@ func (s *sysBaseMenu) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysBaseMenu) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 14)
+	s.fieldMap = make(map[string]field.Expr, 13)
 	s.fieldMap["id"] = s.ID
-	s.fieldMap["uuid"] = s.UUID
 	s.fieldMap["menu_level"] = s.MenuLevel
 	s.fieldMap["parent_id"] = s.ParentID
 	s.fieldMap["path"] = s.Path

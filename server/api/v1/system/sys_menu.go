@@ -3,7 +3,7 @@
  * @Date: 2025-03-19 19:04:24
  * @Description:菜单操作类
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2025-04-10 16:16:36
+ * @LastEditTime: 2025-04-11 09:23:34
  * @FilePath: /server/api/v1/system/sys_menu.go
  *
  * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
@@ -30,13 +30,13 @@ type MenuApi struct{}
  * @return {*}
  */
 func (m *MenuApi) Menus(c *gin.Context) {
-	user, _ := userService.GetUserInfo(utils.GetUserUuid(c))
+	user, _ := userService.GetUserInfo(utils.GetUserID(c))
 	if len(user.Role) == 0 {
 		response.FailWithMessage("未设置任何角色", c)
 	}
 
 	//获取第一个角色
-	menus, err := menuService.GetRoleMenuList(user.Role[0].UUID)
+	menus, err := menuService.GetRoleMenuList(int64(user.Role[0].ID))
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
@@ -122,8 +122,9 @@ func (m *MenuApi) SaveBaseMenu(c *gin.Context) {
  * @return {*}
  */
 func (m *MenuApi) DeleteMenu(c *gin.Context) {
-	uuid := c.Query("id")
-	resultInfo, err := menuService.DeleteMenu(uuid)
+	id := c.Query("id")
+	idInt, _ := utils.StrToInt64(id)
+	resultInfo, err := menuService.DeleteMenu(idInt)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return

@@ -32,7 +32,7 @@ func newSysDictionaryDetail(db *gorm.DB, opts ...gen.DOOption) sysDictionaryDeta
 	_sysDictionaryDetail.Value = field.NewString(tableName, "value")
 	_sysDictionaryDetail.Status = field.NewBool(tableName, "status")
 	_sysDictionaryDetail.Sort = field.NewBool(tableName, "sort")
-	_sysDictionaryDetail.SysDictionaryID = field.NewString(tableName, "sys_dictionary_id")
+	_sysDictionaryDetail.SysDictionaryID = field.NewField(tableName, "sys_dictionary_id")
 	_sysDictionaryDetail.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysDictionaryDetail.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_sysDictionaryDetail.DeletedAt = field.NewTime(tableName, "deleted_at")
@@ -52,7 +52,7 @@ type sysDictionaryDetail struct {
 	Value           field.String // 字典值
 	Status          field.Bool   // 启用状态
 	Sort            field.Bool   // 排序标记
-	SysDictionaryID field.String // 关联标记
+	SysDictionaryID field.Field  // 关联标记
 	CreatedAt       field.Time
 	UpdatedAt       field.Time
 	DeletedAt       field.Time
@@ -77,7 +77,7 @@ func (s *sysDictionaryDetail) updateTableName(table string) *sysDictionaryDetail
 	s.Value = field.NewString(table, "value")
 	s.Status = field.NewBool(table, "status")
 	s.Sort = field.NewBool(table, "sort")
-	s.SysDictionaryID = field.NewString(table, "sys_dictionary_id")
+	s.SysDictionaryID = field.NewField(table, "sys_dictionary_id")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
 	s.DeletedAt = field.NewTime(table, "deleted_at")

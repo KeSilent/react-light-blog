@@ -1,6 +1,5 @@
 export interface RoleModel {
   id: string; // 角色ID
-  uuid: string;
   roleName: string; // 角色名称
   parentId: number; // 父角色ID
   createTime: string; // 创建时间
@@ -12,6 +11,6 @@ export interface RoleModel {
 }
 
 export interface RoleMenuModel {
-  sysBaseMenuUuid: string;
-  sysRoleUuid: string;
+  sysBaseMenuId: string;
+  sysRoleId: string;
 }

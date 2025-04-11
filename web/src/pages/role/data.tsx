@@ -29,12 +29,12 @@ export const columns = (
     dataIndex: 'option',
     valueType: 'option',
     render: (_, record) => [
-      <CheckMenu key="checkMenu" roleId={record.uuid} reload={actionRef.current?.reload} />,
+      <CheckMenu key="checkMenu" roleId={record.id} reload={actionRef.current?.reload} />,
       <CreateRole key="updateUser" role={record} reload={actionRef.current?.reload} />,
       <Popconfirm
         key="delete"
         title="是否确认删除角色"
-        onConfirm={() => handleDelete(record.uuid)}
+        onConfirm={() => handleDelete(record.id)}
         okType="danger"
         okText="删除"
         cancelText="取消"

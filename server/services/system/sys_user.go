@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/google/uuid"
 	"github.com/kesilent/react-light-blog/dal/model"
 	"github.com/kesilent/react-light-blog/dal/query"
 	systemReq "github.com/kesilent/react-light-blog/dal/request"
@@ -33,10 +32,9 @@ func (userService *UserService) Register(u model.SysUser) (userInter model.SysUs
 	}
 	// 否则 附加uuid 密码hash加密 注册
 	u.Password = utils.BcryptHash(u.Password)
-	if err != nil {
-		return userInter, err
+	if u.ID == 0 {
+		u.ID = model.SnowflakeID(utils.GenID(1))
 	}
-	u.UUID = uuid.NewString()
 	err = q.WithContext(context.Background()).Save(&u)
 	return u, err
 }
@@ -66,7 +64,7 @@ func (userService *UserService) Login(u *model.SysUser) (userInter *model.SysUse
 func (userService *UserService) ChangePassword(u *model.SysUser, newPassword string) (userInter *model.SysUser, err error) {
 	var user *model.SysUser
 	q := query.Q.SysUser
-	user, err = q.WithContext(context.Background()).Where(q.UUID.Eq(u.UUID)).First()
+	user, err = q.WithContext(context.Background()).Where(q.ID.Eq(u.ID)).First()
 	if err != nil {
 		return nil, err
 	}
@@ -115,9 +113,9 @@ func (userService *UserService) GetUserInfoList(info systemReq.GetUserList) (lis
 // @description: 通过ID获取用户信息
 // @param: id int64
 // @return: *model.SysUser, error
-func (userService *UserService) GetUserInfo(UUID string) (*model.SysUser, error) {
+func (userService *UserService) GetUserInfo(id int64) (*model.SysUser, error) {
 	q := query.Q.SysUser
-	return q.WithContext(context.Background()).Preload(field.NewRelation("Role", "")).Where(query.SysUser.UUID.Eq(UUID)).First()
+	return q.WithContext(context.Background()).Preload(field.NewRelation("Role", "")).Where(query.SysUser.ID.Eq(model.SnowflakeID(id))).First()
 }
 
 func (userService *UserService) AddUserRole(userRole []*model.SysUserRole) error {
@@ -143,10 +141,10 @@ func (UserService *UserService) UpdateUser(u *model.SysUser) error {
  * @author: JackYang
  * @function: DeleteUser
  * @description: 删除用户
- * @param:   uuid string
+ * @param:   id string
  * @return:  gen.ResultInfo, error
  */
-func (UserService *UserService) DeleteUser(uuid string) (gen.ResultInfo, error) {
+func (UserService *UserService) DeleteUser(uuid int64) (gen.ResultInfo, error) {
 	q := query.Q.SysUser
-	return q.WithContext(context.Background()).Where(q.UUID.Eq(uuid)).Delete()
+	return q.WithContext(context.Background()).Where(q.ID.Eq(model.SnowflakeID(uuid))).Delete()
 }

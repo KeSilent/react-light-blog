@@ -38,20 +38,19 @@ func (role *RoleService) CreateRoleList(authorities []*model.SysRole) error {
  * @return: error
  */
 func (role *RoleService) SaveRole(model *model.SysRole) error {
-	q := query.SysRole.WithContext(context.Background())
-	return q.Save(model)
+	return query.SysRole.WithContext(context.Background()).Save(model)
 }
 
 /**
  * @author: JackYang
  * @function: DeleteRole
  * @description: 删除角色
- * @param: roleUUID string
+ * @param: id int64
  * @return: gen.ResultInfo, error
  */
-func (role *RoleService) DeleteRole(roleUUID string) (gen.ResultInfo, error) {
+func (role *RoleService) DeleteRole(id int64) (gen.ResultInfo, error) {
 	q := query.SysRole.WithContext(context.Background())
-	return q.Where(query.SysRole.UUID.Eq(roleUUID)).Delete()
+	return q.Where(query.SysRole.ID.Eq(model.SnowflakeID(id))).Delete()
 }
 
 /**
@@ -63,7 +62,7 @@ func (role *RoleService) DeleteRole(roleUUID string) (gen.ResultInfo, error) {
  */
 func (role *RoleService) AddRoleMenus(authorityMenus systemReq.RoleMenuReq) error {
 	q := query.SysRoleMenu
-	if _, err := role.DeleteRoleMenu(authorityMenus.RoleUUID); err != nil {
+	if _, err := role.DeleteRoleMenu(int64(authorityMenus.RoleID)); err != nil {
 		return err
 	}
 	if len(authorityMenus.Rolemenus) > 0 {
@@ -72,9 +71,9 @@ func (role *RoleService) AddRoleMenus(authorityMenus systemReq.RoleMenuReq) erro
 	return nil
 }
 
-func (role *RoleService) DeleteRoleMenu(roleUUID string) (gen.ResultInfo, error) {
+func (role *RoleService) DeleteRoleMenu(roleID int64) (gen.ResultInfo, error) {
 	q := query.SysRoleMenu
-	return q.WithContext(context.Background()).Where(q.SysRoleUUID.Eq(roleUUID)).Delete()
+	return q.WithContext(context.Background()).Where(q.SysRoleID.Eq(model.SnowflakeID(roleID))).Delete()
 }
 
 /**
@@ -84,9 +83,9 @@ func (role *RoleService) DeleteRoleMenu(roleUUID string) (gen.ResultInfo, error)
  * @param: roleId int64
  * @return: []*model.SysRoleMenu, error
  */
-func (role *RoleService) GetRoleMenus(roleUUID string) ([]*model.SysRoleMenu, error) {
+func (role *RoleService) GetRoleMenus(roleID int64) ([]*model.SysRoleMenu, error) {
 	q := query.SysRoleMenu
-	return q.WithContext(context.Background()).Where(q.SysRoleUUID.Eq(roleUUID)).Find()
+	return q.WithContext(context.Background()).Where(q.SysRoleID.Eq(model.SnowflakeID(roleID))).Find()
 }
 
 /**
@@ -102,8 +101,8 @@ func (role *RoleService) GetRoleList(info systemReq.GetRoleListReq) (list []*mod
 
 	db := query.Q.SysRole.WithContext(context.Background())
 
-	if info.Name != "" {
-		db = db.Where(query.SysRole.RoleName.Like("%" + info.Name + "%"))
+	if info.RoleName != "" {
+		db = db.Where(query.SysRole.RoleName.Like("%" + info.RoleName + "%"))
 	}
 
 	total, err = db.Count()

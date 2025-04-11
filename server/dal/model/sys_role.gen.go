@@ -12,16 +12,15 @@ const TableNameSysRole = "sys_role"
 
 // SysRole 角色表
 type SysRole struct {
-	ID            SnowflakeID   `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true;comment:角色ID" json:"id"` // 角色ID
-	UUID          string        `gorm:"column:uuid;type:char(36);not null" json:"uuid"`
+	ID            SnowflakeID   `gorm:"column:id;type:bigint;primaryKey;comment:角色ID" json:"id"`                                     // 角色ID
 	RoleName      string        `gorm:"column:role_name;type:varchar(64);not null;comment:角色名称" json:"roleName"`                     // 角色名称
-	ParentID      string        `gorm:"column:parent_id;type:char(36);primaryKey;comment:父角色ID" json:"parentId"`                     // 父角色ID
+	ParentID      SnowflakeID   `gorm:"column:parent_id;type:bigint;primaryKey;comment:父角色ID" json:"parentId"`                       // 父角色ID
 	DefaultRouter string        `gorm:"column:default_router;type:varchar(128);default:dashboard;comment:默认路由" json:"defaultRouter"` // 默认路由
 	CreateTime    time.Time     `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"createTime"`
 	UpdateTime    *time.Time    `gorm:"column:update_time;type:datetime" json:"updateTime"`
 	DeletedAt     *time.Time    `gorm:"column:deleted_at;type:datetime" json:"deletedAt"`
-	Menus         []SysBaseMenu `gorm:"foreignKey:uuid;joinForeignKey:sys_role_uuid;joinReferences:sys_base_menu_uuid;many2many:sys_role_menus;references:uuid" json:"menus"`
-	Users         []SysUser     `gorm:"foreignKey:uuid;joinForeignKey:sys_role_uuid;joinReferences:sys_user_uuid;many2many:sys_user_role;references:uuid" json:"users"`
+	Menus         []SysBaseMenu `gorm:"foreignKey:id;joinForeignKey:sys_role_id;joinReferences:sys_base_menu_id;many2many:sys_role_menus;references:id" json:"menus"`
+	Users         []SysUser     `gorm:"foreignKey:id;joinForeignKey:sys_role_id;joinReferences:sys_user_id;many2many:sys_user_role;references:id" json:"users"`
 }
 
 // TableName SysRole's table name

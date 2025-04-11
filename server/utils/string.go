@@ -54,3 +54,7 @@ func AdapterDiaplayToMP(content string) string {
 	regex := regexp.MustCompile(`<img`)
 	return regex.ReplaceAllString(content, `<img width="100%"`)
 }
+
+func StrToInt64(str string) (int64, error) {
+	return strconv.ParseInt(str, 10, 64)
+}

@@ -10,7 +10,6 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/google/uuid"
 	"github.com/kesilent/react-light-blog/dal/model"
 	"github.com/kesilent/react-light-blog/dal/query"
 	req "github.com/kesilent/react-light-blog/dal/request"
@@ -39,13 +38,12 @@ func (menuService *MenuService) SaveBaseMenu(menu model.SysBaseMenu) error {
 			return errors.New("存在重复name，请修改name")
 		}
 		menu.ID = model.SnowflakeID(utils.GenID(1))
-		menu.UUID = uuid.NewString()
 	}
 	//字符串转成首字母大写
 	menu.Name = utils.Capitalize(menu.Name)
 
 	//查询父级菜单的级别
-	parentMenu, err := db.Where(query.SysBaseMenu.UUID.Eq(menu.ParentID)).First()
+	parentMenu, err := db.Where(query.SysBaseMenu.ID.Eq(menu.ParentID)).First()
 	if err != nil {
 		return err
 	}
@@ -64,13 +62,13 @@ func (menuService *MenuService) AddBaseMenuList(menus []*model.SysBaseMenu) erro
 // @description: 获取角色菜单
 // @param: authorId int64
 // @return: 返回类型
-func (menuService *MenuService) GetRoleMenuList(roleUUID string) ([]model.SysBaseMenu, error) {
+func (menuService *MenuService) GetRoleMenuList(id int64) ([]model.SysBaseMenu, error) {
 	// 获取权限信息，并预加载菜单
 
 	q := query.Q.SysRole.WithContext(context.Background())
 
-	if roleUUID != "" {
-		q = q.Where(query.SysRole.UUID.Eq(roleUUID))
+	if id != 0 {
+		q = q.Where(query.SysRole.ID.Eq(model.SnowflakeID(id)))
 	}
 
 	authority, err := q.
@@ -86,7 +84,7 @@ func (menuService *MenuService) GetRoleMenuList(roleUUID string) ([]model.SysBas
 		menusPtr = append(menusPtr, &authority.Menus[i])
 	}
 
-	rootMenus := buildTree(menusPtr, "")
+	rootMenus := buildTree(menusPtr, 0)
 
 	// 对每个级别的菜单按 Sort 排序
 	sortMenus(rootMenus)
@@ -129,7 +127,7 @@ func (menuService *MenuService) GetMenuByKey(menuName string) ([]model.SysBaseMe
 		return nil, err
 	}
 
-	treeMenus := buildTree(menus, "")
+	treeMenus := buildTree(menus, 0)
 
 	// 对每个级别的菜单按 Sort 排序
 	sortMenus(treeMenus)
@@ -169,7 +167,7 @@ func (menuService *MenuService) GetMenuListByPage(info req.GetMenuListReq) (list
 
 	userList, err := db.Limit(limit).Offset(offset).Find()
 
-	treeMenus := buildTree(userList, "")
+	treeMenus := buildTree(userList, 0)
 
 	// 对每个级别的菜单按 Sort 排序
 	sortMenus(treeMenus)
@@ -183,10 +181,10 @@ func (menuService *MenuService) GetMenuListByPage(info req.GetMenuListReq) (list
  * @param {string} menuUUID
  * @return {*}
  */
-func (menuService *MenuService) DeleteMenu(menuUUID string) (gen.ResultInfo, error) {
+func (menuService *MenuService) DeleteMenu(id int64) (gen.ResultInfo, error) {
 	db := query.Q.SysBaseMenu.WithContext(context.Background())
 
-	resultInfo, err := db.Where(query.SysBaseMenu.UUID.Eq(menuUUID)).Delete()
+	resultInfo, err := db.Where(query.SysBaseMenu.ID.Eq(model.SnowflakeID(id))).Delete()
 	if err != nil {
 		return resultInfo, err
 	}
@@ -195,7 +193,7 @@ func (menuService *MenuService) DeleteMenu(menuUUID string) (gen.ResultInfo, err
 }
 
 // 构建树形结构
-func buildTree(menus []*model.SysBaseMenu, parentID string) []model.SysBaseMenu {
+func buildTree(menus []*model.SysBaseMenu, parentID model.SnowflakeID) []model.SysBaseMenu {
 	var tree []model.SysBaseMenu
 
 	for _, menu := range menus {
@@ -203,7 +201,7 @@ func buildTree(menus []*model.SysBaseMenu, parentID string) []model.SysBaseMenu 
 			// 复制当前菜单节点
 			node := *menu
 			// 递归构建子菜单
-			node.Children = buildTree(menus, menu.UUID)
+			node.Children = buildTree(menus, menu.ID)
 			tree = append(tree, node)
 		}
 	}

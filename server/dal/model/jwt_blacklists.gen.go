@@ -12,7 +12,7 @@ const TableNameJwtBlacklist = "jwt_blacklists"
 
 // JwtBlacklist mapped from table <jwt_blacklists>
 type JwtBlacklist struct {
-	ID        SnowflakeID `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true" json:"id"`
+	ID        SnowflakeID `gorm:"column:id;type:bigint;primaryKey" json:"id"`
 	CreatedAt time.Time   `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
 	UpdatedAt time.Time   `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
 	DeletedAt *time.Time  `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`

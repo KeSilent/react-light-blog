@@ -29,6 +29,8 @@ func RegisterTables() {
 
 	//TODO 初始化表
 	// model.SysUser{},
+	// model.JwtBlacklist{},
+	// model.SysOperationRecord{},
 	)
 	if err != nil {
 		global.RLB_LOG.Error("register table failed", zap.Error(err))

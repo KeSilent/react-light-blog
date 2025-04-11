@@ -27,21 +27,20 @@ func newSysUserRole(db *gorm.DB, opts ...gen.DOOption) sysUserRole {
 
 	tableName := _sysUserRole.sysUserRoleDo.TableName()
 	_sysUserRole.ALL = field.NewAsterisk(tableName)
-	_sysUserRole.SysUserUUID = field.NewString(tableName, "sys_user_uuid")
-	_sysUserRole.SysRoleUUID = field.NewString(tableName, "sys_role_uuid")
+	_sysUserRole.SysUserID = field.NewField(tableName, "sys_user_id")
+	_sysUserRole.SysRoleID = field.NewField(tableName, "sys_role_id")
 
 	_sysUserRole.fillFieldMap()
 
 	return _sysUserRole
 }
 
-// sysUserRole 用户角色关联表
 type sysUserRole struct {
 	sysUserRoleDo sysUserRoleDo
 
-	ALL         field.Asterisk
-	SysUserUUID field.String
-	SysRoleUUID field.String
+	ALL       field.Asterisk
+	SysUserID field.Field
+	SysRoleID field.Field
 
 	fieldMap map[string]field.Expr
 }
@@ -58,8 +57,8 @@ func (s sysUserRole) As(alias string) *sysUserRole {
 
 func (s *sysUserRole) updateTableName(table string) *sysUserRole {
 	s.ALL = field.NewAsterisk(table)
-	s.SysUserUUID = field.NewString(table, "sys_user_uuid")
-	s.SysRoleUUID = field.NewString(table, "sys_role_uuid")
+	s.SysUserID = field.NewField(table, "sys_user_id")
+	s.SysRoleID = field.NewField(table, "sys_role_id")
 
 	s.fillFieldMap()
 
@@ -87,8 +86,8 @@ func (s *sysUserRole) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 
 func (s *sysUserRole) fillFieldMap() {
 	s.fieldMap = make(map[string]field.Expr, 2)
-	s.fieldMap["sys_user_uuid"] = s.SysUserUUID
-	s.fieldMap["sys_role_uuid"] = s.SysRoleUUID
+	s.fieldMap["sys_user_id"] = s.SysUserID
+	s.fieldMap["sys_role_id"] = s.SysRoleID
 }
 
 func (s sysUserRole) clone(db *gorm.DB) sysUserRole {
