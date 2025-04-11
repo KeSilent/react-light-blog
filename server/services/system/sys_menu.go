@@ -49,7 +49,7 @@ func (menuService *MenuService) SaveBaseMenu(menu model.SysBaseMenu) error {
 	}
 	menu.MenuLevel = parentMenu.MenuLevel + 1
 
-	return db.Save(&menu)
+	return db.Debug().Save(&menu)
 }
 
 func (menuService *MenuService) AddBaseMenuList(menus []*model.SysBaseMenu) error {
@@ -105,6 +105,28 @@ func sortMenus(menus []model.SysBaseMenu) {
 			sortMenus(menus[i].Children)
 		}
 	}
+}
+
+/**
+ * @Author: Yang
+ * @description: 获取最小的ID
+ * @param {[]model.SysBaseMenu} menus
+ * @return {*}
+ */
+func (menuService *MenuService) getLastParentId(menus []*model.SysBaseMenu) (lastParentId model.SnowflakeID) {
+	if len(menus) == 0 {
+		return 0 // 或者返回一个合适的默认值
+	}
+	// 初始化最小 parentID 为第一个菜单项的 parentID
+	lastParentId = menus[0].ParentID
+	// 遍历菜单列表，找到最小的 parentID
+	for _, menu := range menus {
+		if menu.ParentID < lastParentId {
+			lastParentId = menu.ParentID
+		}
+	}
+
+	return
 }
 
 /**
@@ -167,7 +189,7 @@ func (menuService *MenuService) GetMenuListByPage(info req.GetMenuListReq) (list
 
 	userList, err := db.Limit(limit).Offset(offset).Find()
 
-	treeMenus := buildTree(userList, 0)
+	treeMenus := buildTree(userList, menuService.getLastParentId(userList))
 
 	// 对每个级别的菜单按 Sort 排序
 	sortMenus(treeMenus)

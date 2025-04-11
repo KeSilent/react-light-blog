@@ -7,10 +7,12 @@ package request
 
 import (
 	common "github.com/kesilent/react-light-blog/dal/common/request"
-	"github.com/kesilent/react-light-blog/dal/model"
 )
 
 type GetMenuListReq struct {
 	common.PageInfo
-	model.SysBaseMenu
+	Path      string `json:"path" form:"path"`
+	Name      string `json:"name" form:"name"`
+	Component string `json:"component" form:"component"` // 对应前端文件路径
+	Title     string `json:"title" form:"title"`         // 菜单名
 }

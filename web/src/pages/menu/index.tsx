@@ -26,9 +26,9 @@ export default function Menu() {
     };
   };
 
-  const handleDelete = async (roleUUId: string) => {
+  const handleDelete = async (roleId: string) => {
     try {
-      if (!(await deleteMenu(roleUUId))) {
+      if (!(await deleteMenu(roleId))) {
         message.success('删除成功');
         actionRef.current?.reload();
       }

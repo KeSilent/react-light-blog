@@ -46,7 +46,7 @@ export const columns = (
       <Popconfirm
         key="delete"
         title="是否确认删除菜单"
-        onConfirm={() => handleDelete(record.uuid)}
+        onConfirm={() => handleDelete(record.id)}
         okType="danger"
         okText="删除"
         cancelText="取消"

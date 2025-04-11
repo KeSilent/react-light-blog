@@ -209,28 +209,27 @@ export default function CreateMenu(props: CreateMenuProps) {
             width="md"
             label="是否隐藏"
             valueEnum={{
-              true: '不隐藏',
-              false: '隐藏',
+              false: '不隐藏',
+              true: '隐藏',
+            }}
+            fieldProps={{
+              defaultValue: 'false',
             }}
             transform={(value) => ({
               hidden: value === 'true' ? true : false,
             })}
           />
-          <ProFormDigit width="md" min={1} label="排序" name="sort" />
+          <ProFormDigit
+            fieldProps={{ defaultValue: 1 }}
+            width="md"
+            min={1}
+            label="排序"
+            name="sort"
+          />
         </ProForm.Group>
         <ProForm.Group>
-          <ProFormText
-            label="菜单唯一标识"
-            width="md"
-            name="uuid"
-            hidden={true}
-          />
-          <ProFormText
-            label="id"
-            width="md"
-            name="id"
-            hidden={true}
-          />
+          <ProFormText label="菜单唯一标识" width="md" name="uuid" hidden={true} />
+          <ProFormText label="id" width="md" name="id" hidden={true} />
         </ProForm.Group>
       </ModalForm>
     </>
