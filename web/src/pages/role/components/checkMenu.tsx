@@ -48,7 +48,7 @@ export default function CheckMenu(props: CheckMenuProps) {
     getMenuByKey({ keyWord: keyword }).then((res) => {
       if (res) {
         setTreeData(res);
-        setExpandedKeys(res.map((item) => String(item.uuid)));
+        setExpandedKeys(res.map((item) => String(item.id)));
         getSelectedKeys();
       }
     });
@@ -106,7 +106,7 @@ export default function CheckMenu(props: CheckMenuProps) {
               };
             });
           }
-          await run({ rolemenus: roleMenus, roleUUID: roleId });
+          await run({ rolemenus: roleMenus, roleId: roleId });
           return true;
         }}
         onOpenChange={(visible) => {

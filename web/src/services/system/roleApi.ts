@@ -39,7 +39,7 @@ export async function getAllRoleKeyValueList() {
       return result.data.data.map((item) => {
         return {
           label: item.roleName,
-          value: item.uuid,
+          value: item.id,
         };
       });
     }
