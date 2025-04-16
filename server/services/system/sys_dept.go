@@ -18,7 +18,7 @@ var DeptServiceApp = new(DeptService)
  * @param {req.GetMenuListReq} info
  * @return {*}
  */
-func (deptService *DeptService) GetListByPage(info req.GetDeptListReq) (list []*model.SysDept, total int64, err error) {
+func (deptService *DeptService) GetListByPage(info req.GetDeptListReq) (list []model.SysDept, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Current - 1)
 
@@ -30,10 +30,18 @@ func (deptService *DeptService) GetListByPage(info req.GetDeptListReq) (list []*
 	}
 
 	deptList, err := db.Limit(limit).Offset(offset).Find()
+	// 构建树结构
+	treeDepts := deptService.buildTree(deptList, deptService.getLastParentId(deptList))
 
-	return deptList, int64(len(deptList)), err
+	return treeDepts, int64(len(treeDepts)), err
 }
 
+/**
+ * @Author: Yang
+ * @description:  获取最后一个父级ID
+ * @param {[]*model.SysDept} menus
+ * @return {*}
+ */
 func (deptService *DeptService) getLastParentId(menus []*model.SysDept) (lastParentId model.SnowflakeID) {
 	if len(menus) == 0 {
 		return 0
@@ -46,4 +54,27 @@ func (deptService *DeptService) getLastParentId(menus []*model.SysDept) (lastPar
 	}
 
 	return
+}
+
+/**
+ * @Author: Yang
+ * @description: 构建树结构
+ * @param {[]*model.SysDept} menus
+ * @param {model.SnowflakeID} parentID
+ * @return {*}
+ */
+func (deptService *DeptService) buildTree(menus []*model.SysDept, parentID model.SnowflakeID) []model.SysDept {
+	var tree []model.SysDept
+
+	for _, menu := range menus {
+		if menu.ParentID == parentID {
+			// 复制当前菜单节点
+			node := *menu
+			// 递归构建子菜单
+			node.Children = deptService.buildTree(menus, menu.ID)
+			tree = append(tree, node)
+		}
+	}
+
+	return tree
 }
