@@ -84,16 +84,16 @@ func (menuService *MenuService) GetRoleMenuList(id int64) ([]model.SysBaseMenu, 
 		menusPtr = append(menusPtr, &authority.Menus[i])
 	}
 
-	rootMenus := buildTree(menusPtr, 0)
+	rootMenus := menuService.buildTree(menusPtr, 0)
 
 	// 对每个级别的菜单按 Sort 排序
-	sortMenus(rootMenus)
+	menuService.sortMenus(rootMenus)
 
 	return rootMenus, nil
 }
 
 // 递归排序菜单
-func sortMenus(menus []model.SysBaseMenu) {
+func (menuService *MenuService) sortMenus(menus []model.SysBaseMenu) {
 	// 按 Sort 字段排序
 	sort.Slice(menus, func(i, j int) bool {
 		return menus[i].Sort < menus[j].Sort
@@ -102,7 +102,7 @@ func sortMenus(menus []model.SysBaseMenu) {
 	// 递归排序子菜单
 	for i := range menus {
 		if len(menus[i].Children) > 0 {
-			sortMenus(menus[i].Children)
+			menuService.sortMenus(menus[i].Children)
 		}
 	}
 }
@@ -149,10 +149,10 @@ func (menuService *MenuService) GetMenuByKey(menuName string) ([]model.SysBaseMe
 		return nil, err
 	}
 
-	treeMenus := buildTree(menus, 0)
+	treeMenus := menuService.buildTree(menus, 0)
 
 	// 对每个级别的菜单按 Sort 排序
-	sortMenus(treeMenus)
+	menuService.sortMenus(treeMenus)
 
 	return treeMenus, nil
 }
@@ -189,10 +189,10 @@ func (menuService *MenuService) GetMenuListByPage(info req.GetMenuListReq) (list
 
 	userList, err := db.Limit(limit).Offset(offset).Find()
 
-	treeMenus := buildTree(userList, menuService.getLastParentId(userList))
+	treeMenus := menuService.buildTree(userList, menuService.getLastParentId(userList))
 
 	// 对每个级别的菜单按 Sort 排序
-	sortMenus(treeMenus)
+	menuService.sortMenus(treeMenus)
 
 	return treeMenus, int64(len(treeMenus)), err
 }
@@ -215,7 +215,7 @@ func (menuService *MenuService) DeleteMenu(id int64) (gen.ResultInfo, error) {
 }
 
 // 构建树形结构
-func buildTree(menus []*model.SysBaseMenu, parentID model.SnowflakeID) []model.SysBaseMenu {
+func (menuService *MenuService) buildTree(menus []*model.SysBaseMenu, parentID model.SnowflakeID) []model.SysBaseMenu {
 	var tree []model.SysBaseMenu
 
 	for _, menu := range menus {
@@ -223,7 +223,7 @@ func buildTree(menus []*model.SysBaseMenu, parentID model.SnowflakeID) []model.S
 			// 复制当前菜单节点
 			node := *menu
 			// 递归构建子菜单
-			node.Children = buildTree(menus, menu.ID)
+			node.Children = menuService.buildTree(menus, menu.ID)
 			tree = append(tree, node)
 		}
 	}

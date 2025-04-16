@@ -69,4 +69,9 @@ export default [
     path: '/system/menu',
     component: './menu'
   },
+  {
+    name: '部门列表',
+    path: '/system/dept',
+    component: './dept'
+  },
 ];

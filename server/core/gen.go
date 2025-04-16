@@ -156,6 +156,22 @@ func GenStructs() error {
 		}),
 	)...)
 
+	dept = generator.GenerateModel("sys_dept", append(fieldOpts,
+		gen.FieldRelate(field.Many2Many, "Users", user, &field.RelateConfig{
+			GORMTag: field.GormTag{
+				"many2many":      []string{"sys_user_dept"},
+				"foreignKey":     []string{"id"},
+				"references":     []string{"id"},
+				"joinForeignKey": []string{"sys_dept_id"},
+				"joinReferences": []string{"sys_user_id"},
+			},
+		}),
+
+		gen.FieldRelate(field.HasMany, "Children", dept, &field.RelateConfig{
+			GORMTag: field.GormTag{"foreignKey": []string{"parent_id"}},
+		}),
+	)...)
+
 	// 生成字典相关模型
 	dicDetails := generator.GenerateModel("sys_dictionary_details")
 

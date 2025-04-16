@@ -13,4 +13,5 @@ var (
 	baseApi = api.ApiGroupApp.SystemApiGroup.BaseApi
 	menuApi = api.ApiGroupApp.SystemApiGroup.MenuApi
 	roleApi = api.ApiGroupApp.SystemApiGroup.RoleApi
+	deptApi = api.ApiGroupApp.SystemApiGroup.DeptApi
 )

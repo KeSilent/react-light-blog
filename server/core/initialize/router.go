@@ -41,6 +41,7 @@ func Routers() *gin.Engine {
 	userRouter := router.RouterGroupApp.User
 	roleRouter := router.RouterGroupApp.Role
 	menuRouter := router.RouterGroupApp.Menu
+	deptRouter := router.RouterGroupApp.Dept
 
 	PublicGroup := Router.Group(global.RLB_CONFIG.System.RouterPrefix)
 	PrivateGroup := Router.Group(global.RLB_CONFIG.System.RouterPrefix)
@@ -61,6 +62,7 @@ func Routers() *gin.Engine {
 		userRouter.InitUserRouter(PublicGroup)
 		roleRouter.InitRoleRouter(PublicGroup)
 		menuRouter.InitMenuRouter(PublicGroup)
+		deptRouter.InitDeptRouter(PublicGroup)
 	}
 
 	global.RLB_ROUTERS = Router.Routes()

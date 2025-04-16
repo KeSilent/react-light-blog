@@ -9,4 +9,5 @@ type RouterGroup struct {
 	User   system.UserRouter
 	Role   system.RoleRouter
 	Menu   system.MenuRouter
+	Dept   system.DeptRouter
 }

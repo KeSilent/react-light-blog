@@ -1,40 +1,23 @@
+import { DeptModel } from '@/models/system/dept-model';
 import { ActionType, ProColumns } from '@ant-design/pro-components';
-
-import { MenuModel } from '@/models/system/menu-model';
-import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Popconfirm } from 'antd';
 import { MutableRefObject } from 'react';
-import CreateMenu from './components/CreateMenu';
+import CreateDept from './components/CreateDept';
+import { Button, Popconfirm } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 export const columns = (
   actionRef: MutableRefObject<ActionType | undefined>,
   handleDelete: (roleId: string) => void,
-): ProColumns<MenuModel>[] => [
+): ProColumns<DeptModel>[] => [
   {
-    title: '菜单显示名称',
+    title: '部门名称',
     dataIndex: 'title',
     key: 'title',
   },
   {
-    title: '菜单路由名称',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '图标',
-    dataIndex: 'icon',
-    key: 'icon',
-    search: false,
-  },
-  {
-    title: '路由地址',
-    dataIndex: 'path',
-    key: 'path',
-  },
-  {
-    title: '组件地址',
-    dataIndex: 'component',
-    key: 'component',
+    title: '部门状态',
+    dataIndex: 'status',
+    key: 'status',
   },
   {
     title: '操作',
@@ -42,7 +25,7 @@ export const columns = (
     dataIndex: 'option',
     valueType: 'option',
     render: (_, record) => [
-      <CreateMenu key="update" menu={record} reload={actionRef.current?.reload} />,
+      <CreateDept key="update" model={record} reload={actionRef.current?.reload} />,
       <Popconfirm
         key="delete"
         title="是否确认删除菜单"
