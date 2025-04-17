@@ -42,14 +42,18 @@ func (menuService *MenuService) SaveBaseMenu(menu model.SysBaseMenu) error {
 	//字符串转成首字母大写
 	menu.Name = utils.Capitalize(menu.Name)
 
-	//查询父级菜单的级别
-	parentMenu, err := db.Where(query.SysBaseMenu.ID.Eq(menu.ParentID)).First()
-	if err != nil {
-		return err
+	if menu.ParentID == 0 {
+		menu.MenuLevel = 0
+	} else {
+		//查询父级菜单的级别
+		parentMenu, err := db.Where(query.SysBaseMenu.ID.Eq(menu.ParentID)).First()
+		if err != nil {
+			return err
+		}
+		menu.MenuLevel = parentMenu.MenuLevel + 1
 	}
-	menu.MenuLevel = parentMenu.MenuLevel + 1
 
-	return db.Debug().Save(&menu)
+	return db.Save(&menu)
 }
 
 func (menuService *MenuService) AddBaseMenuList(menus []*model.SysBaseMenu) error {
@@ -151,6 +155,14 @@ func (menuService *MenuService) GetMenuByKey(menuName string) ([]model.SysBaseMe
 
 	treeMenus := menuService.buildTree(menus, 0)
 
+	//补充一条默认值id为0，名称为空的节点
+	treeMenus = append(treeMenus, model.SysBaseMenu{
+		ID:       0,
+		Title:    "空",
+		ParentID: 0,
+		Sort:     0,
+	})
+
 	// 对每个级别的菜单按 Sort 排序
 	menuService.sortMenus(treeMenus)
 
@@ -182,14 +194,9 @@ func (menuService *MenuService) GetMenuListByPage(info req.GetMenuListReq) (list
 		db = db.Where(query.SysBaseMenu.Component.Like("%" + info.Component + "%"))
 	}
 
-	total, err = db.Count()
-	if err != nil {
-		return
-	}
+	menuList, err := db.Limit(limit).Offset(offset).Find()
 
-	userList, err := db.Limit(limit).Offset(offset).Find()
-
-	treeMenus := menuService.buildTree(userList, menuService.getLastParentId(userList))
+	treeMenus := menuService.buildTree(menuList, menuService.getLastParentId(menuList))
 
 	// 对每个级别的菜单按 Sort 排序
 	menuService.sortMenus(treeMenus)

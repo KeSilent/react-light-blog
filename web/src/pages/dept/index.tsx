@@ -35,7 +35,7 @@ export default function Dept() {
     <PageContainer>
       <ProTable<DeptModel, PageParams>
         rowKey="id"
-        headerTitle="菜单列表"
+        headerTitle="部门列表"
         actionRef={actionRef}
         search={{
           labelWidth: 120,

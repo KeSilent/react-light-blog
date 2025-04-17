@@ -1,7 +1,17 @@
+import { StatusConstant } from '@/constant/Status-Constant';
 import { DeptModel } from '@/models/system/dept-model';
-import { saveDept } from '@/services/system/deptApi';
+import { getListByTreeSelect, saveDept } from '@/services/system/deptApi';
 import { PlusOutlined } from '@ant-design/icons';
-import { ActionType, ModalForm } from '@ant-design/pro-components';
+import {
+  ActionType,
+  ModalForm,
+  ProForm,
+  ProFormDigit,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+  ProFormTreeSelect,
+} from '@ant-design/pro-components';
 import { useRequest } from '@umijs/max';
 import { Button, Form, message } from 'antd';
 import { useEffect, useState } from 'react';
@@ -37,16 +47,30 @@ export default function CreateDept(props: CreateDeptProps) {
   useEffect(() => {
     if (open) {
       if (model) {
-        form.setFieldsValue(model);
+        form.setFieldsValue({
+          ...model,
+          status: model.status ? 'true' : 'false',
+        });
       } else {
-        form.setFieldsValue({});
+        form.setFieldsValue({
+          parentId: '0',
+          deptName: '',
+          sort: 1,
+          remark: '',
+          status: 'true',
+          parent: '',
+          createdAt: '',
+          updatedAt: '',
+          deletedAt: null,
+          users: [],
+          children: [],
+        });
       }
     }
   }, [open, form, model]);
   return (
     <>
       {contextHolder}
-
       <ModalForm<DeptModel>
         title={model ? '编辑部门' : '新建部门'}
         trigger={
@@ -68,7 +92,7 @@ export default function CreateDept(props: CreateDeptProps) {
         }
         form={form}
         autoFocusFirstInput
-        modalProps={{ okButtonProps: { loading } }}
+        modalProps={{ okButtonProps: { loading }, destroyOnClose: true }}
         onFinish={async (value) => {
           await run(value);
           return true;
@@ -76,12 +100,70 @@ export default function CreateDept(props: CreateDeptProps) {
         onOpenChange={(visible) => {
           setOpen(visible);
           if (visible) {
-            form.setFieldsValue({});
+            form.setFieldsValue({
+              parentId: '0',
+              deptName: '',
+              sort: 1,
+              remark: '',
+              status: 'true',
+              parent: '',
+              createdAt: '',
+              updatedAt: '',
+              deletedAt: null,
+              users: [],
+              children: [],
+            });
           } else {
             form.resetFields();
           }
         }}
-      ></ModalForm>
+      >
+        <ProForm.Group>
+          <ProFormText label="id" width="md" name="id" hidden={true} />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormText
+            name="deptName"
+            label="部门名称"
+            width="md"
+            rules={[{ required: true, message: '请输入部门名称' }]}
+          />
+          <ProFormTreeSelect
+            name="parentId"
+            label="上级部门"
+            width="md"
+            debounceTime={300}
+            fieldProps={{
+              fieldNames: {
+                label: 'deptName',
+                value: 'id',
+                children: 'children',
+              },
+            }}
+            request={async () => {
+              try {
+                return await getListByTreeSelect({ keyWord: '' });
+              } catch (error) {
+                console.error('获取数据失败:', error);
+                return [];
+              }
+            }}
+          />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormSelect
+            name="status"
+            label="部门状态"
+            width="md"
+            valueEnum={StatusConstant}
+            transform={(value) => ({
+              status: value === 'true',
+            })}
+          />
+          <ProFormDigit name="sort" label="排序" width="md" min={1} />
+        </ProForm.Group>
+        <ProFormTextArea width="xl" label="备注" name="remark" />
+      </ModalForm>
     </>
   );
 }

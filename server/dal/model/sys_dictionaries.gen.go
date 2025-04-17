@@ -6,6 +6,8 @@ package model
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 const TableNameSysDictionary = "sys_dictionaries"
@@ -19,7 +21,7 @@ type SysDictionary struct {
 	Desc      string                `gorm:"column:desc;type:varchar(191);comment:描述" json:"desc"`     // 描述
 	CreatedAt time.Time             `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
 	UpdatedAt time.Time             `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
-	DeletedAt *time.Time            `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`
+	DeletedAt gorm.DeletedAt        `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`
 	Details   []SysDictionaryDetail `gorm:"foreignKey:sys_dictionary_id" json:"details"`
 }
 

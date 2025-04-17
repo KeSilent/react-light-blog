@@ -16,6 +16,9 @@ func (d *DeptRouter) InitDeptRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
 	deptRouter := Router.Group("dept").Use(middleware.OperationRecord())
 	{
 		deptRouter.GET("getList", deptApi.GetList)
+		deptRouter.GET("getListByTreeSelect", deptApi.GetListByTreeSelect)
+		deptRouter.POST("saveDept", deptApi.SaveDept)
+		deptRouter.DELETE("deleteDept", deptApi.DeleteDept)
 	}
 	return deptRouter
 }

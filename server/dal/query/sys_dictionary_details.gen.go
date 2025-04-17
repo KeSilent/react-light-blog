@@ -35,7 +35,7 @@ func newSysDictionaryDetail(db *gorm.DB, opts ...gen.DOOption) sysDictionaryDeta
 	_sysDictionaryDetail.SysDictionaryID = field.NewField(tableName, "sys_dictionary_id")
 	_sysDictionaryDetail.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysDictionaryDetail.UpdatedAt = field.NewTime(tableName, "updated_at")
-	_sysDictionaryDetail.DeletedAt = field.NewTime(tableName, "deleted_at")
+	_sysDictionaryDetail.DeletedAt = field.NewField(tableName, "deleted_at")
 
 	_sysDictionaryDetail.fillFieldMap()
 
@@ -55,7 +55,7 @@ type sysDictionaryDetail struct {
 	SysDictionaryID field.Field  // 关联标记
 	CreatedAt       field.Time
 	UpdatedAt       field.Time
-	DeletedAt       field.Time
+	DeletedAt       field.Field
 
 	fieldMap map[string]field.Expr
 }
@@ -80,7 +80,7 @@ func (s *sysDictionaryDetail) updateTableName(table string) *sysDictionaryDetail
 	s.SysDictionaryID = field.NewField(table, "sys_dictionary_id")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
-	s.DeletedAt = field.NewTime(table, "deleted_at")
+	s.DeletedAt = field.NewField(table, "deleted_at")
 
 	s.fillFieldMap()
 

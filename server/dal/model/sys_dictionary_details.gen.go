@@ -6,22 +6,24 @@ package model
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 const TableNameSysDictionaryDetail = "sys_dictionary_details"
 
 // SysDictionaryDetail 字典值
 type SysDictionaryDetail struct {
-	ID              SnowflakeID   `gorm:"column:id;type:bigint;primaryKey" json:"id"`
-	Label           string        `gorm:"column:label;type:varchar(191);comment:展示值" json:"label"`                             // 展示值
-	Value           string        `gorm:"column:value;type:varchar(255);comment:字典值" json:"value"`                             // 字典值
-	Status          bool          `gorm:"column:status;type:tinyint(1);comment:启用状态" json:"status"`                            // 启用状态
-	Sort            bool          `gorm:"column:sort;type:tinyint(1);comment:排序标记" json:"sort"`                                // 排序标记
-	SysDictionaryID SnowflakeID   `gorm:"column:sys_dictionary_id;type:bigint;primaryKey;comment:关联标记" json:"sysDictionaryId"` // 关联标记
-	CreatedAt       time.Time     `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
-	UpdatedAt       time.Time     `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
-	DeletedAt       *time.Time    `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`
-	Dictionary      SysDictionary `gorm:"foreignKey:sys_dictionary_id;references:id" json:"dictionary"`
+	ID              SnowflakeID    `gorm:"column:id;type:bigint;primaryKey" json:"id"`
+	Label           string         `gorm:"column:label;type:varchar(191);comment:展示值" json:"label"`                             // 展示值
+	Value           string         `gorm:"column:value;type:varchar(255);comment:字典值" json:"value"`                             // 字典值
+	Status          bool           `gorm:"column:status;type:tinyint(1);comment:启用状态" json:"status"`                            // 启用状态
+	Sort            bool           `gorm:"column:sort;type:tinyint(1);comment:排序标记" json:"sort"`                                // 排序标记
+	SysDictionaryID SnowflakeID    `gorm:"column:sys_dictionary_id;type:bigint;primaryKey;comment:关联标记" json:"sysDictionaryId"` // 关联标记
+	CreatedAt       time.Time      `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
+	UpdatedAt       time.Time      `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
+	DeletedAt       gorm.DeletedAt `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`
+	Dictionary      SysDictionary  `gorm:"foreignKey:sys_dictionary_id;references:id" json:"dictionary"`
 }
 
 // TableName SysDictionaryDetail's table name

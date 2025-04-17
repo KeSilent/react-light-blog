@@ -69,8 +69,8 @@ func GenStructs() error {
 		"datetime": func(detailType gorm.ColumnType) (dataType string) {
 			// 只将 update_time 和 deleted_at 设置为指针类型
 			columnName := detailType.Name()
-			if columnName == "update_time" || columnName == "deleted_at" {
-				return "*time.Time"
+			if columnName == "deleted_at" {
+				return "gorm.DeletedAt"
 			}
 			return "time.Time"
 		},

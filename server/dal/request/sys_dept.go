@@ -11,8 +11,7 @@ import (
 
 type GetDeptListReq struct {
 	common.PageInfo
-	Path      string `json:"path" form:"path"`
-	Name      string `json:"name" form:"name"`
-	Component string `json:"component" form:"component"`
-	Title     string `json:"title" form:"title"`
+	Path     string `json:"path" form:"path"`
+	DeptName string `json:"deptName" form:"deptName"`
+	Status   string `json:"status" form:"status"`
 }

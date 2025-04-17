@@ -30,7 +30,7 @@ func newSysOperationRecord(db *gorm.DB, opts ...gen.DOOption) sysOperationRecord
 	_sysOperationRecord.ID = field.NewField(tableName, "id")
 	_sysOperationRecord.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysOperationRecord.UpdatedAt = field.NewTime(tableName, "updated_at")
-	_sysOperationRecord.DeletedAt = field.NewTime(tableName, "deleted_at")
+	_sysOperationRecord.DeletedAt = field.NewField(tableName, "deleted_at")
 	_sysOperationRecord.IP = field.NewString(tableName, "ip")
 	_sysOperationRecord.Method = field.NewString(tableName, "method")
 	_sysOperationRecord.Path = field.NewString(tableName, "path")
@@ -55,7 +55,7 @@ type sysOperationRecord struct {
 	ID           field.Field
 	CreatedAt    field.Time
 	UpdatedAt    field.Time
-	DeletedAt    field.Time
+	DeletedAt    field.Field
 	IP           field.String // 请求ip
 	Method       field.String // 请求方法
 	Path         field.String // 请求路径
@@ -85,7 +85,7 @@ func (s *sysOperationRecord) updateTableName(table string) *sysOperationRecord {
 	s.ID = field.NewField(table, "id")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
-	s.DeletedAt = field.NewTime(table, "deleted_at")
+	s.DeletedAt = field.NewField(table, "deleted_at")
 	s.IP = field.NewString(table, "ip")
 	s.Method = field.NewString(table, "method")
 	s.Path = field.NewString(table, "path")

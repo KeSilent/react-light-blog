@@ -57,7 +57,22 @@ export default function CreateMenu(props: CreateMenuProps) {
           hidden: menu.hidden?.toString(),
         });
       } else {
-        form.setFieldsValue({});
+        form.setFieldsValue({
+          id: '',
+          menuLevel: 0,
+          parentId: 0,
+          path: '',
+          name: '',
+          hidden: 'false',
+          component: '',
+          sort: 1,
+          title: '',
+          icon: '',
+          createTime: '',
+          updateTime: null,
+          deletedAt: null,
+          children: [],
+        });
       }
     }
   }, [open, form, menu]);
@@ -95,7 +110,7 @@ export default function CreateMenu(props: CreateMenuProps) {
         }
         form={form}
         autoFocusFirstInput
-        modalProps={{ okButtonProps: { loading } }}
+        modalProps={{ okButtonProps: { loading }, destroyOnClose: true }}
         onFinish={async (value) => {
           await run(value);
           return true;
@@ -212,23 +227,13 @@ export default function CreateMenu(props: CreateMenuProps) {
               false: '不隐藏',
               true: '隐藏',
             }}
-            fieldProps={{
-              defaultValue: 'false',
-            }}
             transform={(value) => ({
               hidden: value === 'true' ? true : false,
             })}
           />
-          <ProFormDigit
-            fieldProps={{ defaultValue: 1 }}
-            width="md"
-            min={1}
-            label="排序"
-            name="sort"
-          />
+          <ProFormDigit width="md" min={1} label="排序" name="sort" />
         </ProForm.Group>
         <ProForm.Group>
-          <ProFormText label="菜单唯一标识" width="md" name="uuid" hidden={true} />
           <ProFormText label="id" width="md" name="id" hidden={true} />
         </ProForm.Group>
       </ModalForm>

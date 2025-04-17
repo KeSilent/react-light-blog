@@ -6,24 +6,26 @@ package model
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 const TableNameSysDept = "sys_dept"
 
 // SysDept 部门
 type SysDept struct {
-	ID        SnowflakeID `gorm:"column:id;type:bigint;primaryKey" json:"id"`
-	DeptName  string      `gorm:"column:dept_name;type:varchar(200);comment:部门名称" json:"deptName"`     // 部门名称
-	ParentID  SnowflakeID `gorm:"column:parent_id;type:bigint;not null;comment:父部门ID" json:"parentId"` // 父部门ID
-	OrderNo   SnowflakeID `gorm:"column:order_no;type:bigint;comment:显示顺序" json:"orderNo"`             // 显示顺序
-	Remark    string      `gorm:"column:remark;type:varchar(200);comment:备注" json:"remark"`            // 备注
-	Status    bool        `gorm:"column:status;type:tinyint(1);comment:部门状态" json:"status"`            // 部门状态
-	Parent    string      `gorm:"column:parent;type:varchar(200);comment:上下级关系" json:"parent"`         // 上下级关系
-	CreatedAt time.Time   `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
-	UpdatedAt time.Time   `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
-	DeletedAt *time.Time  `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`
-	Users     []SysUser   `gorm:"foreignKey:id;joinForeignKey:sys_dept_id;joinReferences:sys_user_id;many2many:sys_user_dept;references:id" json:"users"`
-	Children  []SysDept   `gorm:"foreignKey:parent_id" json:"children"`
+	ID        SnowflakeID    `gorm:"column:id;type:bigint;primaryKey" json:"id"`
+	DeptName  string         `gorm:"column:dept_name;type:varchar(200);comment:部门名称" json:"deptName"`     // 部门名称
+	ParentID  SnowflakeID    `gorm:"column:parent_id;type:bigint;not null;comment:父部门ID" json:"parentId"` // 父部门ID
+	Sort      SnowflakeID    `gorm:"column:sort;type:bigint;comment:显示顺序" json:"sort"`                    // 显示顺序
+	Remark    string         `gorm:"column:remark;type:varchar(200);comment:备注" json:"remark"`            // 备注
+	Status    bool           `gorm:"column:status;type:tinyint(1);comment:部门状态" json:"status"`            // 部门状态
+	Parent    string         `gorm:"column:parent;type:varchar(200);comment:上下级关系" json:"parent"`         // 上下级关系
+	CreatedAt time.Time      `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
+	UpdatedAt time.Time      `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;type:datetime(3)" json:"deletedAt"`
+	Users     []SysUser      `gorm:"foreignKey:id;joinForeignKey:sys_dept_id;joinReferences:sys_user_id;many2many:sys_user_dept;references:id" json:"users"`
+	Children  []SysDept      `gorm:"foreignKey:parent_id" json:"children"`
 }
 
 // TableName SysDept's table name

@@ -30,13 +30,13 @@ func newSysDept(db *gorm.DB, opts ...gen.DOOption) sysDept {
 	_sysDept.ID = field.NewField(tableName, "id")
 	_sysDept.DeptName = field.NewString(tableName, "dept_name")
 	_sysDept.ParentID = field.NewField(tableName, "parent_id")
-	_sysDept.OrderNo = field.NewField(tableName, "order_no")
+	_sysDept.Sort = field.NewField(tableName, "sort")
 	_sysDept.Remark = field.NewString(tableName, "remark")
 	_sysDept.Status = field.NewBool(tableName, "status")
 	_sysDept.Parent = field.NewString(tableName, "parent")
 	_sysDept.CreatedAt = field.NewTime(tableName, "created_at")
 	_sysDept.UpdatedAt = field.NewTime(tableName, "updated_at")
-	_sysDept.DeletedAt = field.NewTime(tableName, "deleted_at")
+	_sysDept.DeletedAt = field.NewField(tableName, "deleted_at")
 
 	_sysDept.fillFieldMap()
 
@@ -51,13 +51,13 @@ type sysDept struct {
 	ID        field.Field
 	DeptName  field.String // 部门名称
 	ParentID  field.Field  // 父部门ID
-	OrderNo   field.Field  // 显示顺序
+	Sort      field.Field  // 显示顺序
 	Remark    field.String // 备注
 	Status    field.Bool   // 部门状态
 	Parent    field.String // 上下级关系
 	CreatedAt field.Time
 	UpdatedAt field.Time
-	DeletedAt field.Time
+	DeletedAt field.Field
 
 	fieldMap map[string]field.Expr
 }
@@ -77,13 +77,13 @@ func (s *sysDept) updateTableName(table string) *sysDept {
 	s.ID = field.NewField(table, "id")
 	s.DeptName = field.NewString(table, "dept_name")
 	s.ParentID = field.NewField(table, "parent_id")
-	s.OrderNo = field.NewField(table, "order_no")
+	s.Sort = field.NewField(table, "sort")
 	s.Remark = field.NewString(table, "remark")
 	s.Status = field.NewBool(table, "status")
 	s.Parent = field.NewString(table, "parent")
 	s.CreatedAt = field.NewTime(table, "created_at")
 	s.UpdatedAt = field.NewTime(table, "updated_at")
-	s.DeletedAt = field.NewTime(table, "deleted_at")
+	s.DeletedAt = field.NewField(table, "deleted_at")
 
 	s.fillFieldMap()
 
@@ -112,7 +112,7 @@ func (s *sysDept) fillFieldMap() {
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["dept_name"] = s.DeptName
 	s.fieldMap["parent_id"] = s.ParentID
-	s.fieldMap["order_no"] = s.OrderNo
+	s.fieldMap["sort"] = s.Sort
 	s.fieldMap["remark"] = s.Remark
 	s.fieldMap["status"] = s.Status
 	s.fieldMap["parent"] = s.Parent

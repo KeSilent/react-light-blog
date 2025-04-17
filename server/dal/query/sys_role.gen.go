@@ -33,7 +33,7 @@ func newSysRole(db *gorm.DB, opts ...gen.DOOption) sysRole {
 	_sysRole.DefaultRouter = field.NewString(tableName, "default_router")
 	_sysRole.CreateTime = field.NewTime(tableName, "create_time")
 	_sysRole.UpdateTime = field.NewTime(tableName, "update_time")
-	_sysRole.DeletedAt = field.NewTime(tableName, "deleted_at")
+	_sysRole.DeletedAt = field.NewField(tableName, "deleted_at")
 
 	_sysRole.fillFieldMap()
 
@@ -51,7 +51,7 @@ type sysRole struct {
 	DefaultRouter field.String // 默认路由
 	CreateTime    field.Time
 	UpdateTime    field.Time
-	DeletedAt     field.Time
+	DeletedAt     field.Field
 
 	fieldMap map[string]field.Expr
 }
@@ -74,7 +74,7 @@ func (s *sysRole) updateTableName(table string) *sysRole {
 	s.DefaultRouter = field.NewString(table, "default_router")
 	s.CreateTime = field.NewTime(table, "create_time")
 	s.UpdateTime = field.NewTime(table, "update_time")
-	s.DeletedAt = field.NewTime(table, "deleted_at")
+	s.DeletedAt = field.NewField(table, "deleted_at")
 
 	s.fillFieldMap()
 

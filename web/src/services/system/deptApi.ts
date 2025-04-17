@@ -14,17 +14,31 @@ export async function getDeptList(
   },
   options?: { [keyword: string]: any },
 ) {
-  const result = await request<ResponseResult<PageList<DeptModel[]>>>(
-    '/api/dept/getList',
-    {
-      method: 'GET',
-      params: {
-        ...params,
-      },
-      ...(options || {}),
+  const result = await request<ResponseResult<PageList<DeptModel[]>>>('/api/dept/getList', {
+    method: 'GET',
+    params: {
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
   return result.data;
+}
+
+/**
+ * @Author: Yang
+ * @description: 获取下拉菜单部门列表
+ * @param {object} params
+ * @return {*}
+ */
+export async function getListByTreeSelect(params: { keyWord: string }) {
+  const result = await request<PageList<DeptModel[]>>('/api/dept/getListByTreeSelect', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+  });
+
+  return result.data || [];
 }
 
 /**
@@ -34,7 +48,7 @@ export async function getDeptList(
  * @return {*}
  */
 export async function deleteDept(deptId: string) {
-  const result = await request<ResponseResult<string>>('/api/menu/deleteMenu', {
+  const result = await request<ResponseResult<string>>('/api/dept/deleteDept', {
     method: 'DELETE',
     params: {
       id: deptId,
@@ -43,11 +57,16 @@ export async function deleteDept(deptId: string) {
   return result.code;
 }
 
-
+/**
+ * @Author: Yang
+ * @description: 保存部门信息
+ * @param {DeptModel} params
+ * @return {*}
+ */
 export async function saveDept(params: DeptModel) {
   const result = await request<ResponseResult<string>>('/api/dept/saveDept', {
     method: 'POST',
     data: params,
   });
-  return result.code;
+  return { data: result.code };
 }

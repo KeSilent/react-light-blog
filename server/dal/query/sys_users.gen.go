@@ -37,7 +37,7 @@ func newSysUser(db *gorm.DB, opts ...gen.DOOption) sysUser {
 	_sysUser.Status = field.NewBool(tableName, "status")
 	_sysUser.CreateTime = field.NewTime(tableName, "create_time")
 	_sysUser.UpdateTime = field.NewTime(tableName, "update_time")
-	_sysUser.DeletedAt = field.NewTime(tableName, "deleted_at")
+	_sysUser.DeletedAt = field.NewField(tableName, "deleted_at")
 
 	_sysUser.fillFieldMap()
 
@@ -59,7 +59,7 @@ type sysUser struct {
 	Status     field.Bool   // 状态(0:禁用,1:启用)
 	CreateTime field.Time
 	UpdateTime field.Time
-	DeletedAt  field.Time
+	DeletedAt  field.Field
 
 	fieldMap map[string]field.Expr
 }
@@ -86,7 +86,7 @@ func (s *sysUser) updateTableName(table string) *sysUser {
 	s.Status = field.NewBool(table, "status")
 	s.CreateTime = field.NewTime(table, "create_time")
 	s.UpdateTime = field.NewTime(table, "update_time")
-	s.DeletedAt = field.NewTime(table, "deleted_at")
+	s.DeletedAt = field.NewField(table, "deleted_at")
 
 	s.fillFieldMap()
 

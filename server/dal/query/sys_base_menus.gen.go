@@ -39,7 +39,7 @@ func newSysBaseMenu(db *gorm.DB, opts ...gen.DOOption) sysBaseMenu {
 	_sysBaseMenu.Icon = field.NewString(tableName, "icon")
 	_sysBaseMenu.CreateTime = field.NewTime(tableName, "create_time")
 	_sysBaseMenu.UpdateTime = field.NewTime(tableName, "update_time")
-	_sysBaseMenu.DeletedAt = field.NewTime(tableName, "deleted_at")
+	_sysBaseMenu.DeletedAt = field.NewField(tableName, "deleted_at")
 
 	_sysBaseMenu.fillFieldMap()
 
@@ -63,7 +63,7 @@ type sysBaseMenu struct {
 	Icon       field.String // 图标
 	CreateTime field.Time
 	UpdateTime field.Time
-	DeletedAt  field.Time
+	DeletedAt  field.Field
 
 	fieldMap map[string]field.Expr
 }
@@ -92,7 +92,7 @@ func (s *sysBaseMenu) updateTableName(table string) *sysBaseMenu {
 	s.Icon = field.NewString(table, "icon")
 	s.CreateTime = field.NewTime(table, "create_time")
 	s.UpdateTime = field.NewTime(table, "update_time")
-	s.DeletedAt = field.NewTime(table, "deleted_at")
+	s.DeletedAt = field.NewField(table, "deleted_at")
 
 	s.fillFieldMap()
 
