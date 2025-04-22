@@ -15,7 +15,7 @@ import { columns } from './data';
 export default function Menu() {
   const actionRef = useRef<ActionType>();
 
-  const handleGetUserList = async (
+  const handleGetList = async (
     params: PageParams & { pageSize?: number; current?: number; name?: string },
   ) => {
     const result = await getMenuList(params);
@@ -46,7 +46,7 @@ export default function Menu() {
           labelWidth: 120,
         }}
         toolBarRender={() => [<CreateMenu key="addMenu" reload={actionRef.current?.reload} />]}
-        request={handleGetUserList}
+        request={handleGetList}
         columns={columns(actionRef, handleDelete)}
       />
     </PageContainer>
