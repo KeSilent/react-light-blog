@@ -3,7 +3,7 @@
  * @Date: 2025-03-19 19:04:24
  * @Description:菜单操作类
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2025-04-11 09:23:34
+ * @LastEditTime: 2025-05-06 10:22:09
  * @FilePath: /server/api/v1/system/sys_menu.go
  *
  * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
@@ -31,7 +31,7 @@ type MenuApi struct{}
  */
 func (m *MenuApi) Menus(c *gin.Context) {
 	user, _ := userService.GetUserInfo(utils.GetUserID(c))
-	if len(user.Role) == 0 {
+	if user == nil && len(user.Role) == 0 {
 		response.FailWithMessage("未设置任何角色", c)
 	}
 

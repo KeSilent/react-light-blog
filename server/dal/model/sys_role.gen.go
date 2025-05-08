@@ -18,8 +18,8 @@ type SysRole struct {
 	RoleName      string         `gorm:"column:role_name;type:varchar(64);not null;comment:角色名称" json:"roleName"`                     // 角色名称
 	ParentID      SnowflakeID    `gorm:"column:parent_id;type:bigint;primaryKey;comment:父角色ID" json:"parentId"`                       // 父角色ID
 	DefaultRouter string         `gorm:"column:default_router;type:varchar(128);default:dashboard;comment:默认路由" json:"defaultRouter"` // 默认路由
-	CreateTime    time.Time      `gorm:"column:create_time;type:datetime;default:CURRENT_TIMESTAMP" json:"createTime"`
-	UpdateTime    time.Time      `gorm:"column:update_time;type:datetime" json:"updateTime"`
+	CreatedAt     time.Time      `gorm:"column:created_at;type:datetime(3)" json:"createdAt"`
+	UpdatedAt     time.Time      `gorm:"column:updated_at;type:datetime(3)" json:"updatedAt"`
 	DeletedAt     gorm.DeletedAt `gorm:"column:deleted_at;type:datetime" json:"deletedAt"`
 	Menus         []SysBaseMenu  `gorm:"foreignKey:id;joinForeignKey:sys_role_id;joinReferences:sys_base_menu_id;many2many:sys_role_menus;references:id" json:"menus"`
 	Users         []SysUser      `gorm:"foreignKey:id;joinForeignKey:sys_role_id;joinReferences:sys_user_id;many2many:sys_user_role;references:id" json:"users"`

@@ -41,23 +41,30 @@ func SetToken(c *gin.Context, token string, maxAge int) {
 	}
 }
 
-func GetToken(c *gin.Context) string {
+func GetToken(c *gin.Context) (string, error) {
 	token, _ := c.Cookie("x-token")
 	if token == "" {
-		j := NewJWT()
 		token = c.Request.Header.Get("x-token")
+		if token == "" {
+			return "", fmt.Errorf("未找到有效的token")
+		}
+
+		j := NewJWT()
 		claims, err := j.ParseToken(token)
 		if err != nil {
 			global.RLB_LOG.Error("重新写入cookie token失败,未能成功解析token,请检查请求头是否存在x-token且claims是否为规定结构")
-			return token
+			return "", err
 		}
 		SetToken(c, token, int((claims.ExpiresAt.Unix()-time.Now().Unix())/60))
 	}
-	return token
+	return token, nil
 }
 
 func GetClaims(c *gin.Context) (*systemReq.CustomClaims, error) {
-	token := GetToken(c)
+	token, err := GetToken(c)
+	if err != nil {
+		return nil, err
+	}
 	j := NewJWT()
 	claims, err := j.ParseToken(token)
 	if err != nil {

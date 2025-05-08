@@ -7,4 +7,6 @@ type ServiceGroup struct {
 	OperationRecordService
 	RoleService
 	DeptService
+	CodeBuilderFieldService
+	AutoCodeService
 }

@@ -8,6 +8,7 @@ import { MenuModel } from './models/system/menu-model';
 import { errorConfig, tokenInit } from './requestErrorConfig';
 import { getDynamicMenus } from './services/base/api';
 import { createIcon } from './utils/MenuItemRender';
+import { requestConfig } from './utils/request';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -144,5 +145,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  */
 export const request = {
   ...errorConfig,
+  ...requestConfig,
   requestInterceptors: [tokenInit],
 };

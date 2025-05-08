@@ -35,8 +35,8 @@ func newSysUser(db *gorm.DB, opts ...gen.DOOption) sysUser {
 	_sysUser.Phone = field.NewString(tableName, "phone")
 	_sysUser.Email = field.NewString(tableName, "email")
 	_sysUser.Status = field.NewBool(tableName, "status")
-	_sysUser.CreateTime = field.NewTime(tableName, "create_time")
-	_sysUser.UpdateTime = field.NewTime(tableName, "update_time")
+	_sysUser.CreatedAt = field.NewTime(tableName, "created_at")
+	_sysUser.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_sysUser.DeletedAt = field.NewField(tableName, "deleted_at")
 
 	_sysUser.fillFieldMap()
@@ -48,18 +48,18 @@ func newSysUser(db *gorm.DB, opts ...gen.DOOption) sysUser {
 type sysUser struct {
 	sysUserDo sysUserDo
 
-	ALL        field.Asterisk
-	ID         field.Field  // 用户ID
-	Username   field.String // 用户名
-	Password   field.String // 密码
-	NickName   field.String // 昵称
-	Avatar     field.String // 头像
-	Phone      field.String // 手机号
-	Email      field.String // 邮箱
-	Status     field.Bool   // 状态(0:禁用,1:启用)
-	CreateTime field.Time
-	UpdateTime field.Time
-	DeletedAt  field.Field
+	ALL       field.Asterisk
+	ID        field.Field  // 用户ID
+	Username  field.String // 用户名
+	Password  field.String // 密码
+	NickName  field.String // 昵称
+	Avatar    field.String // 头像
+	Phone     field.String // 手机号
+	Email     field.String // 邮箱
+	Status    field.Bool   // 状态(0:禁用,1:启用)
+	CreatedAt field.Time
+	UpdatedAt field.Time
+	DeletedAt field.Field
 
 	fieldMap map[string]field.Expr
 }
@@ -84,8 +84,8 @@ func (s *sysUser) updateTableName(table string) *sysUser {
 	s.Phone = field.NewString(table, "phone")
 	s.Email = field.NewString(table, "email")
 	s.Status = field.NewBool(table, "status")
-	s.CreateTime = field.NewTime(table, "create_time")
-	s.UpdateTime = field.NewTime(table, "update_time")
+	s.CreatedAt = field.NewTime(table, "created_at")
+	s.UpdatedAt = field.NewTime(table, "updated_at")
 	s.DeletedAt = field.NewField(table, "deleted_at")
 
 	s.fillFieldMap()
@@ -120,8 +120,8 @@ func (s *sysUser) fillFieldMap() {
 	s.fieldMap["phone"] = s.Phone
 	s.fieldMap["email"] = s.Email
 	s.fieldMap["status"] = s.Status
-	s.fieldMap["create_time"] = s.CreateTime
-	s.fieldMap["update_time"] = s.UpdateTime
+	s.fieldMap["created_at"] = s.CreatedAt
+	s.fieldMap["updated_at"] = s.UpdatedAt
 	s.fieldMap["deleted_at"] = s.DeletedAt
 }
 

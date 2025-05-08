@@ -37,8 +37,8 @@ func newSysBaseMenu(db *gorm.DB, opts ...gen.DOOption) sysBaseMenu {
 	_sysBaseMenu.Sort = field.NewInt32(tableName, "sort")
 	_sysBaseMenu.Title = field.NewString(tableName, "title")
 	_sysBaseMenu.Icon = field.NewString(tableName, "icon")
-	_sysBaseMenu.CreateTime = field.NewTime(tableName, "create_time")
-	_sysBaseMenu.UpdateTime = field.NewTime(tableName, "update_time")
+	_sysBaseMenu.CreatedAt = field.NewTime(tableName, "created_at")
+	_sysBaseMenu.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_sysBaseMenu.DeletedAt = field.NewField(tableName, "deleted_at")
 
 	_sysBaseMenu.fillFieldMap()
@@ -50,20 +50,20 @@ func newSysBaseMenu(db *gorm.DB, opts ...gen.DOOption) sysBaseMenu {
 type sysBaseMenu struct {
 	sysBaseMenuDo sysBaseMenuDo
 
-	ALL        field.Asterisk
-	ID         field.Field  // 菜单ID
-	MenuLevel  field.Int32  // 菜单层级
-	ParentID   field.Field  // 父菜单ID
-	Path       field.String // 路由path
-	Name       field.String // 路由name
-	Hidden     field.Bool   // 是否隐藏
-	Component  field.String // 对应前端文件路径
-	Sort       field.Int32  // 排序
-	Title      field.String // 菜单名
-	Icon       field.String // 图标
-	CreateTime field.Time
-	UpdateTime field.Time
-	DeletedAt  field.Field
+	ALL       field.Asterisk
+	ID        field.Field  // 菜单ID
+	MenuLevel field.Int32  // 菜单层级
+	ParentID  field.Field  // 父菜单ID
+	Path      field.String // 路由path
+	Name      field.String // 路由name
+	Hidden    field.Bool   // 是否隐藏
+	Component field.String // 对应前端文件路径
+	Sort      field.Int32  // 排序
+	Title     field.String // 菜单名
+	Icon      field.String // 图标
+	CreatedAt field.Time
+	UpdatedAt field.Time
+	DeletedAt field.Field
 
 	fieldMap map[string]field.Expr
 }
@@ -90,8 +90,8 @@ func (s *sysBaseMenu) updateTableName(table string) *sysBaseMenu {
 	s.Sort = field.NewInt32(table, "sort")
 	s.Title = field.NewString(table, "title")
 	s.Icon = field.NewString(table, "icon")
-	s.CreateTime = field.NewTime(table, "create_time")
-	s.UpdateTime = field.NewTime(table, "update_time")
+	s.CreatedAt = field.NewTime(table, "created_at")
+	s.UpdatedAt = field.NewTime(table, "updated_at")
 	s.DeletedAt = field.NewField(table, "deleted_at")
 
 	s.fillFieldMap()
@@ -130,8 +130,8 @@ func (s *sysBaseMenu) fillFieldMap() {
 	s.fieldMap["sort"] = s.Sort
 	s.fieldMap["title"] = s.Title
 	s.fieldMap["icon"] = s.Icon
-	s.fieldMap["create_time"] = s.CreateTime
-	s.fieldMap["update_time"] = s.UpdateTime
+	s.fieldMap["created_at"] = s.CreatedAt
+	s.fieldMap["updated_at"] = s.UpdatedAt
 	s.fieldMap["deleted_at"] = s.DeletedAt
 }
 

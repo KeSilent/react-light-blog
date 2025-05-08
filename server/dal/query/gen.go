@@ -16,23 +16,27 @@ import (
 )
 
 var (
-	Q                   = new(Query)
-	JwtBlacklist        *jwtBlacklist
-	SysBaseMenu         *sysBaseMenu
-	SysDept             *sysDept
-	SysDictionary       *sysDictionary
-	SysDictionaryDetail *sysDictionaryDetail
-	SysOperationRecord  *sysOperationRecord
-	SysRole             *sysRole
-	SysRoleMenu         *sysRoleMenu
-	SysUser             *sysUser
-	SysUserRole         *sysUserRole
+	Q                    = new(Query)
+	JwtBlacklist         *jwtBlacklist
+	SysBaseMenu          *sysBaseMenu
+	SysCodeBuilderField  *sysCodeBuilderField
+	SysCodeBuilderStruct *sysCodeBuilderStruct
+	SysDept              *sysDept
+	SysDictionary        *sysDictionary
+	SysDictionaryDetail  *sysDictionaryDetail
+	SysOperationRecord   *sysOperationRecord
+	SysRole              *sysRole
+	SysRoleMenu          *sysRoleMenu
+	SysUser              *sysUser
+	SysUserRole          *sysUserRole
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	JwtBlacklist = &Q.JwtBlacklist
 	SysBaseMenu = &Q.SysBaseMenu
+	SysCodeBuilderField = &Q.SysCodeBuilderField
+	SysCodeBuilderStruct = &Q.SysCodeBuilderStruct
 	SysDept = &Q.SysDept
 	SysDictionary = &Q.SysDictionary
 	SysDictionaryDetail = &Q.SysDictionaryDetail
@@ -45,50 +49,56 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:                  db,
-		JwtBlacklist:        newJwtBlacklist(db, opts...),
-		SysBaseMenu:         newSysBaseMenu(db, opts...),
-		SysDept:             newSysDept(db, opts...),
-		SysDictionary:       newSysDictionary(db, opts...),
-		SysDictionaryDetail: newSysDictionaryDetail(db, opts...),
-		SysOperationRecord:  newSysOperationRecord(db, opts...),
-		SysRole:             newSysRole(db, opts...),
-		SysRoleMenu:         newSysRoleMenu(db, opts...),
-		SysUser:             newSysUser(db, opts...),
-		SysUserRole:         newSysUserRole(db, opts...),
+		db:                   db,
+		JwtBlacklist:         newJwtBlacklist(db, opts...),
+		SysBaseMenu:          newSysBaseMenu(db, opts...),
+		SysCodeBuilderField:  newSysCodeBuilderField(db, opts...),
+		SysCodeBuilderStruct: newSysCodeBuilderStruct(db, opts...),
+		SysDept:              newSysDept(db, opts...),
+		SysDictionary:        newSysDictionary(db, opts...),
+		SysDictionaryDetail:  newSysDictionaryDetail(db, opts...),
+		SysOperationRecord:   newSysOperationRecord(db, opts...),
+		SysRole:              newSysRole(db, opts...),
+		SysRoleMenu:          newSysRoleMenu(db, opts...),
+		SysUser:              newSysUser(db, opts...),
+		SysUserRole:          newSysUserRole(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	JwtBlacklist        jwtBlacklist
-	SysBaseMenu         sysBaseMenu
-	SysDept             sysDept
-	SysDictionary       sysDictionary
-	SysDictionaryDetail sysDictionaryDetail
-	SysOperationRecord  sysOperationRecord
-	SysRole             sysRole
-	SysRoleMenu         sysRoleMenu
-	SysUser             sysUser
-	SysUserRole         sysUserRole
+	JwtBlacklist         jwtBlacklist
+	SysBaseMenu          sysBaseMenu
+	SysCodeBuilderField  sysCodeBuilderField
+	SysCodeBuilderStruct sysCodeBuilderStruct
+	SysDept              sysDept
+	SysDictionary        sysDictionary
+	SysDictionaryDetail  sysDictionaryDetail
+	SysOperationRecord   sysOperationRecord
+	SysRole              sysRole
+	SysRoleMenu          sysRoleMenu
+	SysUser              sysUser
+	SysUserRole          sysUserRole
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:                  db,
-		JwtBlacklist:        q.JwtBlacklist.clone(db),
-		SysBaseMenu:         q.SysBaseMenu.clone(db),
-		SysDept:             q.SysDept.clone(db),
-		SysDictionary:       q.SysDictionary.clone(db),
-		SysDictionaryDetail: q.SysDictionaryDetail.clone(db),
-		SysOperationRecord:  q.SysOperationRecord.clone(db),
-		SysRole:             q.SysRole.clone(db),
-		SysRoleMenu:         q.SysRoleMenu.clone(db),
-		SysUser:             q.SysUser.clone(db),
-		SysUserRole:         q.SysUserRole.clone(db),
+		db:                   db,
+		JwtBlacklist:         q.JwtBlacklist.clone(db),
+		SysBaseMenu:          q.SysBaseMenu.clone(db),
+		SysCodeBuilderField:  q.SysCodeBuilderField.clone(db),
+		SysCodeBuilderStruct: q.SysCodeBuilderStruct.clone(db),
+		SysDept:              q.SysDept.clone(db),
+		SysDictionary:        q.SysDictionary.clone(db),
+		SysDictionaryDetail:  q.SysDictionaryDetail.clone(db),
+		SysOperationRecord:   q.SysOperationRecord.clone(db),
+		SysRole:              q.SysRole.clone(db),
+		SysRoleMenu:          q.SysRoleMenu.clone(db),
+		SysUser:              q.SysUser.clone(db),
+		SysUserRole:          q.SysUserRole.clone(db),
 	}
 }
 
@@ -102,45 +112,51 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:                  db,
-		JwtBlacklist:        q.JwtBlacklist.replaceDB(db),
-		SysBaseMenu:         q.SysBaseMenu.replaceDB(db),
-		SysDept:             q.SysDept.replaceDB(db),
-		SysDictionary:       q.SysDictionary.replaceDB(db),
-		SysDictionaryDetail: q.SysDictionaryDetail.replaceDB(db),
-		SysOperationRecord:  q.SysOperationRecord.replaceDB(db),
-		SysRole:             q.SysRole.replaceDB(db),
-		SysRoleMenu:         q.SysRoleMenu.replaceDB(db),
-		SysUser:             q.SysUser.replaceDB(db),
-		SysUserRole:         q.SysUserRole.replaceDB(db),
+		db:                   db,
+		JwtBlacklist:         q.JwtBlacklist.replaceDB(db),
+		SysBaseMenu:          q.SysBaseMenu.replaceDB(db),
+		SysCodeBuilderField:  q.SysCodeBuilderField.replaceDB(db),
+		SysCodeBuilderStruct: q.SysCodeBuilderStruct.replaceDB(db),
+		SysDept:              q.SysDept.replaceDB(db),
+		SysDictionary:        q.SysDictionary.replaceDB(db),
+		SysDictionaryDetail:  q.SysDictionaryDetail.replaceDB(db),
+		SysOperationRecord:   q.SysOperationRecord.replaceDB(db),
+		SysRole:              q.SysRole.replaceDB(db),
+		SysRoleMenu:          q.SysRoleMenu.replaceDB(db),
+		SysUser:              q.SysUser.replaceDB(db),
+		SysUserRole:          q.SysUserRole.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	JwtBlacklist        *jwtBlacklistDo
-	SysBaseMenu         *sysBaseMenuDo
-	SysDept             *sysDeptDo
-	SysDictionary       *sysDictionaryDo
-	SysDictionaryDetail *sysDictionaryDetailDo
-	SysOperationRecord  *sysOperationRecordDo
-	SysRole             *sysRoleDo
-	SysRoleMenu         *sysRoleMenuDo
-	SysUser             *sysUserDo
-	SysUserRole         *sysUserRoleDo
+	JwtBlacklist         *jwtBlacklistDo
+	SysBaseMenu          *sysBaseMenuDo
+	SysCodeBuilderField  *sysCodeBuilderFieldDo
+	SysCodeBuilderStruct *sysCodeBuilderStructDo
+	SysDept              *sysDeptDo
+	SysDictionary        *sysDictionaryDo
+	SysDictionaryDetail  *sysDictionaryDetailDo
+	SysOperationRecord   *sysOperationRecordDo
+	SysRole              *sysRoleDo
+	SysRoleMenu          *sysRoleMenuDo
+	SysUser              *sysUserDo
+	SysUserRole          *sysUserRoleDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		JwtBlacklist:        q.JwtBlacklist.WithContext(ctx),
-		SysBaseMenu:         q.SysBaseMenu.WithContext(ctx),
-		SysDept:             q.SysDept.WithContext(ctx),
-		SysDictionary:       q.SysDictionary.WithContext(ctx),
-		SysDictionaryDetail: q.SysDictionaryDetail.WithContext(ctx),
-		SysOperationRecord:  q.SysOperationRecord.WithContext(ctx),
-		SysRole:             q.SysRole.WithContext(ctx),
-		SysRoleMenu:         q.SysRoleMenu.WithContext(ctx),
-		SysUser:             q.SysUser.WithContext(ctx),
-		SysUserRole:         q.SysUserRole.WithContext(ctx),
+		JwtBlacklist:         q.JwtBlacklist.WithContext(ctx),
+		SysBaseMenu:          q.SysBaseMenu.WithContext(ctx),
+		SysCodeBuilderField:  q.SysCodeBuilderField.WithContext(ctx),
+		SysCodeBuilderStruct: q.SysCodeBuilderStruct.WithContext(ctx),
+		SysDept:              q.SysDept.WithContext(ctx),
+		SysDictionary:        q.SysDictionary.WithContext(ctx),
+		SysDictionaryDetail:  q.SysDictionaryDetail.WithContext(ctx),
+		SysOperationRecord:   q.SysOperationRecord.WithContext(ctx),
+		SysRole:              q.SysRole.WithContext(ctx),
+		SysRoleMenu:          q.SysRoleMenu.WithContext(ctx),
+		SysUser:              q.SysUser.WithContext(ctx),
+		SysUserRole:          q.SysUserRole.WithContext(ctx),
 	}
 }
 

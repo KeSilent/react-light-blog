@@ -74,4 +74,9 @@ export default [
     path: '/system/dept',
     component: './dept'
   },
+  {
+    name: '代码生成器',
+    path: '/code/autoCode',
+    component: './auto-code'
+  },
 ];
