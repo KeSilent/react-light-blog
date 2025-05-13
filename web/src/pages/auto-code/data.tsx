@@ -1,4 +1,4 @@
-import { CodeFieldModel } from '@/models/system/code-field-model';
+import { CodeFieldModel, RelationModel } from '@/models/system/code-field-model';
 import { ProColumns } from '@ant-design/pro-components';
 
 export const columns: ProColumns<CodeFieldModel>[] = [
@@ -46,5 +46,38 @@ export const columns: ProColumns<CodeFieldModel>[] = [
     title: '注释',
     dataIndex: 'Comment',
     key: 'Comment',
+  },
+];
+
+export const relationColumns: ProColumns<RelationModel>[] = [
+  {
+    title: '被关联表名',
+    dataIndex: 'RelateTable',
+    key: 'RelateTable',
+  },
+  {
+    title: '关联类型',
+    dataIndex: 'RelateType',
+    key: 'RelateType',
+  },
+  {
+    title: '外键字段名',
+    dataIndex: 'RelateColumn',
+    key: 'RelateColumn',
+  },
+  {
+    title: '生成属性',
+    dataIndex: 'FieldName',
+    key: 'FieldName',
+  },
+  {
+    title: '新关联关系表名',
+    dataIndex: 'RelationTable',
+    key: 'RelationTable',
+  },
+  {
+    title: '操作',
+    dataIndex: 'Collation',
+    key: 'Collation',
   },
 ];

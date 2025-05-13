@@ -1,3 +1,4 @@
+import { CodeFieldModel } from '@/models/system/code-field-model';
 import {  ResponseResult } from '@/models/system/common-model';
 import { request } from '@umijs/max';
 /**
@@ -20,7 +21,7 @@ export async function getAllTableName() {
  * @return {*}
  */
 export async function getFieldsByTableName(tableName: string) {
-  const result = await request<ResponseResult<string[]>>('/api/autoCode/getFieldsByTableName', {
+  const result = await request<ResponseResult<CodeFieldModel[]>>('/api/autoCode/getFieldsByTableName', {
     method: 'GET',
     params: {
       tableName,
