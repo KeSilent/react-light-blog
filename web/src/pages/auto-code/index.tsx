@@ -11,7 +11,7 @@ import {
 } from '@ant-design/pro-components';
 import { Divider, message } from 'antd';
 import { useRef, useState } from 'react';
-import CreateField from './components/CreateField';
+import CreateField from './components/CreateRelation';
 import { columns, relationColumns } from './data';
 
 export default function AutoCode() {
@@ -20,6 +20,17 @@ export default function AutoCode() {
   const relationRef = useRef<ActionType>();
   const [tableData, setTableData] = useState<CodeFieldModel[]>([]);
   const [relationData, setRelationData] = useState<RelationModel[]>([]);
+  const [tableNames, setTableNames] = useState<RequestOptionsType[]>([]);
+  const handleDelete = async (id: string) => {
+    try {
+      setRelationData(relationData.filter((item) => item.key !== id));
+      message.success('删除成功');
+      relationRef.current?.reload();
+    } catch (error) {
+      message.error('删除失败');
+    }
+  };
+
   return (
     <>
       <StepsForm<{
@@ -54,7 +65,6 @@ export default function AutoCode() {
           title="设置模型及关系"
           layout="horizontal"
           onFinish={async () => {
-            console.log(formRef.current?.getFieldsValue());
             return true;
           }}
         >
@@ -62,9 +72,12 @@ export default function AutoCode() {
             defaultCollapsed
             split
             onFinish={async (values) => {
-              console.log(values);
               const fields = await getFieldsByTableName(values.tableName);
-              setTableData(fields);
+              const dataWithKey = (fields || []).map((item) => ({
+                ...item,
+                key: item.field,
+              }));
+              setTableData(dataWithKey);
               return true;
             }}
           >
@@ -75,10 +88,12 @@ export default function AutoCode() {
               debounceTime={300}
               request={async () => {
                 const response = await getAllTableName();
-                return (response || []).map((table: string) => ({
+                const result = (response || []).map((table: string) => ({
                   label: table,
                   value: table,
                 })) as RequestOptionsType[];
+                setTableNames(result);
+                return result;
               }}
               rules={[
                 {
@@ -90,6 +105,7 @@ export default function AutoCode() {
           </QueryFilter>
           <ProTable<CodeFieldModel>
             actionRef={ref}
+            key={'codeFieldData'}
             search={false}
             columns={columns}
             dataSource={tableData}
@@ -99,11 +115,28 @@ export default function AutoCode() {
 
           <ProTable<RelationModel>
             actionRef={relationRef}
+            key={'relationData'}
             toolBarRender={() => [
-              <CreateField key="addRelation" reload={relationRef.current?.reload} />,
+              <CreateField
+                key="addRelation"
+                reload={relationRef.current?.reload}
+                codeFieldModel={tableData}
+                relationModel={relationData}
+                tableNames={tableNames}
+                onSuccess={(data) => {
+                  setRelationData([...relationData, data]);
+                }}
+              />,
             ]}
             search={false}
-            columns={relationColumns}
+            columns={relationColumns(
+              relationRef,
+              handleDelete,
+              tableData,
+              relationData,
+              tableNames,
+              setRelationData,
+            )}
             dataSource={relationData}
             pagination={false}
           />

@@ -27,6 +27,5 @@ export async function getFieldsByTableName(tableName: string) {
       tableName,
     },
   });
-
   return result.data || [];
 }
