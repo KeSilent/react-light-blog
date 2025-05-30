@@ -85,13 +85,15 @@ export default function CreateRelation(props: CreateRelationProps) {
         layout="horizontal"
         labelCol={{ span: 4 }}
         onFinish={async (value) => {
-          if (relationModel?.find((item) => item.relationTable === value.relationTable)) {
+          console.log(value);
+          
+          if (relationModel?.find((item) => item.fieldName === value.fieldName)) {
             messageApi.error('关联属性名已存在！');
           } else {
             messageApi.success('保存成功！');
             form.resetFields();
             reload?.();
-            value.key = value.relationTable;
+            value.key = value.fieldName;
             onSuccess?.(value);
             setOpen(false);
           }

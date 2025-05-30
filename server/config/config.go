@@ -17,4 +17,6 @@ type Server struct {
 	Qiniu types.Qiniu `mapstructure:"qiniu" json:"qiniu" yaml:"qiniu"`
 	// 跨域配置
 	Cors types.CORS `mapstructure:"cors" json:"cors" yaml:"cors"`
+
+	AutoCode types.Autocode `mapstructure:"autocode" json:"autocode" yaml:"autocode"`
 }

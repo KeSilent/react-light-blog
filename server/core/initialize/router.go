@@ -69,6 +69,9 @@ func Routers() *gin.Engine {
 		autoCodeRouter.InitAutoCodeRouter(PublicGroup)
 	}
 
+	//插件路由安装
+	InstallPlugin(PrivateGroup, PublicGroup, Router)
+
 	global.RLB_ROUTERS = Router.Routes()
 	global.RLB_LOG.Info("router register success")
 	return Router

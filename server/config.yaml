@@ -76,3 +76,10 @@ captcha:
   img-height: 80
   open-captcha: 1000 # 0代表一直开启，大于0代表限制次数
   open-captcha-timeout: 3600 # open-captcha大于0时才生效
+
+autocode:
+    web: web/src
+    root: /Volumes/KeSilentA/Code/personal-code/react-light-blog
+    server: server
+    module: github.com/kesilent/react-light-blog
+    ai-path: ""

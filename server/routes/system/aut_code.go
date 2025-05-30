@@ -13,5 +13,8 @@ func (d *AutoCodeRouter) InitAutoCodeRouter(Router *gin.RouterGroup) (R gin.IRou
 		deptRouter.GET("getAllTableName", AutoCodeApi.GetAllTableName)
 		deptRouter.GET("getFieldsByTableName", AutoCodeApi.GetFieldsByTableName)
 	}
+	{
+		deptRouter.POST("createTemp", AutoCodeApi.CreateTemp)
+	}
 	return deptRouter
 }

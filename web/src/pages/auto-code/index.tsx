@@ -4,6 +4,7 @@ import {
   ActionType,
   ProFormInstance,
   ProFormSelect,
+  ProFormText,
   ProTable,
   QueryFilter,
   RequestOptionsType,
@@ -21,6 +22,7 @@ export default function AutoCode() {
   const [tableData, setTableData] = useState<CodeFieldModel[]>([]);
   const [relationData, setRelationData] = useState<RelationModel[]>([]);
   const [tableNames, setTableNames] = useState<RequestOptionsType[]>([]);
+  const [messageApi, contextHolder] = message.useMessage();
   const handleDelete = async (id: string) => {
     try {
       setRelationData(relationData.filter((item) => item.key !== id));
@@ -33,6 +35,7 @@ export default function AutoCode() {
 
   return (
     <>
+      {contextHolder}
       <StepsForm<{
         name: string;
       }>
@@ -41,17 +44,22 @@ export default function AutoCode() {
         onFinish={async () => {
           message.success('提交成功');
         }}
-        submitter={{
-          render: (props, dom) => {
-            return (
-              <div
-                style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: 24 }}
-              >
-                {dom}
-              </div>
-            );
-          },
-        }}
+        stepsFormRender={(formDom, submitterDom) => (
+          <div>
+            {formDom}
+            <div
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'right',
+                marginTop: 24,
+                gap: 24,
+              }}
+            >
+              {submitterDom}
+            </div>
+          </div>
+        )}
         formProps={{
           validateMessages: {
             required: '此项为必填项',
@@ -65,7 +73,12 @@ export default function AutoCode() {
           title="设置模型及关系"
           layout="horizontal"
           onFinish={async () => {
-            return true;
+            if (!tableData?.length) {
+              messageApi.error('请选择表');
+              return false;
+            } else {
+              return true;
+            }
           }}
         >
           <QueryFilter
@@ -142,18 +155,32 @@ export default function AutoCode() {
           />
         </StepsForm.StepForm>
         <StepsForm.StepForm<{
-          checkbox: string;
+          packageName: string;
         }>
           name="checkbox"
-          title="设置参数"
-          stepProps={{
-            description: '这里填入运维参数',
-          }}
+          title="设置API"
+          layout="horizontal"
           onFinish={async () => {
             console.log(formRef.current?.getFieldsValue());
             return true;
           }}
-        ></StepsForm.StepForm>
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
+            <ProFormText
+              name="packageName"
+              label="设置包名"
+              width="md"
+              rules={[{ required: true, message: '请输入包名' }]}
+            />
+          </div>
+        </StepsForm.StepForm>
       </StepsForm>
     </>
   );
